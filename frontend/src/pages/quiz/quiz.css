@@ -1,0 +1,21 @@
+.quiz {
+  height: 100%;
+}
+
+.quiz-container {
+  display: flex;
+  height: calc(100vh - (52px + 88px));
+}
+
+.quiz-title {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 20px;
+  background-color: rgb(234, 234, 235);
+}
+
+.quiz--title-placeholder {
+  padding-bottom: 10px;
+  color: #a0aabf;
+  font-size: 11px;
+}

@@ -19,6 +19,7 @@
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^9.0.4",
+    "reactjs-popup": "^2.0.5",
     "rehype-highlight": "^5.0.2",
     "rehype-katex": "^6.0.2",
     "remark-gfm": "^3.0.1",

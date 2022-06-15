@@ -11,10 +11,7 @@ import "katex/dist/katex.min.css";
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 
-import "./quiz-editor.css";
-import "./quiz-show.css";
 import "./quiz.css";
-import Navbar from "../../components/Navbar";
 
 const Quiz = () => {
   const code = `## Title
@@ -45,59 +42,56 @@ const Quiz = () => {
   const [codeCur, setCodeCur] = useState(code);
 
   return (
-    <>
-      <Navbar />
-      <div className='quiz'>
-        <div className='quiz-title'>
-          <div className='quiz--title-placeholder'>
-            <p>DOCUMENT NAME</p>
-          </div>
-          <div className='quiz-header-title-name'>
-            <p>A test markdown demo.md</p>
-          </div>
+    <div className='editor'>
+      <div className='editor-title'>
+        <div className='editor--title-placeholder'>
+          <p>DOCUMENT NAME</p>
         </div>
-
-        <div className='quiz-container'>
-          <CodeMirror
-            value={codeCur}
-            extensions={[markdown({ base: markdownLanguage })]}
-            onChange={(value, viewUpdate) => {
-              setCodeCur(value);
-            }}
-            // theme='dark'
-            height='100vh'
-            width='50vw'
-            className='quiz-editor'
-          />
-
-          <ReactMarkdown
-            className='quiz-show'
-            children={codeCur}
-            remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeKatex]}
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    children={String(children).replace(/\n$/, "")}
-                    style={dracula}
-                    language={match[1]}
-                    PreTag='div'
-                    {...props}
-                  />
-                ) : (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          />
+        <div className='editor-header-title-name'>
+          <p>A test markdown demo.md</p>
         </div>
       </div>
-    </>
+
+      <div className='editor-container'>
+        <CodeMirror
+          value={codeCur}
+          extensions={[markdown({ base: markdownLanguage })]}
+          onChange={(value, viewUpdate) => {
+            setCodeCur(value);
+          }}
+          // theme='dark'
+          height='100vh'
+          width='50vw'
+          className='quiz-editor'
+        />
+
+        <ReactMarkdown
+          className='editor-show'
+          children={codeCur}
+          remarkPlugins={[remarkGfm, remarkMath]}
+          rehypePlugins={[rehypeKatex]}
+          components={{
+            code({ node, inline, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "");
+
+              return !inline && match ? (
+                <SyntaxHighlighter
+                  children={String(children).replace(/\n$/, "")}
+                  style={dracula}
+                  language={match[1]}
+                  PreTag='div'
+                  {...props}
+                />
+              ) : (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              );
+            },
+          }}
+        />
+      </div>
+    </div>
   );
 };
 

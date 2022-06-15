@@ -21,22 +21,32 @@ const Dashboard = () => {
 
   const [course, setCourse] = useState(courses);
   const [isPopUp, setIsPopUp] = useState(false);
+  const [courseCard, setCourseCard] = useState("");
 
   const addCourse = () => {
     setCourse([...course, "New101"]);
   };
 
+  const onClick = (item) => {
+    setIsPopUp(true);
+    setCourseCard(item);
+  };
+
   const courseList = course.map((item, index) => (
-    // <div className='course' onClick={setIsPopUp(true)} key={key}>
-    <div className='course' onClick={() => setIsPopUp(true)} key={index}>
+    // <div className='course' onClick={onClick(item)} key={index}>
+    <div className='course' onClick={() => onClick(item)} key={index}>
       {item}
     </div>
   ));
 
   return (
     <div className='dashboard'>
-      <List isPopUp={isPopUp} onClose={() => setIsPopUp(false)} />
-      <div className='dashboard-sidebar'>
+      <List
+        isPopUp={isPopUp}
+        course={courseCard}
+        onClose={() => setIsPopUp(false)}
+      />
+      {/* <div className='dashboard-sidebar'>
         <div className='dashboard-sidebar-profile'>
           <FaUserCircle className='dashboard-sidebar-profile-icon' />
           <span className='dashboard-sidebar-profile-name'>Tarik</span>
@@ -45,7 +55,7 @@ const Dashboard = () => {
           <h4 className='dashboard-sidebar-menu-card'>Home</h4>
           <h4 className='dashboard-sidebar-menu-card'>Request</h4>
         </div>
-      </div>
+      </div> */}
       <div className='dashboard-container'>
         <h1 className='dashboard-container-header'>Course List</h1>
         <div className='dashboard-container-course'>

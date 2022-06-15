@@ -1,22 +1,61 @@
 import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import "./list.css";
 import { Link } from "react-router-dom";
 
-const List = (props) => {
-  const courses = ["mid1", "mid2", "semi", "final"];
+import { FaPlus } from "react-icons/fa";
+import { CgNotes } from "react-icons/cg";
+import { GoChecklist } from "react-icons/go";
+import { AiOutlineTable } from "react-icons/ai";
+import { FiArrowRightCircle } from "react-icons/fi";
 
-  const [course, setCourse] = useState(courses);
-  // const [title, setTitle] = useState()
+import "./list.css";
+
+const List = (props) => {
+  const [quiz, setQuiz] = useState(["mid1", "mid2", "semi", "final"]);
+  const [curHover, setCurHover] = useState("");
 
   const addCourse = () => {
-    setCourse([...course, "New101"]);
+    setQuiz([...quiz, "New101"]);
   };
 
-  const courseList = course.map((item, index) => (
-    // <div className='course' onClick={setIsPopUp(true)} key={key}>
-    <div className='quiz-list' key={index}>
-      {item}
+  const onMouseEnter = (item) => {
+    setCurHover(item);
+  };
+
+  const onMouseLeave = () => {
+    setCurHover("");
+  };
+
+  const quizList = quiz.map((item, index) => (
+    <div
+      className='quiz'
+      key={index}
+      onMouseEnter={() => onMouseEnter(item)}
+      onMouseLeave={() => onMouseLeave(item)}
+    >
+      {/* Show 3 cards when hover
+         Quiz Markdown link
+        Solution link 
+        Score link */}
+
+      {item === curHover ? (
+        <div className='quiz-card text-focus-in'>
+          <div className='quiz-card-item '>
+            {/* <CgNotes className='quiz-card-item-icon fade-in-left' /> */}
+            <p className='quiz-card-item-text'>Editor</p>
+            <FiArrowRightCircle className='quiz-card-item-icon' />
+          </div>
+          <div className='quiz-card-item '>
+            <GoChecklist className='quiz-card-item-icon' />
+            <p>Solution</p>
+          </div>
+          <div className='quiz-card-item'>
+            <AiOutlineTable className='quiz-card-item-icon' />
+            <p>Score</p>
+          </div>
+        </div>
+      ) : (
+        <div className='quiz-item'>{item}</div>
+      )}
     </div>
   ));
 
@@ -27,19 +66,10 @@ const List = (props) => {
     <div className='list'>
       <div className='list-overlay' onClick={props.onClose} />
       <div className='list-container'>
-        {/* <input
-          type='text'
-          value={this.state.value}
-          onChange={this.handleChange}
-        /> */}
-        <h1 className='list-container-header'>Quiz List</h1>
+        <h1 className='list-container-header'>{props.course}</h1>
         <div className='list-container-quiz'>
-          {courseList}
-          <Link
-            to='/quiz'
-            className='quiz-list quiz-create'
-            onClick={addCourse}
-          >
+          {quizList}
+          <Link to='/quiz' className='quiz quiz-create' onClick={addCourse}>
             <FaPlus className='' />
             Add a quiz
           </Link>

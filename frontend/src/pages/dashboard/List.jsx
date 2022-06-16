@@ -39,11 +39,14 @@ const List = (props) => {
 
       {item === curHover ? (
         <div className='quiz-card text-focus-in'>
-          <div className='quiz-card-item '>
-            {/* <CgNotes className='quiz-card-item-icon fade-in-left' /> */}
-            <p className='quiz-card-item-text'>Editor</p>
-            <FiArrowRightCircle className='quiz-card-item-icon' />
-          </div>
+          <Link to='/quiz'>
+            <div className='quiz-card-item '>
+              {/* <CgNotes className='quiz-card-item-icon fade-in-left' /> */}
+              <p className='quiz-card-item-text'>Editor</p>
+              <FiArrowRightCircle className='quiz-card-item-icon' />
+            </div>
+          </Link>
+
           <div className='quiz-card-item '>
             <GoChecklist className='quiz-card-item-icon' />
             <p>Solution</p>

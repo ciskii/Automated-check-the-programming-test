@@ -53,6 +53,7 @@
 .editor-show code {
   font-size: 85%;
   padding: 0.2em 0.4em;
+  border-radius: 3px;
   background-color: var(--color-comment-background);
 }
 

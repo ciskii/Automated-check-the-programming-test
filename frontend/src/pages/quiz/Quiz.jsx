@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -11,6 +11,8 @@ import "katex/dist/katex.min.css";
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 
+import { debounce } from "lodash";
+
 import "./quiz.css";
 
 const Quiz = () => {
@@ -21,15 +23,15 @@ const Quiz = () => {
     return <div>demo</div>
   }
   \`\`\`
-  
+
   \`\`\`bash
   # Not dependent on uiw.
   npm install @codemirror/lang-markdown --save
   npm install @codemirror/language-data --save
   \`\`\`
-  
+
   [weisit ulr](https://uiwjs.github.io/react-codemirror/)
-  
+
   \`\`\`go
   package main
   import "fmt"
@@ -40,25 +42,40 @@ const Quiz = () => {
   `;
 
   const [codeCur, setCodeCur] = useState(code);
+  const [value, setValue] = useState("Example.md");
+
+  const changeHandler = useCallback((value, viewUpdate) => {
+    console.log("value", value);
+    setCodeCur(value);
+  }, []);
+
+  const debouncedChangeHandler = useMemo(
+    (value, viewUpdate) => debounce(changeHandler, 300),
+    []
+  );
 
   return (
     <div className='editor'>
       <div className='editor-title'>
-        <div className='editor--title-placeholder'>
+        <div className='editor-title-label'>
           <p>DOCUMENT NAME</p>
         </div>
-        <div className='editor-header-title-name'>
-          <p>A test markdown demo.md</p>
-        </div>
+        <input
+          className='editor-title-name'
+          type='text'
+          value={value}
+          // onChange={debouncedChangeHandler}
+        />
       </div>
 
       <div className='editor-container'>
         <CodeMirror
           value={codeCur}
           extensions={[markdown({ base: markdownLanguage })]}
-          onChange={(value, viewUpdate) => {
-            setCodeCur(value);
-          }}
+          // onChange={(e) => {
+          //   debouncedChangeHandler(e);
+          // }}
+          onChange={debouncedChangeHandler}
           // theme='dark'
           height='100vh'
           width='50vw'

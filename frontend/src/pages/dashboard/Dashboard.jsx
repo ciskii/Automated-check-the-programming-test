@@ -46,16 +46,6 @@ const Dashboard = () => {
         course={courseCard}
         onClose={() => setIsPopUp(false)}
       />
-      {/* <div className='dashboard-sidebar'>
-        <div className='dashboard-sidebar-profile'>
-          <FaUserCircle className='dashboard-sidebar-profile-icon' />
-          <span className='dashboard-sidebar-profile-name'>Tarik</span>
-        </div>
-        <div className='dashboard-sidebar-menu'>
-          <h4 className='dashboard-sidebar-menu-card'>Home</h4>
-          <h4 className='dashboard-sidebar-menu-card'>Request</h4>
-        </div>
-      </div> */}
       <div className='dashboard-container'>
         <h1 className='dashboard-container-header'>Course List</h1>
         <div className='dashboard-container-course'>

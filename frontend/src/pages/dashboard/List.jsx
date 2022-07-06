@@ -32,28 +32,26 @@ const List = (props) => {
       onMouseEnter={() => onMouseEnter(item)}
       onMouseLeave={() => onMouseLeave(item)}
     >
-      {/* Show 3 cards when hover
-         Quiz Markdown link
-        Solution link 
-        Score link */}
+      {/* 
+        Editor Page - Markdown Editor
+        Student Page - List enrolled students with score
+      */}
 
       {item === curHover ? (
         <div className='quiz-card text-focus-in'>
           <Link to='/quiz'>
             <div className='quiz-card-item '>
-              {/* <CgNotes className='quiz-card-item-icon fade-in-left' /> */}
               <p className='quiz-card-item-text'>Editor</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />
             </div>
           </Link>
-
           <div className='quiz-card-item '>
-            <GoChecklist className='quiz-card-item-icon' />
+            <FiArrowRightCircle className='quiz-card-item-icon' />
             <p>Solution</p>
           </div>
           <div className='quiz-card-item'>
-            <AiOutlineTable className='quiz-card-item-icon' />
-            <p>Score</p>
+            <FiArrowRightCircle className='quiz-card-item-icon' />
+            <p>Student</p>
           </div>
         </div>
       ) : (

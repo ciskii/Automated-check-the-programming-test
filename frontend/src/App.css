@@ -13,7 +13,7 @@
   --color-editor-header: #e45649;
   --color-editor-link: #a626a4;
 
-  --color-dashboard-line: #e1e1e1;
+  --color-dashboard-border: #e1e1e1;
   --color-dashboard-font: rgb(55, 53, 47);
   --height-quiz: calc(100vh - (52px + 88px));
 }

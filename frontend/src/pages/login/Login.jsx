@@ -1,22 +1,44 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+// import { signup, login } from "features/auth/authSlice";
+import { signup, login } from "features/auth/authSlice";
+
 import "./login.css";
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const page = props.login == true ? "Log in" : "Sign up";
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("email", email);
+    console.log("password", password);
+
+    await dispatch(login({ email, password }));
+  };
+
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true });
+    }
+  }, [user, dispatch]);
 
   return (
     <div className='login'>
       <div className='login-container'>
         <h1 className='login-header'>{page}</h1>
-        <div className='login-alt'>
+        {/* <div className='login-alt'>
           <div className='login-alt-item'>
             <FcGoogle className='login-alt-item-logo' />
             Continue with Google
@@ -25,9 +47,9 @@ const Login = (props) => {
             <FaGithub className='login-alt-item-logo' />
             Continue with Github
           </div>
-        </div>
+        </div> */}
       </div>
-      <form className='login-form' onSubmit={() => handleSubmit} method='POST'>
+      <form className='login-form' onSubmit={handleSubmit} method='POST'>
         <label name='email' className='login-form-label'>
           Email
         </label>

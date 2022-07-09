@@ -6,38 +6,8 @@ const User = require("../models/user");
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-// const loginUser = asyncHandler(async (req, res) => {
-//   const { email, password } = req.body;
 
-//   if (!email || !password) {
-//     throw new Error("Please add all fields");
-//   }
-
-//   const user = await User.findOne({ email: email });
-
-//   if (!user) {
-//     throw new Error("Email doesn't exist");
-//   }
-//   const validPassword = await bcrypt.compare(password, user.password);
-
-//   if (validPassword) {
-//     res.status(200).send("Login success");
-//   } else {
-//     res.status(401).send("Login failed");
-//   }
-// });
-
-const loginUser = passport.authenticate("local", {
-  successRedirect: "/login/yeah",
-  failureRedirect: "/login",
-});
-
-const loginPage = (req, res) => {
-  res.status(200).send("Login Page");
-};
-const yeah = (req, res) => {
-  res.status(200).send("YEAH");
-};
+const loginUser = passport.authenticate("local");
 
 // @desc    Register a user
 // @route   POST /api/users/signup
@@ -99,6 +69,4 @@ module.exports = {
   signupUser,
   signupTeacher,
   loginUser,
-  loginPage,
-  yeah,
 };

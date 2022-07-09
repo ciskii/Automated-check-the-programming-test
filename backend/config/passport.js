@@ -22,7 +22,7 @@ const authUser = async (username, password, done) => {
       const isValid = await bcrypt.compare(password, user.password);
 
       if (isValid) {
-        console.log("authUser: ", user);
+        // console.log("authUser: ", user);
         return done(null, user);
       } else {
         return done(null, false);

@@ -1,4 +1,4 @@
-module.exports.isAuth = (req, res, next) => {
+const isAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
@@ -8,7 +8,7 @@ module.exports.isAuth = (req, res, next) => {
   }
 };
 
-module.exports.isTeacher = (req, res, next) => {
+const isTeacher = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role === "teacher") {
     next();
   } else {
@@ -18,7 +18,7 @@ module.exports.isTeacher = (req, res, next) => {
   }
 };
 
-module.exports.isStudent = (req, res, next) => {
+const isStudent = (req, res, next) => {
   if (req.isAuthenticated() && req.user.role === "student") {
     next();
   } else {
@@ -26,4 +26,10 @@ module.exports.isStudent = (req, res, next) => {
       msg: "You are not authorized to view this resource because you are not a student.",
     });
   }
+};
+
+module.exports = {
+  isAuth,
+  isTeacher,
+  isStudent,
 };

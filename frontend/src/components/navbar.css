@@ -34,7 +34,6 @@
   position: absolute;
   right: 0px;
   margin-top: 10px;
-  padding: 10px;
   width: 200px;
   height: auto;
   border-radius: 3px;
@@ -48,8 +47,8 @@
 .nav-dd-ctn-link {
   display: flex;
   flex-direction: row;
+  align-items: center;
   cursor: pointer;
-  margin-top: 5px;
 }
 
 .nav-dd-ctn-link:hover {
@@ -59,10 +58,21 @@
 .nav-dd-ctn-name {
   font-size: 1.5rem;
   border-bottom: 1px solid black;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   margin-bottom: 10px;
+  width: auto;
 }
 
-.nav-dd-ctn-group {
+/* .nav-dd-ctn-group {
   margin-top: 10px;
+} */
+
+.nav-dd-ctn-link-btn {
+  margin-right: 5px;
+}
+
+.nav-dd-ctn-group div,
+p {
+  padding: 5px 10px;
 }

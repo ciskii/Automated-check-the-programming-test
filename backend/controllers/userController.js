@@ -8,8 +8,14 @@ const User = require("../models/user");
 // @access  Public
 const loginUser = passport.authenticate("local");
 
-const logoutUser = (req, res) => {
-  req.logout();
+const logoutUser = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+  res.clearCookie("connect.sid");
+  res.json({ msg: "You are logged out" });
 };
 
 // @desc    Register a user
@@ -62,6 +68,11 @@ const signupTeacher = asyncHandler(async (req, res) => {
   );
 });
 
+const getMe = (req, res) => {
+  console.log("req.user", req.user);
+  res.json(req.user);
+};
+
 // @desc    Hash password function
 const hash = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -73,4 +84,5 @@ module.exports = {
   logoutUser,
   signupUser,
   signupTeacher,
+  getMe,
 };

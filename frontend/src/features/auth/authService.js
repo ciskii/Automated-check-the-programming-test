@@ -9,11 +9,27 @@ const login = async (user) => {
       password: user.password,
     },
     {
-      withCredentials: true, // Now this is was the missing piece in the client side
+      withCredentials: true,
     }
   );
   localStorage.setItem("loginStatus", JSON.stringify(true));
-  console.log("res", res);
+  return res.data;
+};
+
+const logout = async () => {
+  console.log("logout dispatch");
+  // const res = await axios.post(api + "logout", {
+  //   withCredentials: true,
+  // });
+
+  const res = await axios({
+    method: "post",
+    url: api + "logout",
+    withCredentials: true,
+  });
+
+  localStorage.removeItem("loginStatus");
+  console.log("res.data", res.data);
   return res.data;
 };
 
@@ -41,10 +57,19 @@ const isLoggedIn = async () => {
   }
 };
 
+const getMe = async () => {
+  const res = await await axios.get(api + "getMe", {
+    withCredentials: true,
+  });
+  console.log("res.data", res.data);
+};
+
 const authService = {
   login,
   signup,
   isLoggedIn,
+  logout,
+  getMe,
 };
 
 export default authService;

@@ -5,6 +5,7 @@ const {
   logoutUser,
   signupUser,
   signupTeacher,
+  getMe,
 } = require("../controllers/userController");
 
 const {
@@ -24,7 +25,7 @@ router.post("/login", loginUser, (req, res) => {
   }
 });
 
-router.post("/logout", logoutUser);
+router.post("/logout", isAuth, logoutUser);
 
 router.post("/isLoggedIn", isAuth, (req, res) => {
   res.status(200).json({ msg: "You are logged in" });
@@ -32,5 +33,7 @@ router.post("/isLoggedIn", isAuth, (req, res) => {
 
 router.post("/signupTeacher", signupTeacher);
 router.post("/signup", signupUser);
+
+router.get("/getMe", isAuth, getMe);
 
 module.exports = router;

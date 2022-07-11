@@ -25,7 +25,15 @@ export const isLoggedIn = createAsyncThunk("auth/isLoggedIn", async (user) => {
   return response;
 });
 
-// const logout = () => {};
+export const logout = createAsyncThunk("auth/logout", async (user) => {
+  const response = await authService.logout();
+  return response;
+});
+
+export const getMe = createAsyncThunk("auth/getMe", async (user) => {
+  const response = await authService.getMe();
+  return response;
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -68,12 +76,25 @@ const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(getMe.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getMe.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(getMe.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(isLoggedIn.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.user = null;
       });
-    // .addCase(logout.fulfilled, (state, action) => {
-    //   state.user = null;
-    // });
   },
 });
 

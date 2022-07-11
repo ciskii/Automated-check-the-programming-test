@@ -6,8 +6,11 @@ const User = require("../models/user");
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-
 const loginUser = passport.authenticate("local");
+
+const logoutUser = (req, res) => {
+  req.logout();
+};
 
 // @desc    Register a user
 // @route   POST /api/users/signup
@@ -66,7 +69,8 @@ const hash = async (password) => {
 };
 
 module.exports = {
+  loginUser,
+  logoutUser,
   signupUser,
   signupTeacher,
-  loginUser,
 };

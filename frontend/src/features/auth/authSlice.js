@@ -6,6 +6,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isLoggedIn: false,
   message: "",
 };
 
@@ -16,6 +17,11 @@ export const login = createAsyncThunk("auth/login", async (user) => {
 
 export const signup = createAsyncThunk("auth/signup", async (user) => {
   const response = await authService.signup(user);
+  return response;
+});
+
+export const isLoggedIn = createAsyncThunk("auth/isLoggedIn", async (user) => {
+  const response = await authService.isLoggedIn();
   return response;
 });
 
@@ -30,6 +36,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
+      state.isLoggedIn = false;
       state.message = "";
     },
   },
@@ -60,6 +67,9 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(isLoggedIn.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload;
       });
     // .addCase(logout.fulfilled, (state, action) => {
     //   state.user = null;

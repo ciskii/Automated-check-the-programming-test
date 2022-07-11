@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-// import { signup, login } from "features/auth/authSlice";
 import { signup, login } from "features/auth/authSlice";
 
 import "./login.css";
@@ -12,6 +10,7 @@ import "./login.css";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,13 +19,9 @@ const Login = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("email", email);
-    console.log("password", password);
-
-    await dispatch(login({ email, password }));
+    const handleSubmit = await dispatch(login({ email, password }));
+    console.log("handleSubmit", handleSubmit);
   };
-
-  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (user) {

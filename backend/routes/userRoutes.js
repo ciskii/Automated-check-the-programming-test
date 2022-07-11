@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
   loginUser,
+  logoutUser,
   signupUser,
   signupTeacher,
 } = require("../controllers/userController");
@@ -23,13 +24,10 @@ router.post("/login", loginUser, (req, res) => {
   }
 });
 
-router.get("/loginFailed", (req, res) => {
-  res.status(401).send("Login Failed");
-});
+router.post("/logout", logoutUser);
 
-router.get("/logout", (req, res) => {
-  req.logout();
-  res.status(200).send("Logout");
+router.post("/isLoggedIn", isAuth, (req, res) => {
+  res.status(200).json({ msg: "You are logged in" });
 });
 
 router.post("/signupTeacher", signupTeacher);

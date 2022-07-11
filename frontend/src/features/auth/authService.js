@@ -1,5 +1,4 @@
 const axios = require("axios");
-
 const api = "http://localhost:5000/api/users/";
 
 const login = async (user) => {
@@ -13,13 +12,9 @@ const login = async (user) => {
       withCredentials: true, // Now this is was the missing piece in the client side
     }
   );
-
-  if (res.data) {
-    console.log("res.data", res.data);
-    return res.data;
-  } else {
-    console.log("res.data", res.data);
-  }
+  localStorage.setItem("loginStatus", JSON.stringify(true));
+  console.log("res", res);
+  return res.data;
 };
 
 const signup = async (user) => {
@@ -35,9 +30,21 @@ const signup = async (user) => {
   }
 };
 
+const isLoggedIn = async () => {
+  const res = await axios.get(api + "isLoggedIn");
+
+  console.log("authService: res.status", res.status);
+  if (res.status === "200") {
+    return true;
+  } else if (res.status === "401") {
+    return false;
+  }
+};
+
 const authService = {
   login,
   signup,
+  isLoggedIn,
 };
 
 export default authService;

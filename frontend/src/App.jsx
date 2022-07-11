@@ -1,49 +1,49 @@
-import React from "react";
-import Quiz from "pages/quiz/Quiz";
-import "./app.css";
-import Navbar from "components/Navbar";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
   Navigate,
   useLocation,
 } from "react-router-dom";
+
 import Dashboard from "pages/dashboard/Dashboard";
 import Login from "pages/login/Login";
-import { useSelector } from "react-redux";
+import Quiz from "pages/quiz/Quiz";
+import Navbar from "components/Navbar";
+import "./app.css";
+import { isLoggedIn } from "features/auth/authSlice";
+
+const axios = require("axios");
+const api = "http://localhost:5000/api/users/";
+
+const RequireAuth = (props) => {
+  const navigate = useNavigate();
+  let location = useLocation();
+  const loginStatus = JSON.parse(localStorage.getItem("loginStatus"));
+  if (!loginStatus) {
+    return <Navigate to='/login' replace={true} />;
+  } else {
+    return props.children;
+  }
+};
 
 const App = () => {
-  const user = useSelector((state) => state.auth.user);
-
-  const RequireAuth = (props) => {
-    // let auth = useAuth();
-    let location = useLocation();
-
-    if (!user) {
-      return <Navigate to='/login' replace />;
-    } else {
-      return props.children;
-    }
-  };
-  console.log("App {user}: ", user);
   return (
     <Router>
       <div className='app'>
-        {/* <Navbar /> */}
         <Routes>
-          {/* <Route exact path='/'>
-            <>{user ? <Navigate to='/login' /> : <Dashboard />}</>
-          </Route> */}
           <Route
             path='/'
             element={
               <RequireAuth>
+                <Navbar />
                 <Dashboard />
               </RequireAuth>
             }
           />
-          {/* <Route path='/' element={<Dashboard />}></Route> */}
           <Route path='/quiz' element={<Quiz />}></Route>
           <Route path='/login' element={<Login login={true} />}></Route>
           <Route path='/signup' element={<Login login={false} />}></Route>

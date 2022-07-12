@@ -20,17 +20,15 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(signup({ email, password }));
-    console.log("isSuccess", isSuccess);
-    if (isSuccess) {
-      console.log("calling login");
+    const res = dispatch(signup({ email, password })).unwrap();
+
+    // *call login api after signup
+    res.then((result) => {
       dispatch(login({ email, password }));
-    }
+    });
   };
 
   useEffect(() => {
-    console.log("user", user);
-    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn || user) {
       navigate("/");
     }

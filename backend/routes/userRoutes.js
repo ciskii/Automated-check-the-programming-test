@@ -1,4 +1,5 @@
 const express = require("express");
+const clientURL = "http://localhost:3000/";
 
 const {
   loginUser,
@@ -22,17 +23,17 @@ router.post("/login", loginUser, (req, res) => {
   } else {
     const user = req.user;
     res.json({ email: user.email });
+    // res.redirect(clientURL);
   }
 });
-
 router.post("/logout", isAuth, logoutUser);
 
 router.post("/isLoggedIn", isAuth, (req, res) => {
   res.status(200).json({ msg: "You are logged in" });
 });
 
-router.post("/signupTeacher", signupTeacher);
 router.post("/signup", signupUser);
+router.post("/signupTeacher", signupTeacher);
 
 router.get("/getMe", isAuth, getMe);
 

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   user: null,
@@ -12,6 +13,7 @@ const initialState = {
 
 export const login = createAsyncThunk("auth/login", async (user) => {
   const response = await authService.login(user);
+
   return response;
 });
 
@@ -56,7 +58,7 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        // state.user = action.payload;
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -68,7 +70,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
+        state.isLoggedIn = true;
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
@@ -92,7 +94,7 @@ const authSlice = createSlice({
       .addCase(isLoggedIn.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.user = null;
       });
   },

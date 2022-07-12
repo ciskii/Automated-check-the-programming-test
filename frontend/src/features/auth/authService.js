@@ -2,26 +2,15 @@ const axios = require("axios");
 const api = "http://localhost:5000/api/users/";
 
 const login = async (user) => {
-  const res = await axios.post(
-    api + "login",
-    {
-      email: user.email,
-      password: user.password,
-    },
-    {
-      withCredentials: true,
-    }
-  );
+  const res = await axios.post(api + "login", {
+    email: user.email,
+    password: user.password,
+  });
   localStorage.setItem("loginStatus", JSON.stringify(true));
   return res.data;
 };
 
 const logout = async () => {
-  console.log("logout dispatch");
-  // const res = await axios.post(api + "logout", {
-  //   withCredentials: true,
-  // });
-
   const res = await axios({
     method: "post",
     url: api + "logout",
@@ -29,7 +18,6 @@ const logout = async () => {
   });
 
   localStorage.removeItem("loginStatus");
-  console.log("res.data", res.data);
   return res.data;
 };
 
@@ -38,12 +26,8 @@ const signup = async (user) => {
     email: user.email,
     password: user.password,
   });
-
-  if (res.data) {
-    console.log("res.data", res.data);
-  } else {
-    console.log("res.data", res.data);
-  }
+  console.log("res.data", res.data);
+  return res.data;
 };
 
 const isLoggedIn = async () => {

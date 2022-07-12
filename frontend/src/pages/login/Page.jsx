@@ -7,32 +7,34 @@ import { signup, login } from "features/auth/authSlice";
 
 import "./page.css";
 
-const Login = () => {
+const Page = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, isSuccess, isLoggedIn, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isSuccess, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const page = "Log in";
+  const page = props.page === "login" ? "Log in" : "Sign up";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const res = dispatch(login({ email, password })).unwrap();
-    // console.log("res", res);
-    dispatch(login({ email, password }));
-    //! if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
-    //! it has to be in useEffect
-    // navigate("/");
+    if (page === "Log in") {
+      const res = dispatch(login({ email, password })).unwrap();
+      console.log("res", res);
+      //! if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
+      //! it has to be in useEffect
+      // navigate("/");
+    } else if (page === "Sign up") {
+      dispatch(signup({ email, password }));
+      dispatch(login({ email, password }));
+    }
   };
 
   useEffect(() => {
-    if (isLoggedIn || user) {
+    if (isSuccess || user) {
       navigate("/");
     }
-  }, [user, isLoggedIn]);
+  }, [user, isSuccess]);
 
   return (
     <div className='login'>
@@ -68,12 +70,19 @@ const Login = () => {
           Submit
         </button>
       </form>
-      <div className='signup-link'>
-        <p>Don't have an account?</p>
-        <Link to='/signup'>Sign up</Link>
-      </div>
+      {page === "Log in" ? (
+        <div className='signup-link'>
+          <p>Don't have an account?</p>
+          <Link to='/signup'>Sign up</Link>
+        </div>
+      ) : (
+        <div className='signup-link'>
+          <p>Have an account?</p>
+          <Link to='/login'>Log in</Link>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Login;
+export default Page;

@@ -3,36 +3,38 @@ import { useSelector, useDispatch } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import { signup, login } from "features/auth/authSlice";
+import { signup, login, isLoggedIn } from "features/auth/authSlice";
 
 import "./page.css";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, isSuccess, isLoggedIn, isLoading } = useSelector(
+  const { user, isSuccess, isLoading, isLoggedIn } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const page = "Log in";
+  const page = "Sign up";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const res = dispatch(login({ email, password })).unwrap();
-    // console.log("res", res);
-    dispatch(login({ email, password }));
-    //! if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
-    //! it has to be in useEffect
-    // navigate("/");
+    dispatch(signup({ email, password }));
+    console.log("isSuccess", isSuccess);
+    if (isSuccess) {
+      console.log("calling login");
+      dispatch(login({ email, password }));
+    }
   };
 
   useEffect(() => {
+    console.log("user", user);
+    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn || user) {
       navigate("/");
     }
-  }, [user, isLoggedIn]);
+  }, [user, isLoggedIn, dispatch]);
 
   return (
     <div className='login'>
@@ -69,11 +71,11 @@ const Login = () => {
         </button>
       </form>
       <div className='signup-link'>
-        <p>Don't have an account?</p>
-        <Link to='/signup'>Sign up</Link>
+        <p>Have an account?</p>
+        <Link to='/login'>Log in</Link>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Signup;

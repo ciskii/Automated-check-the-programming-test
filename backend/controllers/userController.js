@@ -14,7 +14,6 @@ const logoutUser = (req, res, next) => {
       return next(err);
     }
   });
-  res.clearCookie("connect.sid");
   res.json({ msg: "You are logged out" });
 };
 
@@ -39,7 +38,7 @@ const signupUser = asyncHandler(async (req, res) => {
 
   await User.create({ email: email, password: hashPassword }, (err, user) => {
     if (err) throw new Error("Cannot create new user");
-    res.status(200).send("Create user success");
+    res.json({ email: user.email });
   });
 });
 

@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import "./navbar.css";
-import { useDispatch } from "react-redux";
-import { logout, getMe } from "features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, getMe, reset } from "features/auth/authSlice";
 
 const Navbar = () => {
   const [isDropDown, setIsDropDown] = useState(false);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("loginStatus");
     dispatch(logout());
+    dispatch(reset());
     navigate("/login", { replace: true });
   };
 
@@ -27,6 +29,7 @@ const Navbar = () => {
     const user = dispatch(getMe());
     console.log("user", user);
   };
+
   return (
     <div className='nav'>
       <Link to='/' className='nav-home'>

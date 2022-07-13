@@ -16,7 +16,9 @@ const authUser = async (username, password, done) => {
   User.findOne({ email: username })
     .then(async (user) => {
       if (!user) {
-        return done(null, false);
+        return done(null, false, {
+          message: "The email or password are incorrect.",
+        });
       }
 
       const isValid = await bcrypt.compare(password, user.password);
@@ -25,7 +27,9 @@ const authUser = async (username, password, done) => {
         // console.log("authUser: ", user);
         return done(null, user);
       } else {
-        return done(null, false);
+        return done(null, false, {
+          message: "The email or password are incorrect.",
+        });
       }
     })
     .catch((err) => {

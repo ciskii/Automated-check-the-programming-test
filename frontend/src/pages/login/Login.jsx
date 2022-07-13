@@ -10,7 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmail, setIsEmail] = useState(false);
-  const { user, isLoggedIn } = useSelector((state) => state.auth);
+  const { user, message, isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -80,6 +80,14 @@ const Login = () => {
           </button>
         )}
       </form>
+      {message ? (
+        <>
+          {console.log("message", message)}
+          <p>Error Message: {message}</p>
+        </>
+      ) : (
+        <></>
+      )}
       <div className='signup-link'>
         <p>Don't have an account?</p>
         <Link to='/signup'>Sign up</Link>

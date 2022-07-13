@@ -1,13 +1,37 @@
 const axios = require("axios");
 const api = "http://localhost:5000/api/users/";
 
-const login = async (user) => {
-  const res = await axios.post(api + "login", {
-    email: user.email,
-    password: user.password,
-  });
-  localStorage.setItem("loginStatus", JSON.stringify(true));
-  return res.data;
+const login = async (user, rejectWithValue) => {
+  // await axios
+  //   .post(api + "login", {
+  //     email: user.email,
+  //     password: user.password,
+  //   })
+  //   .then((res) => localStorage.setItem("loginStatus", JSON.stringify(true)))
+  //   .then((res) => {
+  //     console.log("login success");
+  //     return res.data;
+  //   })
+  //   .catch((err) => {
+  //     console.log("err", err);
+  //     console.log("err.data.message", err.response.data.message);
+
+  //     return err.response.data.message;
+  //   });
+
+  try {
+    await axios
+      .post(api + "login", {
+        email: user.email,
+        password: user.password,
+      })
+      .then((res) => {
+        localStorage.setItem("loginStatus", JSON.stringify(true));
+        return res.data;
+      });
+  } catch (error) {
+    return rejectWithValue(error.response.data.message);
+  }
 };
 
 const logout = async () => {

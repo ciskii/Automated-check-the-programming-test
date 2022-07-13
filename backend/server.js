@@ -8,6 +8,7 @@ const colors = require("colors");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
+const { errorHandler, logErrors } = require("./middleware/errorMiddleware");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -83,9 +84,8 @@ app.use((req, res, next) => {
 // app.use("/api/users", printData, require("./routes/userRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
-// app.use((err, req, res, next) => {
-//   // logic
-// })
+app.use(logErrors);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`.blue);

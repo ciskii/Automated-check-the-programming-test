@@ -19,7 +19,9 @@ const router = express.Router();
 
 router.post("/login", loginUser, (req, res) => {
   if (!req.user) {
-    res.status(401).send("Login Failed");
+    console.log("req.session.messages", req.session.messages);
+    res.status(400);
+    throw new Error("The user name or password are incorrect.");
   } else {
     const user = req.user;
     res.json({ email: user.email });

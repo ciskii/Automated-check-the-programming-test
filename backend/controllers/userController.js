@@ -6,7 +6,10 @@ const User = require("../models/user");
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-const loginUser = passport.authenticate("local");
+// const loginUser = passport.authenticate("local");
+const loginUser = passport.authenticate("local", {
+  failureMessage: "The email or password are incorrect.",
+});
 
 // @desc    Logout a user
 // @route   POST /api/users/logout

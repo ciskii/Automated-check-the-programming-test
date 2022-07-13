@@ -11,11 +11,14 @@ const initialState = {
   message: "",
 };
 
-export const login = createAsyncThunk("auth/login", async (user) => {
-  const response = await authService.login(user);
+export const login = createAsyncThunk(
+  "auth/login",
+  async (user, { rejectWithValue }) => {
+    const response = await authService.login(user, rejectWithValue);
 
-  return response;
-});
+    return response;
+  }
+);
 
 export const signup = createAsyncThunk("auth/signup", async (user) => {
   const response = await authService.signup(user);
@@ -74,6 +77,7 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        console.log("action", action);
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

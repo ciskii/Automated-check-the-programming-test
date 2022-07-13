@@ -83,6 +83,10 @@ app.use((req, res, next) => {
 // app.use("/api/users", printData, require("./routes/userRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
+// app.use((err, req, res, next) => {
+//   // logic
+// })
+
 app.listen(port, () => {
   console.log(`Server started on port ${port}`.blue);
 });

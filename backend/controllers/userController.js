@@ -8,6 +8,9 @@ const User = require("../models/user");
 // @access  Public
 const loginUser = passport.authenticate("local");
 
+// @desc    Logout a user
+// @route   POST /api/users/logout
+// @access  Private
 const logoutUser = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
@@ -17,7 +20,7 @@ const logoutUser = (req, res, next) => {
   res.json({ msg: "You are logged out" });
 };
 
-// @desc    Register a user
+// @desc    Register a student user
 // @route   POST /api/users/signup
 // @access  Public
 const signupUser = asyncHandler(async (req, res) => {
@@ -42,6 +45,9 @@ const signupUser = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Register a teacher user
+// @route   POST /api/users/signupTeacher
+// @access  Private
 const signupTeacher = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -67,6 +73,9 @@ const signupTeacher = asyncHandler(async (req, res) => {
   );
 });
 
+// @desc    Get user information
+// @route   POST /api/users/getMe
+// @access  Private
 const getMe = (req, res) => {
   console.log("req.user", req.user);
   res.json(req.user);

@@ -1,31 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { useNavigate, Link, Navigate } from "react-router-dom";
-import { signup, login } from "features/auth/authSlice";
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "features/auth/authSlice";
+import validator from "validator";
 
 import "./page.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, isSuccess, isLoggedIn, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  const [isEmail, setIsEmail] = useState(false);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const page = "Log in";
+  const page = "Log In";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const res = dispatch(login({ email, password })).unwrap();
-    // console.log("res", res);
-    dispatch(login({ email, password }));
-    //! if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
-    //! it has to be in useEffect
-    // navigate("/");
+    if (validator.isEmail(email)) {
+      dispatch(login({ email, password }));
+    }
+
+    // * if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
+    // * it has to be in useEffect
+    // * navigate("/"); <--------------
+  };
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+    if (validator.isEmail(email)) {
+      setIsEmail(true);
+    } else {
+      setIsEmail(false);
+    }
   };
 
   useEffect(() => {
@@ -48,9 +56,7 @@ const Login = () => {
           type='email'
           name='email'
           value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          onChange={onChangeEmail}
         />
         <label className='login-form-label' name='password'>
           Password
@@ -64,9 +70,15 @@ const Login = () => {
             setPassword(e.target.value);
           }}
         />
-        <button className='login-form-submit' type='submit'>
-          Submit
-        </button>
+        {isEmail ? (
+          <button className='login-form-submit' type='submit'>
+            Log In
+          </button>
+        ) : (
+          <button className='login-form-submit' disabled>
+            Log In
+          </button>
+        )}
       </form>
       <div className='signup-link'>
         <p>Don't have an account?</p>

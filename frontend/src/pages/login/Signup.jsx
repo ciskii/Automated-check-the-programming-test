@@ -1,31 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { useNavigate, Link, Navigate } from "react-router-dom";
-import { signup, login, isLoggedIn } from "features/auth/authSlice";
+import { useNavigate, Link } from "react-router-dom";
+import { signup, login } from "features/auth/authSlice";
+import validator from "validator";
 
 import "./page.css";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, isSuccess, isLoading, isLoggedIn } = useSelector(
-    (state) => state.auth
-  );
+  const [isEmail, setIsEmail] = useState(false);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const page = "Sign up";
+  const page = "Sign Up";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = dispatch(signup({ email, password })).unwrap();
 
     // *call login api after signup
-    res.then((result) => {
+    res.then(() => {
       dispatch(login({ email, password }));
     });
+  };
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+    if (validator.isEmail(email)) {
+      setIsEmail(true);
+    } else {
+      setIsEmail(false);
+    }
   };
 
   useEffect(() => {
@@ -48,9 +55,7 @@ const Signup = () => {
           type='email'
           name='email'
           value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          onChange={onChangeEmail}
         />
         <label className='login-form-label' name='password'>
           Password
@@ -64,9 +69,15 @@ const Signup = () => {
             setPassword(e.target.value);
           }}
         />
-        <button className='login-form-submit' type='submit'>
-          Submit
-        </button>
+        {isEmail ? (
+          <button className='login-form-submit' type='submit'>
+            Sign Up
+          </button>
+        ) : (
+          <button className='login-form-submit' disabled>
+            Sign Up
+          </button>
+        )}
       </form>
       <div className='signup-link'>
         <p>Have an account?</p>

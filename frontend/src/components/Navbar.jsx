@@ -18,7 +18,6 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("loginStatus");
     dispatch(logout());
     dispatch(reset());
     navigate("/login", { replace: true });

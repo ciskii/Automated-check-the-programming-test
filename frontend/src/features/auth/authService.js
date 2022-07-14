@@ -4,45 +4,60 @@ const api = "http://localhost:5000/api/users/";
 const login = async (user, rejectWithValue) => {
   try {
     await axios
-      .post(api + "login", {
-        email: user.email,
-        password: user.password,
-      })
-      .then((res) => {
-        localStorage.setItem("loginStatus", JSON.stringify(true));
-        return res.data;
-      });
-  } catch (error) {
-    console.log("error.response.data.message", error.response.data.message);
-    return rejectWithValue(error.response.data.message);
-  }
-};
-
-const logout = async () => {
-  const res = await axios({
-    method: "post",
-    url: api + "logout",
-    withCredentials: true,
-  });
-
-  localStorage.removeItem("loginStatus");
-  return res.data;
-};
-
-const signup = async (user, rejectWithValue) => {
-  try {
-    await axios
-      .post(api + "signup", {
-        email: user.email,
-        password: user.password,
-      })
+      .post(
+        api + "login",
+        {
+          email: user.email,
+          password: user.password,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         console.log("res", res);
         localStorage.setItem("loginStatus", JSON.stringify(true));
         return res.data;
       });
   } catch (error) {
-    console.log("error.response.data.message", error.response.data.message);
+    return rejectWithValue(error.response.data.message);
+  }
+};
+
+const logout = async () => {
+  // await axios
+  //   .post(api + "logout", {}, { withCredentials: true })
+  //   .then((res) => {
+  //     localStorage.setItem("loginStatus", JSON.stringify(true));
+  //     return res.data;
+  //   });
+  await axios({
+    method: "post",
+    url: api + "logout",
+    data: { name: "jay" },
+    withCredentials: true,
+  })
+    .then((res) => {
+      localStorage.removeItem("loginStatus");
+      return res.data;
+    })
+    .catch((err) => console.log("err", err));
+};
+
+const signup = async (user, rejectWithValue) => {
+  try {
+    await axios
+      .post(
+        api + "signup",
+        {
+          email: user.email,
+          password: user.password,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        localStorage.setItem("loginStatus", JSON.stringify(true));
+        return res.data;
+      });
+  } catch (error) {
     return rejectWithValue(error.response.data.message);
   }
 

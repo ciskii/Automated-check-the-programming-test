@@ -15,15 +15,12 @@ import Quiz from "pages/quiz/Quiz";
 import Navbar from "components/Navbar";
 import Signup from "pages/login/Signup";
 import "./app.css";
-import { isLoggedIn } from "features/auth/authSlice";
-
-const axios = require("axios");
-const api = "http://localhost:5000/api/users/";
 
 const RequireAuth = (props) => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  // if (!loginStatus || !isLoggedIn) {
   const loginStatus = JSON.parse(localStorage.getItem("loginStatus"));
-  if (!loginStatus || !isLoggedIn) {
+  if (!loginStatus) {
     return <Navigate to='/login' replace={true} />;
   } else {
     return props.children;

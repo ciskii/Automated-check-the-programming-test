@@ -11,7 +11,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [isEmail, setIsEmail] = useState(false); // if true -> email validated
   const [isPassword, setIsPassword] = useState(false); // if true -> password is strong enough
-  const [passErr, setPassErr] = useState(""); //password validation error message
+  const [passErr, setPassErr] = useState(""); // password validation error message
   const { user, isLoggedIn, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = dispatch(signup({ email, password })).unwrap();
+
     // call login api after signup
     res.then(() => {
       dispatch(login({ email, password }));

@@ -15,6 +15,7 @@ const loginUser = passport.authenticate("local", {
 // @route   POST /api/users/logout
 // @access  Private
 const logoutUser = (req, res, next) => {
+  console.log("logoutUser".yellow);
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -32,11 +33,8 @@ const signupUser = asyncHandler(async (req, res) => {
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
-
   const user = await User.find({ email: email });
-  console.log("email", email);
-  console.log("user", user);
-  console.log("user.length", user.length);
+
   if (user.length === 1) {
     console.log("yoo");
     res.status(400);

@@ -12,7 +12,7 @@ const Login = () => {
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setisPassword] = useState(false);
   const { user, message, isLoggedIn } = useSelector((state) => state.auth);
-  const emailField = useRef(null);
+  // const emailField = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const Login = () => {
 
     // * if put navigate function here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
     // * it has to be in useEffect
-    // * navigate("/"); <--------------
+    // * -----> navigate("/"); <-----
   };
 
   const onChangeEmail = (e) => {
@@ -48,8 +48,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log("isEmail", isEmail);
-    console.log("isPassword", isPassword);
     if (isLoggedIn || user) {
       navigate("/");
     }
@@ -57,7 +55,6 @@ const Login = () => {
 
   return (
     <div className='login'>
-      {console.log("isEmail", isEmail)}
       <div className='login-container'>
         <h1 className='login-header'>{page}</h1>
       </div>

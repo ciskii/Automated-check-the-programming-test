@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle, FaPlus } from "react-icons/fa";
-import Popup from "reactjs-popup";
 import { isLoggedIn } from "features/auth/authSlice";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
-import "./dashboard.css";
 import List from "./List";
+import "./dashboard.css";
 
 const Dashboard = () => {
   const courses = [
@@ -24,6 +25,19 @@ const Dashboard = () => {
   const [course, setCourse] = useState(courses);
   const [isPopUp, setIsPopUp] = useState(false);
   const [courseCard, setCourseCard] = useState("");
+  // const [isSignup, setIsSignup] = useState(false);
+  // const { isSuccess } = useSelector((state) => state.auth);
+
+  // const notify = () =>
+  //   toast.success("🦄 Wow so easy!", {
+  //     position: "top-right",
+  //     autoClose: 5000,
+  //     hideProgressBar: false,
+  //     closeOnClick: false,
+  //     pauseOnHover: false,
+  //     draggable: false,
+  //     progress: undefined,
+  //   });
 
   const addCourse = () => {
     setCourse([...course, "New101"]);

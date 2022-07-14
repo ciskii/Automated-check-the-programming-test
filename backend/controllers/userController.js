@@ -34,10 +34,13 @@ const signupUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.find({ email: email });
-
-  if (!user) {
-    console.log(user);
-    throw new Error("Email already used");
+  console.log("email", email);
+  console.log("user", user);
+  console.log("user.length", user.length);
+  if (user.length === 1) {
+    console.log("yoo");
+    res.status(400);
+    throw new Error("This email address is already being used.");
   }
 
   const hashPassword = await hash(password);

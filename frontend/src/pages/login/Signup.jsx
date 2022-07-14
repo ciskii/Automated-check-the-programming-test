@@ -9,8 +9,10 @@ import "./page.css";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isEmail, setIsEmail] = useState(false);
-  const { user, isLoggedIn } = useSelector((state) => state.auth);
+  const [isEmail, setIsEmail] = useState(false); // if true -> email validated
+  const [isPassword, setIsPassword] = useState(false); // if true -> password is strong enough
+  const [passErr, setPassErr] = useState(""); //password validation error message
+  const { user, isLoggedIn, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,8 +21,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = dispatch(signup({ email, password })).unwrap();
-
-    // *call login api after signup
+    // call login api after signup
     res.then(() => {
       dispatch(login({ email, password }));
     });
@@ -28,10 +29,20 @@ const Signup = () => {
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
-    if (validator.isEmail(email)) {
+    if (validator.isEmail(e.target.value)) {
       setIsEmail(true);
     } else {
       setIsEmail(false);
+    }
+  };
+
+  // todo add strong password validation
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length >= 8) {
+      setIsPassword(true);
+    } else {
+      setIsPassword(false);
     }
   };
 
@@ -65,11 +76,9 @@ const Signup = () => {
           type='password'
           name='password'
           value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
+          onChange={onChangePassword}
         />
-        {isEmail ? (
+        {isEmail && isPassword ? (
           <button className='login-form-submit' type='submit'>
             Sign Up
           </button>
@@ -79,6 +88,7 @@ const Signup = () => {
           </button>
         )}
       </form>
+      {message ? <p className='login-error'>{message}</p> : <></>}
       <div className='signup-link'>
         <p>Have an account?</p>
         <Link to='/login'>Log in</Link>

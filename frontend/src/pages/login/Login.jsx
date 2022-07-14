@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "features/auth/authSlice";
@@ -10,7 +10,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmail, setIsEmail] = useState(false);
+  const [isPassword, setisPassword] = useState(false);
   const { user, message, isLoggedIn } = useSelector((state) => state.auth);
+  const emailField = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,14 +31,25 @@ const Login = () => {
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
-    if (validator.isEmail(email)) {
+    if (validator.isEmail(e.target.value)) {
       setIsEmail(true);
     } else {
       setIsEmail(false);
     }
   };
 
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length >= 8) {
+      setisPassword(true);
+    } else {
+      setisPassword(false);
+    }
+  };
+
   useEffect(() => {
+    console.log("isEmail", isEmail);
+    console.log("isPassword", isPassword);
     if (isLoggedIn || user) {
       navigate("/");
     }
@@ -44,6 +57,7 @@ const Login = () => {
 
   return (
     <div className='login'>
+      {console.log("isEmail", isEmail)}
       <div className='login-container'>
         <h1 className='login-header'>{page}</h1>
       </div>
@@ -66,11 +80,9 @@ const Login = () => {
           type='password'
           name='password'
           value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
+          onChange={onChangePassword}
         />
-        {isEmail ? (
+        {isEmail && isPassword ? (
           <button className='login-form-submit' type='submit'>
             Log In
           </button>
@@ -80,14 +92,7 @@ const Login = () => {
           </button>
         )}
       </form>
-      {message ? (
-        <>
-          {console.log("message", message)}
-          <p>Error Message: {message}</p>
-        </>
-      ) : (
-        <></>
-      )}
+      {message ? <p className='login-error'>{message}</p> : <></>}
       <div className='signup-link'>
         <p>Don't have an account?</p>
         <Link to='/signup'>Sign up</Link>

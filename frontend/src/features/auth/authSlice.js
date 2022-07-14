@@ -20,10 +20,13 @@ export const login = createAsyncThunk(
   }
 );
 
-export const signup = createAsyncThunk("auth/signup", async (user) => {
-  const response = await authService.signup(user);
-  return response;
-});
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (user, { rejectWithValue }) => {
+    const response = await authService.signup(user, rejectWithValue);
+    return response;
+  }
+);
 
 export const isLoggedIn = createAsyncThunk("auth/isLoggedIn", async (user) => {
   const response = await authService.isLoggedIn();

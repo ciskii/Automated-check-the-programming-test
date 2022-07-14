@@ -1,48 +1,109 @@
-# Getting Started with Create React App and Redux
+# A demo of `react-markdown`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+`react-markdown` is a markdown component for React.
 
-## Available Scripts
+👉 Changes are re-rendered as you type.
 
-In the project directory, you can run:
+👈 Try writing some markdown on the left.
 
-### `npm start`
+## Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Follows [CommonMark](https://commonmark.org)
+- Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)
+- Renders actual React elements instead of using `dangerouslySetInnerHTML`
+- Lets you define your own components (to render `MyHeading` instead of `h1`)
+- Has a lot of plugins
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Table of contents
 
-### `npm test`
+Here is an example of a plugin in action
+([`remark-toc`](https://github.com/remarkjs/remark-toc)).
+This section is replaced by an actual table of contents.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Syntax highlighting
 
-### `npm run build`
+Here is an example of a plugin to highlight code:
+[`rehype-highlight`](https://github.com/rehypejs/rehype-highlight).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+import React from "react";
+import ReactDOM from "react-dom";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+ReactDOM.render(
+  <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+    {"# Your markdown here"}
+  </ReactMarkdown>,
+  document.querySelector("#content")
+);
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Pretty neat, eh?
 
-### `npm run eject`
+## GitHub flavored markdown (GFM)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+For GFM, you can _also_ use a plugin:
+[`remark-gfm`](https://github.com/remarkjs/react-markdown#use).
+It adds support for GitHub-specific extensions to the language:
+tables, strikethrough, tasklists, and literal URLs.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+These features **do not work by default**.
+👆 Use the toggle above to add the plugin.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+|    Feature | Support              |
+| ---------: | :------------------- |
+| CommonMark | 100%                 |
+|        GFM | 100% w/ `remark-gfm` |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+~~strikethrough~~
 
-## Learn More
+- [ ] task list
+- [x] checked item
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+https://example.com
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## HTML in markdown
 
-# Update passport js file
+⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can
+use [`rehype-raw`](https://github.com/rehypejs/rehype-raw).
+You should probably combine it with
+[`rehype-sanitize`](https://github.com/rehypejs/rehype-sanitize).
+
+<blockquote>
+  👆 Use the toggle above to add the plugin.
+</blockquote>
+
+## Components
+
+You can pass components to change things:
+
+```js
+import React from "react";
+import ReactDOM from "react-dom";
+import ReactMarkdown from "react-markdown";
+import MyFancyRule from "./components/my-fancy-rule.js";
+
+ReactDOM.render(
+  <ReactMarkdown
+    components={{
+      // Use h2s instead of h1s
+      h1: "h2",
+      // Use a component instead of hrs
+      hr: ({ node, ...props }) => <MyFancyRule {...props} />,
+    }}
+  >
+    # Your markdown here
+  </ReactMarkdown>,
+  document.querySelector("#content")
+);
+```
+
+## More info?
+
+Much more info is available in the
+[readme on GitHub](https://github.com/remarkjs/react-markdown)!
+
+---
+
+A component by [Espen Hovlandsdal](https://espen.codes/)

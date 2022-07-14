@@ -41,7 +41,15 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route path='/quiz' element={<Quiz />}></Route>
+          <Route
+            path='/quiz'
+            element={
+              <RequireAuth>
+                <Quiz />
+              </RequireAuth>
+            }
+          />
+          {/* <Route path='/quiz' element={<Quiz />}></Route> */}
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>

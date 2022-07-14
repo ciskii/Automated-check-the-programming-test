@@ -105,21 +105,12 @@ td {
 .quiz-editor {
   flex: 1;
   overflow: auto;
-  height: var(--height-quiz);
+  /* height: var(--height-quiz); */
+  height: auto;
+  font-size: 14px;
+  font-family: monospace !important;
 }
 
-.ͼ7 {
-  color: var(--color-editor-header);
-  text-decoration: none;
-  font-weight: normal;
-}
-
-.ͼ6 {
-  color: var(--color-link);
-  text-decoration: none;
-}
-
-.ͼc {
-  color: var(--color-editor-link);
-  text-decoration: underline;
+.cm-line span {
+  font-family: monospace;
 }

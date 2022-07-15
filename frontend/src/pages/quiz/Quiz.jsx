@@ -3,7 +3,7 @@ import { debounce } from "lodash";
 
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -15,6 +15,8 @@ import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
 
 import { myTheme, code } from "./theme";
 import "./quiz.css";
+import "github-markdown-css";
+// hljs = require("highlight.js/lib/common");
 
 const Quiz = () => {
   const [codeCur, setCodeCur] = useState(code);
@@ -22,7 +24,6 @@ const Quiz = () => {
 
   // * try to understand useCallback and useMemo
   const changeHandler = useCallback((value, viewUpdate) => {
-    console.log("value", value);
     setCodeCur(value);
   }, []);
 
@@ -45,14 +46,14 @@ const Quiz = () => {
           value={codeCur}
           extensions={[markdown({ base: markdownLanguage })]}
           onChange={debouncedChangeHandler}
-          height='100vh'
-          width='auto'
+          // height='max-content'
+          // width='auto'
           theme={myTheme}
           className='quiz-editor'
         />
 
         <ReactMarkdown
-          className='editor-show'
+          className='editor-show markdown-body'
           children={codeCur}
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
@@ -62,12 +63,13 @@ const Quiz = () => {
               return !inline && match ? (
                 <SyntaxHighlighter
                   children={String(children).replace(/\n$/, "")}
-                  style={atomOneLight}
                   language={match[1]}
+                  style={githubGist}
                   PreTag='div'
                   showLineNumbers={true}
                   wrapLines={true}
                   wrapLongLines={true}
+                  // useInlineStyles={false}
                   {...props}
                 />
               ) : (

@@ -136,19 +136,10 @@ You can pass components to change things:
 import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactMarkdown from 'react-markdown'
-import MyFancyRule from './components/my-fancy-rule.js'
+import rehypeHighlight from 'rehype-highlight'
 
 ReactDOM.render(
-  <ReactMarkdown
-    components={{
-      // Use h2s instead of h1s
-      h1: 'h2',
-      // Use a component instead of hrs
-      hr: ({node, ...props}) => <MyFancyRule {...props} />
-    }}
-  >
-    # Your markdown here
-  </ReactMarkdown>,
+  <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{'# Your markdown here'}</ReactMarkdown>,
   document.querySelector('#content')
 )
 \`\`\`

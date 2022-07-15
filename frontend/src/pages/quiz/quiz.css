@@ -31,7 +31,7 @@
 .editor-show {
   background-color: var(--color-border-muted);
   flex: 1;
-  padding: 2rem 1rem;
+  /* padding: 2rem 1rem; */
 
   height: var(--height-quiz);
   width: 50vw;
@@ -56,9 +56,9 @@
 
 .editor-show code {
   font-size: 85%;
-  padding: 0.2em 0.4em;
+  /* padding: 0.2em 0.4em; */
   border-radius: 3px;
-  background-color: var(--color-comment-background);
+  /* background-color: var(--color-comment-background); */
 }
 
 .editor-show p {
@@ -104,11 +104,13 @@ td {
 
 .quiz-editor {
   flex: 1;
-  overflow: auto;
+  /* overflow: auto; */
+  width: 50vw;
+  /* word-wrap: break-word; */
+
   /* height: var(--height-quiz); */
-  height: auto;
+  /* height: auto; */
   font-size: 14px;
-  font-family: monospace !important;
 }
 
 .cm-line span {

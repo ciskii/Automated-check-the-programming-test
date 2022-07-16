@@ -1,7 +1,7 @@
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
+const { User } = require("../models");
 
 // @desc    Authenticate a user
 // @route   POST /api/users/login
@@ -27,24 +27,30 @@ const logoutUser = (req, res, next) => {
 // @desc    Register a student user
 // @route   POST /api/users/signup
 // @access  Public
-const signupUser = asyncHandler(async (req, res) => {
+const signUpStudent = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("email, password", email, password);
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
-  const user = await User.find({ email: email });
+
+  const user = await User.findAll({
+    where: {
+      email: email,
+    },
+  });
 
   if (user.length === 1) {
-    console.log("yoo");
+    console.log("This email address is already being used.");
     res.status(400);
     throw new Error("This email address is already being used.");
   }
 
   const hashPassword = await hash(password);
 
-  await User.create({ email: email, password: hashPassword }, (err, user) => {
-    if (err) throw new Error("Cannot create new user");
+  await User.create({ email: email, password: hashPassword }).then((user) => {
+    console.log("Create student user success:", user);
     res.json({ email: user.email });
   });
 });
@@ -59,22 +65,28 @@ const signupTeacher = asyncHandler(async (req, res) => {
     throw new Error("Please add all fields");
   }
 
-  const user = await User.find({ email: email });
+  const user = await User.findAll({
+    where: {
+      email: email,
+    },
+  });
 
-  if (!user) {
-    console.log(user);
-    throw new Error("Email already used");
+  if (user.length === 1) {
+    console.log("This email address is already being used.");
+    res.status(400);
+    throw new Error("This email address is already being used.");
   }
 
   const hashPassword = await hash(password);
 
-  await User.create(
-    { email: email, password: hashPassword, role: "teacher" },
-    (err, user) => {
-      if (err) throw new Error("Cannot create new user");
-      res.status(200).send("Create user success");
-    }
-  );
+  await User.create({
+    email: email,
+    password: hashPassword,
+    role: "teacher",
+  }).then((user) => {
+    console.log("Create teacher user success:", user);
+    res.json({ email: user.email });
+  });
 });
 
 // @desc    Get user information
@@ -94,7 +106,7 @@ const hash = async (password) => {
 module.exports = {
   loginUser,
   logoutUser,
-  signupUser,
+  signUpStudent,
   signupTeacher,
   getMe,
 };

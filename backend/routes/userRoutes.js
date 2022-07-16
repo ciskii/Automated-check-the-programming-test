@@ -1,10 +1,11 @@
 const express = require("express");
 const clientURL = "http://localhost:3000/";
+const { User } = require("../models");
 
 const {
   loginUser,
   logoutUser,
-  signupUser,
+  signUpStudent,
   signupTeacher,
   getMe,
 } = require("../controllers/userController");
@@ -34,9 +35,18 @@ router.post("/isLoggedIn", isAuth, (req, res) => {
   res.status(200).json({ msg: "You are logged in" });
 });
 
-router.post("/signup", signupUser);
+router.post("/signup", signUpStudent);
 router.post("/signupTeacher", signupTeacher);
 
 router.get("/getMe", isAuth, getMe);
+
+router.get("/insert", (req, res) => {
+  User.create({ email: "tler@gmail.com", password: "12345678" })
+    .then((user) => {
+      console.log("user", user);
+      res.send(user);
+    })
+    .catch((err) => console.log("err", err));
+});
 
 module.exports = router;

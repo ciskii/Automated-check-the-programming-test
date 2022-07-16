@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "root",
+    "password": "Jjayz8216",
+    "database": "cn404_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": "Jjayz8216",
+    "database": "cn404_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "Jjayz8216",
+    "database": "cn404_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

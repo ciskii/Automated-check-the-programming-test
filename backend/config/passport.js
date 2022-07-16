@@ -1,7 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { User } = require("../models");
 
 const customFields = {
   usernameField: "email",
@@ -13,7 +13,7 @@ const authUser = async (username, password, done) => {
     throw new Error("Please add all fields");
   }
 
-  User.findOne({ email: username })
+  User.findOne({ where: { email: username } })
     .then(async (user) => {
       if (!user) {
         return done(null, false, {
@@ -51,7 +51,7 @@ passport.deserializeUser((user, done) => {
   console.log("---------> Deserialize userId");
   console.log(user);
 
-  User.findById(user)
+  User.findByPk(user)
     .then((user) => {
       done(null, user);
     })

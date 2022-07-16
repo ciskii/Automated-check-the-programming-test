@@ -10,8 +10,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Course.associate = (models) => {
     Course.belongsTo(models.Teacher);
-    Course.hasMany(models.Quiz);
-    Course.belongsToMany(models.Student, { through: "Enrollment" });
+    Course.hasMany(models.Quiz, {
+      onDelete: "CASCADE",
+    });
+    Course.belongsToMany(models.Student, { through: models.Enrollment });
   };
 
   return Course;

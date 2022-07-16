@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
 
   Question.associate = (models) => {
     Question.belongsTo(models.Quiz);
-    Question.hasMany(models.Answer);
+    Question.hasMany(models.Answer, {
+      onDelete: "CASCADE",
+    });
   };
 
   return Question;

@@ -25,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Teacher.associate = (models) => {
-    Teacher.hasMany(models.Course);
+    Teacher.hasMany(models.Course, {
+      onDelete: "CASCADE",
+    });
   };
 
   return Teacher;

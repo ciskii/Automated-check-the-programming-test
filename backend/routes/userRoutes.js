@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.post("/login", loginUser, (req, res) => {
   if (!req.user) {
-    console.log("req.session.messages", req.session.messages);
+    // console.log("req.session.messages", req.session.messages);
     res.status(400);
     throw new Error("The user name or password are incorrect.");
   } else {

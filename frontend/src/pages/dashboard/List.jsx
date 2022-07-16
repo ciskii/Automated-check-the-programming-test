@@ -38,7 +38,8 @@ const List = (props) => {
       */}
 
       {item === curHover ? (
-        <div className='quiz-card text-focus-in'>
+        <div className='quiz-card'>
+          {/* <div className='quiz-card text-focus-in'> */}
           <Link to='/quiz'>
             <div className='quiz-card-item '>
               <p className='quiz-card-item-text'>Editor</p>

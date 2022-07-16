@@ -3,14 +3,15 @@
 .editor {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100vh;
+  /* height: 100%; */
 }
 
 .editor-title {
   display: flex;
   flex-direction: column;
   padding: 15px 20px;
-  border-bottom: 1px solid var(--color-border-muted);
+  border-bottom: 1px solid #eeeeee;
 }
 
 .editor--title-label {
@@ -112,6 +113,8 @@ td {
   /* max-height: max-content; */
   overflow: auto;
   width: 50vw;
+  border-right: 1px solid #eeeeee;
+
   /* word-wrap: break-word; */
 
   /* height: var(--height-quiz); */

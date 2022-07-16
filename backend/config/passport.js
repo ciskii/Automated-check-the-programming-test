@@ -12,10 +12,12 @@ const authUser = async (username, password, done) => {
   if (!username || !password) {
     throw new Error("Please add all fields");
   }
+  console.log("username", username);
 
   User.findOne({ where: { email: username } })
     .then(async (user) => {
       if (!user) {
+        console.log("user", user);
         return done(null, false, {
           message: "The email or password are incorrect.",
         });
@@ -31,6 +33,22 @@ const authUser = async (username, password, done) => {
           message: "The email or password are incorrect.",
         });
       }
+      // if (user) {
+      //   const isValid = await bcrypt.compare(password, user.password);
+
+      //   if (isValid) {
+      //     // console.log("authUser: ", user);
+      //     return done(null, user);
+      //   } else {
+      //     return done(null, false, {
+      //       message: "The email or password are incorrect.",
+      //     });
+      //   }
+      // } else {
+      //   return done(null, false, {
+      //     message: "The email or password are incorrect.",
+      //   });
+      // }
     })
     .catch((err) => {
       done(err);

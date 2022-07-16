@@ -11,7 +11,6 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import "katex/dist/katex.min.css";
 
 import CodeMirror from "@uiw/react-codemirror";
-import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
 
 import { myTheme, code } from "./theme";
 import "./quiz.css";
@@ -46,8 +45,7 @@ const Quiz = () => {
           value={codeCur}
           extensions={[markdown({ base: markdownLanguage })]}
           onChange={debouncedChangeHandler}
-          // height='max-content'
-          // width='auto'
+          height='100%'
           theme={myTheme}
           className='quiz-editor'
         />

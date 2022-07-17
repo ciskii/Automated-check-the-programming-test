@@ -2,22 +2,27 @@ const express = require("express");
 const router = express.Router();
 
 const {
+  isAuth,
+  isTeacher,
+  isStudent,
+} = require("../middleware/authMiddleware");
+
+const {
   createAnswer,
+  getAllAnswers,
   getAnswer,
   updateAnswer,
   deleteAnswer,
 } = require("../controllers/answerController");
 
-// @access Teacher, Student
-router.get("/get", getAnswer);
+router.get("/getAll/:QuestionId", isAuth, getAllAnswers);
 
-// @access Teacher
-router.post("/create", createAnswer);
+router.get("/get/:id", isAuth, getAnswer);
 
-// @access Teacher
-router.put("/update", updateAnswer);
+router.post("/create/:QuestionId", isAuth, createAnswer);
 
-// @access Teacher
-router.delete("/delete", deleteAnswer);
+router.put("/update/:id", isAuth, updateAnswer);
+
+router.delete("/delete/:id", isAuth, deleteAnswer);
 
 module.exports = router;

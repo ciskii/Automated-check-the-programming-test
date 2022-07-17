@@ -11,7 +11,7 @@ const createCourse = (req, res) => {
     .catch((err) => console.log("err", err));
 };
 
-const getCourses = asyncHandler(async (req, res) => {
+const getAllCourses = asyncHandler(async (req, res) => {
   const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
   if (courses) {
     res.json({ courses: courses });
@@ -26,7 +26,7 @@ const getCourse = asyncHandler(async (req, res) => {
   if (course) {
     res.json({ course: course });
   } else {
-    throw new Error("Course not found.");
+    throw new Error("Course was not found.");
   }
 });
 
@@ -61,7 +61,7 @@ const deleteCourse = (req, res) => {
 
 module.exports = {
   createCourse,
-  getCourses,
+  getAllCourses,
   getCourse,
   updateCourse,
   deleteCourse,

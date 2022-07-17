@@ -9,13 +9,17 @@ const {
 
 const {
   createCourse,
-  getCourses,
+  getAllCourses,
+  getCourse,
   updateCourse,
   deleteCourse,
 } = require("../controllers/courseController");
 
 // @access Teacher, Student
-router.get("/get", isAuth, getCourses);
+router.get("/getAll", isAuth, getAllCourses);
+
+// @access Teacher, Student
+router.get("/get/:id", isAuth, getCourse);
 
 // @access Teacher
 router.post("/create", isTeacher, createCourse);

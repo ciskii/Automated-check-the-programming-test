@@ -28,7 +28,7 @@ const getQuiz = asyncHandler(async (req, res) => {
   if (quiz) {
     res.json({ quiz: quiz });
   } else {
-    throw new Error("Quiz was not found.");
+    throw new Error("This quiz was not found.");
   }
 });
 
@@ -39,7 +39,7 @@ const updateQuiz = (req, res) => {
 
   Quiz.update({ name: name }, { where: { id: id } })
     .then(() => {
-      res.json({ msg: "Quiz name has been updated." });
+      res.json({ msg: "This quiz name has been updated." });
     })
     .catch((err) => {
       throw new Error(err);
@@ -50,7 +50,7 @@ const deleteQuiz = (req, res) => {
   const { id } = req.params;
   Quiz.destroy({ where: { id: id } })
     .then(() => {
-      res.json({ msg: `Quiz has been deleted.` });
+      res.json({ msg: `This quiz has been deleted.` });
     })
     .catch((err) => {
       throw new Error(err);

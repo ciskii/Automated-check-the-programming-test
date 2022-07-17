@@ -26,7 +26,7 @@ const getCourse = asyncHandler(async (req, res) => {
   if (course) {
     res.json({ course: course });
   } else {
-    throw new Error("Course was not found.");
+    throw new Error("This course was not found.");
   }
 });
 
@@ -40,7 +40,7 @@ const updateCourse = (req, res) => {
   Course.update({ courseId: courseId, name: name }, { where: { id: id } })
     .then((course) => {
       console.log("course", course);
-      res.json({ msg: "Course has been updated." });
+      res.json({ msg: "This course has been updated." });
     })
     .catch((err) => {
       throw new Error(err);
@@ -52,7 +52,7 @@ const deleteCourse = (req, res) => {
   Course.destroy({ where: { id: id } })
     .then((course) => {
       console.log("course", course);
-      res.json({ msg: `Course has been deleted.` });
+      res.json({ msg: `This course has been deleted.` });
     })
     .catch((err) => {
       throw new Error(err);

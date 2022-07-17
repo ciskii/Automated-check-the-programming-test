@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Answer = sequelize.define("Answer", {
-    object: {
-      type: DataTypes.STRING,
+    answerObj: {
+      type: DataTypes.TEXT,
     },
     score: {
       type: DataTypes.FLOAT(5, 2),

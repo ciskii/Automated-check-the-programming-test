@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { isAuth, isTeacher } = require("../middleware/authMiddleware");
+
 const {
   createQuiz,
   getAllQuizzes,
@@ -10,18 +12,18 @@ const {
 } = require("../controllers/quizController");
 
 // @access Teacher, Student
-router.get("/getAll/:CourseId", getAllQuizzes);
+router.get("/getAll/:CourseId", isAuth, getAllQuizzes);
 
 // @access Teacher, Student
-router.get("/get/:id", getQuiz);
+router.get("/get/:id", isAuth, getQuiz);
 
 // @access Teacher
-router.post("/create/:CourseId", createQuiz);
+router.post("/create/:CourseId", isTeacher, createQuiz);
 
 // @access Teacher
-router.put("/update/:id", updateQuiz);
+router.put("/update/:id", isTeacher, updateQuiz);
 
 // @access Teacher
-router.delete("/delete/:id", deleteQuiz);
+router.delete("/delete/:id", isTeacher, deleteQuiz);
 
 module.exports = router;

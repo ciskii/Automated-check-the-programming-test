@@ -19,7 +19,7 @@ const isTeacher = (req, res, next) => {
 };
 
 const isStudent = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role === "student") {
+  if (req.isAuthenticated() && req.session.passport.user.role === "student") {
     next();
   } else {
     res.status(401).json({

@@ -62,6 +62,7 @@ app.use("/api/course", require("./routes/courseRoutes"));
 app.use("/api/quiz", require("./routes/quizRoutes"));
 app.use("/api/question", require("./routes/questionRoutes"));
 app.use("/api/answer", require("./routes/answerRoutes"));
+app.use("/api/enrollment", require("./routes/enrollmentRoutes"));
 
 app.use(logErrors);
 app.use(errorHandler);

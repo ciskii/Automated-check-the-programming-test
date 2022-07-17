@@ -9,8 +9,7 @@ const isAuth = (req, res, next) => {
 };
 
 const isTeacher = (req, res, next) => {
-  console.log("req.user", req.user);
-  if (req.isAuthenticated() && req.user.role === "teacher") {
+  if (req.isAuthenticated() && req.session.passport.user.role === "teacher") {
     next();
   } else {
     res.status(401).json({

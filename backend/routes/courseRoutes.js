@@ -9,22 +9,22 @@ const {
 
 const {
   createCourse,
-  getCourse,
+  getCourses,
   updateCourse,
   deleteCourse,
 } = require("../controllers/courseController");
 
 // @access Teacher, Student
-router.get("/get", getCourse);
+router.get("/get", isAuth, getCourses);
 
 // @access Teacher
 router.post("/create", isTeacher, createCourse);
 // router.post("/create", createCourse);
 
 // @access Teacher
-router.put("/update", updateCourse);
+router.put("/update/:id", isTeacher, updateCourse);
 
 // @access Teacher
-router.delete("/delete", deleteCourse);
+router.delete("/delete/:id", isTeacher, deleteCourse);
 
 module.exports = router;

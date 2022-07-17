@@ -68,27 +68,11 @@ passport.deserializeUser(async (user, done) => {
   if (role === "teacher") {
     const user = await Teacher.findByPk(id);
     if (user) {
-      // const userSession = {
-      //   id: user.id,
-      //   email: user.email,
-      //   fName: user.fName,
-      //   lName: user.lName,
-      //   role: user.role,
-      // };
-      // console.log("user", user);
       done(null, user);
     } else done(new Error("deserializeUser error"));
   } else if (role === "student") {
     const user = await Student.findByPk(id);
     if (user) {
-      // const userSession = {
-      //   id: user.id,
-      //   email: user.email,
-      //   fName: user.fName,
-      //   lName: user.lName,
-      //   role: user.role,
-      // };
-      // console.log("user", user);
       done(null, user);
     } else done(new Error("deserializeUser error"));
   }

@@ -61,34 +61,35 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
   // console.log("---------> Deserialize userId");
+  // console.log("user", user);
   const id = user.id;
   const role = user.role;
+
   if (role === "teacher") {
     const user = await Teacher.findByPk(id);
     if (user) {
+      // const userSession = {
+      //   id: user.id,
+      //   email: user.email,
+      //   fName: user.fName,
+      //   lName: user.lName,
+      //   role: user.role,
+      // };
+      // console.log("user", user);
       done(null, user);
     } else done(new Error("deserializeUser error"));
   } else if (role === "student") {
     const user = await Student.findByPk(id);
     if (user) {
+      // const userSession = {
+      //   id: user.id,
+      //   email: user.email,
+      //   fName: user.fName,
+      //   lName: user.lName,
+      //   role: user.role,
+      // };
+      // console.log("user", user);
       done(null, user);
     } else done(new Error("deserializeUser error"));
   }
-  // const findTeacher = async () => {
-  //   return await Teacher.findByPk(user);
-  // };
-  // const findStudent = async () => {
-  //   return await Student.findByPk(user);
-  // };
-
-  // const teacher = await findTeacher();
-
-  // if (teacher) {
-  //   done(null, teacher);
-  // } else {
-  //   const student = findStudent();
-  //   if (student) {
-  //     done(null, student);
-  //   } else done(new Error("deserializeUser error"));
-  // }
 });

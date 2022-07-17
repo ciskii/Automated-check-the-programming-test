@@ -4,8 +4,9 @@ const { Course } = require("../models");
 const createCourse = async (req, res) => {
   const courseId = "HS101";
   const name = "Hearthstone 101";
+  const TeacherId = req.user.id;
 
-  Course.create({ courseId: courseId, name: name })
+  Course.create({ courseId: courseId, name: name, TeacherId: TeacherId })
     .then((course) => {
       console.log("user", course);
       res.send(course);

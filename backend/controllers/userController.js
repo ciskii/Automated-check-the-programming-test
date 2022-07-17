@@ -14,7 +14,6 @@ const loginUser = passport.authenticate("local", {
 // @route   POST /api/users/logout
 // @access  Private
 const logoutUser = (req, res, next) => {
-  console.log("logoutUser".yellow);
   req.logout(function (err) {
     if (err) {
       return next(err);

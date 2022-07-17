@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     score: {
       type: DataTypes.FLOAT(5, 2),
+      defaultValue: 0,
     },
   });
 

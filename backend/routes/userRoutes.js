@@ -1,6 +1,5 @@
 const express = require("express");
-const clientURL = "http://localhost:3000/";
-const { User } = require("../models");
+const { Student } = require("../models");
 
 const {
   loginUser,
@@ -26,27 +25,21 @@ router.post("/login", loginUser, (req, res) => {
   } else {
     const user = req.user;
     res.json({ email: user.email });
-    // res.redirect(clientURL);
   }
 });
+
 router.post("/logout", isAuth, logoutUser);
 
-router.post("/isLoggedIn", isAuth, (req, res) => {
-  res.status(200).json({ msg: "You are logged in" });
-});
+router.post("/signupStudent", signUpStudent);
 
-router.post("/signup", signUpStudent);
 router.post("/signupTeacher", signupTeacher);
 
 router.get("/getMe", isAuth, getMe);
-
-router.get("/insert", (req, res) => {
-  User.create({ email: "tler@gmail.com", password: "12345678" })
-    .then((user) => {
-      console.log("user", user);
-      res.send(user);
-    })
-    .catch((err) => console.log("err", err));
+router.get("/findId", async (req, res) => {
+  const student = await Student.findByPk(1);
+  console.log("student.email", student.email);
 });
-
+// router.post("/isLoggedIn", isAuth, (req, res) => {
+//   res.status(200).json({ msg: "You are logged in" });
+// });
 module.exports = router;

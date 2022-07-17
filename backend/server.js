@@ -1,7 +1,5 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const session = require("express-session");
-const MongoStore = require("connect-mongo");
 const passport = require("passport");
 require("dotenv").config();
 const colors = require("colors");
@@ -17,14 +15,11 @@ app.use(express.urlencoded({ extended: false }));
 
 // Connect to DB
 const db = require("./models");
-// const { User } = require("./models");
-
-// !-------------------------------------------------------------------------
 
 db.sequelize
   .authenticate()
   .then(() => {
-    console.log("Connection established successfully.");
+    console.log("Connection established successfully.".blue);
   })
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
@@ -44,6 +39,12 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log("req.user", req.user);
+  console.log("req.session", req.session);
+  next();
+});
+
 app.use(passport.initialize()); // init passport on every route call
 app.use(passport.session());
 require("./config/passport");
@@ -51,12 +52,16 @@ require("./config/passport");
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS", "HEAD"],
     credentials: true,
   })
 );
 
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/course", require("./routes/courseRoutes"));
+app.use("/api/quiz", require("./routes/quizRoutes"));
+app.use("/api/question", require("./routes/questionRoutes"));
+app.use("/api/answer", require("./routes/answerRoutes"));
 
 app.use(logErrors);
 app.use(errorHandler);

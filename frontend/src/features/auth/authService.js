@@ -39,7 +39,7 @@ const signup = async (user, rejectWithValue) => {
   try {
     await axios
       .post(
-        api + "signup",
+        api + "signupStudent",
         {
           email: user.email,
           password: user.password,

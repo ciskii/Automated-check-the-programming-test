@@ -1,12 +1,11 @@
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
-const { User } = require("../models");
+const { Student, Teacher } = require("../models");
 
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-// const loginUser = passport.authenticate("local");
 const loginUser = passport.authenticate("local", {
   failureMessage: "The email or password are incorrect.",
 });
@@ -35,7 +34,7 @@ const signUpStudent = asyncHandler(async (req, res) => {
     throw new Error("Please add all fields");
   }
 
-  const user = await User.findAll({
+  const user = await Student.findAll({
     where: {
       email: email,
     },
@@ -49,10 +48,12 @@ const signUpStudent = asyncHandler(async (req, res) => {
 
   const hashPassword = await hash(password);
 
-  await User.create({ email: email, password: hashPassword }).then((user) => {
-    console.log("Create student user success:", user);
-    res.json({ email: user.email });
-  });
+  await Student.create({ email: email, password: hashPassword }).then(
+    (user) => {
+      console.log("Create student user success:", user);
+      res.json({ email: user.email });
+    }
+  );
 });
 
 // @desc    Register a teacher user
@@ -61,11 +62,12 @@ const signUpStudent = asyncHandler(async (req, res) => {
 const signupTeacher = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("email, password", email, password);
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
 
-  const user = await User.findAll({
+  const user = await Teacher.findAll({
     where: {
       email: email,
     },
@@ -79,14 +81,12 @@ const signupTeacher = asyncHandler(async (req, res) => {
 
   const hashPassword = await hash(password);
 
-  await User.create({
-    email: email,
-    password: hashPassword,
-    role: "teacher",
-  }).then((user) => {
-    console.log("Create teacher user success:", user);
-    res.json({ email: user.email });
-  });
+  await Teacher.create({ email: email, password: hashPassword }).then(
+    (user) => {
+      console.log("Create teacher user success:", user);
+      res.json({ email: user.email });
+    }
+  );
 });
 
 // @desc    Get user information

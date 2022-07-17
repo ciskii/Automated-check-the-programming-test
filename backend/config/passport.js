@@ -56,28 +56,39 @@ passport.use(new LocalStrategy(customFields, authUser));
 passport.serializeUser((user, done) => {
   // console.log(`--------> Serialize User`);
   // console.log("user", user);
-  done(null, user.id);
+  done(null, { id: user.id, role: user.role });
 });
 
 passport.deserializeUser(async (user, done) => {
   // console.log("---------> Deserialize userId");
-  // console.log(`userId ${user}`);
-
-  const findTeacher = async () => {
-    return await Teacher.findByPk(user);
-  };
-  const findStudent = async () => {
-    return await Student.findByPk(user);
-  };
-
-  const teacher = await findTeacher();
-
-  if (teacher) {
-    done(null, teacher);
-  } else {
-    const student = findStudent();
-    if (student) {
-      done(null, student);
+  const id = user.id;
+  const role = user.role;
+  if (role === "teacher") {
+    const user = await Teacher.findByPk(id);
+    if (user) {
+      done(null, user);
+    } else done(new Error("deserializeUser error"));
+  } else if (role === "student") {
+    const user = await Student.findByPk(id);
+    if (user) {
+      done(null, user);
     } else done(new Error("deserializeUser error"));
   }
+  // const findTeacher = async () => {
+  //   return await Teacher.findByPk(user);
+  // };
+  // const findStudent = async () => {
+  //   return await Student.findByPk(user);
+  // };
+
+  // const teacher = await findTeacher();
+
+  // if (teacher) {
+  //   done(null, teacher);
+  // } else {
+  //   const student = findStudent();
+  //   if (student) {
+  //     done(null, student);
+  //   } else done(new Error("deserializeUser error"));
+  // }
 });

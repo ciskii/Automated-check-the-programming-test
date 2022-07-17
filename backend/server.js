@@ -39,12 +39,6 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log("req.user", req.user);
-  console.log("req.session", req.session);
-  next();
-});
-
 app.use(passport.initialize()); // init passport on every route call
 app.use(passport.session());
 require("./config/passport");
@@ -56,6 +50,12 @@ app.use(
     credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  console.log("req.user", req.user);
+  console.log("req.session", req.session);
+  next();
+});
 
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/course", require("./routes/courseRoutes"));

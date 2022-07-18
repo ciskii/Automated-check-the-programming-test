@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "features/auth/authSlice";
 import validator from "validator";
+import { login } from "features/auth/authSlice";
 
 import "./page.css";
 

@@ -92,7 +92,6 @@ const signupTeacher = asyncHandler(async (req, res) => {
 // @route   POST /api/users/getMe
 // @access  Private
 const getMe = (req, res) => {
-  console.log("req.user", req.user);
   res.json(req.user);
 };
 

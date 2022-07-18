@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
-import { useDispatch } from "react-redux";
 
 const initialState = {
   user: null,
@@ -28,20 +27,26 @@ export const signup = createAsyncThunk(
   }
 );
 
-export const isLoggedIn = createAsyncThunk("auth/isLoggedIn", async (user) => {
-  const response = await authService.isLoggedIn();
-  return response;
-});
+export const checkLoggedIn = createAsyncThunk(
+  "auth/checkLoggedIn",
+  async (user) => {
+    const response = await authService.checkLoggedIn();
+    return response;
+  }
+);
 
 export const logout = createAsyncThunk("auth/logout", async (user) => {
   const response = await authService.logout();
   return response;
 });
 
-export const getMe = createAsyncThunk("auth/getMe", async (user) => {
-  const response = await authService.getMe();
-  return response;
-});
+export const getMe = createAsyncThunk(
+  "auth/getMe",
+  async ({ rejectWithValue }) => {
+    const response = await authService.getMe(rejectWithValue);
+    return response;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -64,7 +69,6 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        // state.user = action.payload;
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
@@ -80,7 +84,6 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
-        console.log("action", action);
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -98,11 +101,24 @@ const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(isLoggedIn.fulfilled, (state, action) => {
-        state.isLoggedIn = action.payload;
+      .addCase(checkLoggedIn.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(checkLoggedIn.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isLoggedIn = true;
+      })
+      .addCase(checkLoggedIn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isLoggedIn = false;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = false;
+        state.isLoggedIn = false;
+        state.message = "";
       });
   },
 });

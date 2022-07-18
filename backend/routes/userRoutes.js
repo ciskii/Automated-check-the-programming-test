@@ -29,17 +29,14 @@ router.post("/login", loginUser, (req, res) => {
 });
 
 router.post("/logout", isAuth, logoutUser);
-
 router.post("/signupStudent", signUpStudent);
-
 router.post("/signupTeacher", signupTeacher);
-
 router.get("/getMe", isAuth, getMe);
-router.get("/findId", async (req, res) => {
-  const student = await Student.findByPk(1);
-  console.log("student.email", student.email);
+router.get("/isLoggedIn", (req, res) => {
+  console.log("req.user", req.user);
+  if (req.isAuthenticated()) {
+    res.status(200).json({ isLoggedin: true });
+  } else res.status(401).json({ isLoggedin: false });
 });
-// router.post("/isLoggedIn", isAuth, (req, res) => {
-//   res.status(200).json({ msg: "You are logged in" });
-// });
+
 module.exports = router;

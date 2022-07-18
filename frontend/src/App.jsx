@@ -17,10 +17,10 @@ import Signup from "pages/login/Signup";
 import "./app.css";
 
 const RequireAuth = (props) => {
-  // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  // if (!loginStatus || !isLoggedIn) {
-  const loginStatus = JSON.parse(localStorage.getItem("loginStatus"));
-  if (!loginStatus) {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
+  // const loginStatus = JSON.parse(localStorage.getItem("loginStatus"));
+  if (!isLoggedIn) {
     return <Navigate to='/login' replace={true} />;
   } else {
     return props.children;
@@ -49,7 +49,6 @@ const App = () => {
               </RequireAuth>
             }
           />
-          {/* <Route path='/quiz' element={<Quiz />}></Route> */}
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>
@@ -57,8 +56,5 @@ const App = () => {
     </Router>
   );
 };
-
-//   return children;
-// }
 
 export default App;

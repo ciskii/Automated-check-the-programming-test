@@ -51,11 +51,11 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log("req.user", req.user);
-  console.log("req.session", req.session);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("req.user", req.user);
+//   console.log("req.session", req.session);
+//   next();
+// });
 
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/course", require("./routes/courseRoutes"));

@@ -5,10 +5,15 @@ const { Course } = require("../models");
 // @route   POST /api/course/create
 // @access  Teacher
 const createCourse = (req, res) => {
-  const { courseId, name } = req.body;
+  const { courseId, courseName } = req.body;
 
-  Course.create({ courseId: courseId, name: name, TeacherId: req.user.id })
+  Course.create({
+    courseId: courseId,
+    name: courseName,
+    TeacherId: req.user.id,
+  })
     .then((course) => {
+      console.log("course", course);
       res.json({ course: course });
     })
     .catch((err) => console.log("err", err));

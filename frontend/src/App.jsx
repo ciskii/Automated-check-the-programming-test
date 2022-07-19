@@ -4,9 +4,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 
 import Dashboard from "pages/dashboard/Dashboard";

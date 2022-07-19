@@ -5,6 +5,7 @@ const initialState = {
   course: null,
   isSuccess: false,
   isError: false,
+  isLoading: false,
   message: "",
 };
 
@@ -24,10 +25,25 @@ const courseSlice = createSlice({
     reset: (state) => {
       state.course = null;
       state.isSuccess = false;
-      state.stateisError = false;
+      state.isError = false;
       state.message = "";
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(create.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(create.fulfilled, (state, action) => {
+        state.course = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(create.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      });
+  },
 });
 
+export const { reset } = courseSlice.actions;
 export default courseSlice.reducer;

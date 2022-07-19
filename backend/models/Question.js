@@ -2,6 +2,10 @@ module.exports = (sequelize, DataTypes) => {
   const Question = sequelize.define("Question", {
     questionObj: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
   });
 

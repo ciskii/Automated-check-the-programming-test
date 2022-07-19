@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa";
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import Course from "pages/course/Course";
-import CourseForm from "./CourseForm";
+import CourseForm from "../course/CourseForm";
 import "./dashboard.css";
 
 // Show Courses

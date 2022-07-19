@@ -2,6 +2,10 @@ module.exports = (sequelize, DataTypes) => {
   const Quiz = sequelize.define("Quiz", {
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
   });
 

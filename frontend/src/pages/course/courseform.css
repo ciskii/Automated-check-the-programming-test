@@ -10,15 +10,22 @@
 
 .courseForm-container {
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   padding: 36px 100px 20px;
   width: 500px;
-  height: 500px;
+  height: 350px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid black;
   background: white;
   z-index: 1001;
-
   overflow: auto;
+}
+
+.courseForm-form {
+  /* justify-content: flex-end; */
+  /* height: 100%; */
 }

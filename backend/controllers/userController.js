@@ -39,7 +39,7 @@ const signUpStudent = asyncHandler(async (req, res) => {
   });
 
   if (user.length === 1) {
-    res.status(400);
+    res.status(401);
     throw new Error("This email address is already being used.");
   }
 
@@ -73,8 +73,6 @@ const signupTeacher = asyncHandler(async (req, res) => {
   });
 
   if (user.length === 1) {
-    console.log("This email address is already being used.");
-    res.status(400);
     throw new Error("This email address is already being used.");
   }
 

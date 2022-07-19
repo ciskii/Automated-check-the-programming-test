@@ -28,7 +28,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(login({ email: input.email, password: input.password }));
+    await dispatch(
+      login({ email: input.email, password: input.password })
+    ).unwrap();
+
     // * if navigate function is here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
     // * it has to be in useEffect
     // * -----> navigate("/"); <-----

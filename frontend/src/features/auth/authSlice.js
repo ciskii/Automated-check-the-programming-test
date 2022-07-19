@@ -72,7 +72,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
-        state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload;
       })
       .addCase(login.pending, (state) => {

@@ -1,39 +1,35 @@
 const axios = require("axios");
 const api = "http://localhost:5000/api/users/";
 
-const login = (user, rejectWithValue) => {
-  axios
-    .post(
+const login = async (user, rejectWithValue) => {
+  try {
+    const res = await axios.post(
       api + "login",
       {
         email: user.email,
         password: user.password,
       },
       { withCredentials: true }
-    )
-    .then((res) => {
-      return res.data;
-    })
-    .catch((error) => {
-      return rejectWithValue(error.response.data.message);
-    });
+    );
+    return res.data;
+  } catch (err) {
+    console.log("err", err);
+    return rejectWithValue(err.response.data.message);
+  }
 };
 
-const logout = () => {
-  axios({
+const logout = async () => {
+  const res = await axios({
     method: "post",
     url: api + "logout",
     withCredentials: true,
-  })
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => console.log("err", err));
+  });
+  return res.data;
 };
 
-const signup = (user, rejectWithValue) => {
-  axios
-    .post(
+const signup = async (user, rejectWithValue) => {
+  try {
+    const res = await axios.post(
       api + "signupStudent",
       {
         email: user.email,
@@ -42,14 +38,12 @@ const signup = (user, rejectWithValue) => {
         lastName: user.lastName,
       },
       { withCredentials: true }
-    )
-    .then((res) => {
-      return res.data;
-    })
-
-    .catch((error) => {
-      return rejectWithValue(error.response.data.message);
-    });
+    );
+    return res.data;
+  } catch (err) {
+    console.log("err", err);
+    return rejectWithValue(err.response.data.message);
+  }
 };
 
 const checkLoggedIn = async () => {

@@ -25,11 +25,13 @@ const Signup = () => {
     lastName: false,
   });
 
-  const { user, isLoggedIn, message } = useSelector((state) => state.auth);
+  const { user, isLoggedIn, message, isSuccess } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
       signup({
@@ -38,9 +40,11 @@ const Signup = () => {
         firstName: input.firstName,
         lastName: input.lastName,
       })
-    ).then(() => {
-      dispatch(login({ email: input.email, password: input.password }));
-    });
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(login({ email: input.email, password: input.password }));
+      });
   };
 
   const onChange = (value, inputField) => {

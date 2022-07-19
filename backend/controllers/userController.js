@@ -26,9 +26,8 @@ const logoutUser = (req, res, next) => {
 // @route   POST /api/users/signup
 // @access  Public
 const signUpStudent = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 
-  console.log("email, password", email, password);
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
@@ -40,28 +39,29 @@ const signUpStudent = asyncHandler(async (req, res) => {
   });
 
   if (user.length === 1) {
-    console.log("This email address is already being used.");
     res.status(400);
     throw new Error("This email address is already being used.");
   }
 
   const hashPassword = await hash(password);
 
-  await Student.create({ email: email, password: hashPassword }).then(
-    (user) => {
-      console.log("Create student user success:", user);
-      res.json({ email: user.email });
-    }
-  );
+  await Student.create({
+    email: email,
+    password: hashPassword,
+    firstName: firstName,
+    lastName: lastName,
+  }).then((user) => {
+    console.log("Create student user success:", user);
+    res.json({ email: user.email });
+  });
 });
 
 // @desc    Register a teacher user
 // @route   POST /api/users/signupTeacher
 // @access  Private
 const signupTeacher = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 
-  console.log("email, password", email, password);
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
@@ -80,12 +80,15 @@ const signupTeacher = asyncHandler(async (req, res) => {
 
   const hashPassword = await hash(password);
 
-  await Teacher.create({ email: email, password: hashPassword }).then(
-    (user) => {
-      console.log("Create teacher user success:", user);
-      res.json({ email: user.email });
-    }
-  );
+  await Teacher.create({
+    email: email,
+    password: hashPassword,
+    firstName: firstName,
+    lastName: lastName,
+  }).then((user) => {
+    console.log("Create teacher user success:", user);
+    res.json({ email: user.email });
+  });
 });
 
 // @desc    Get user information

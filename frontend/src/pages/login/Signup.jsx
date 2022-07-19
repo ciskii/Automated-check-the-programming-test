@@ -1,49 +1,77 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signup, login } from "features/auth/authSlice";
 import validator from "validator";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 
-import "./page.css";
+import "./signup.css";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isEmail, setIsEmail] = useState(false); // if true -> email validated
-  const [isPassword, setIsPassword] = useState(false); // if true -> password is strong enough
-  const [passErr, setPassErr] = useState(""); // password validation error message
+  const [input, setInput] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
+
+  const [isValid, setIsValid] = useState({
+    email: false,
+    password: false,
+    firstName: false,
+    lastName: false,
+  });
+
   const { user, isLoggedIn, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const page = "Sign Up";
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = dispatch(signup({ email, password })).unwrap();
-
-    // call login api after signup
-    res.then(() => {
-      dispatch(login({ email, password }));
+    dispatch(
+      signup({
+        email: input.email,
+        password: input.password,
+        firstName: input.firstName,
+        lastName: input.lastName,
+      })
+    ).then(() => {
+      dispatch(login({ email: input.email, password: input.password }));
     });
   };
 
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value);
-    if (validator.isEmail(e.target.value)) {
-      setIsEmail(true);
-    } else {
-      setIsEmail(false);
-    }
-  };
-
-  // todo add strong password validation
-  const onChangePassword = (e) => {
-    setPassword(e.target.value);
-    if (e.target.value.length >= 8) {
-      setIsPassword(true);
-    } else {
-      setIsPassword(false);
+  const onChange = (value, inputField) => {
+    if (inputField === "email") {
+      setInput({ ...input, email: value });
+      if (validator.isEmail(value)) {
+        setIsValid({ ...isValid, email: true });
+      } else {
+        setIsValid({ ...isValid, email: false });
+      }
+    } else if (inputField === "password") {
+      setInput({ ...input, password: value });
+      if (value.length >= 8) {
+        setIsValid({ ...isValid, password: true });
+      } else {
+        setIsValid({ ...isValid, password: false });
+      }
+    } else if (inputField === "firstName") {
+      setInput({ ...input, firstName: value });
+      if (value.length >= 1) {
+        setIsValid({ ...isValid, firstName: true });
+      } else {
+        setIsValid({ ...isValid, firstName: false });
+      }
+    } else if (inputField === "lastName") {
+      setInput({ ...input, lastName: value });
+      if (value.length >= 1) {
+        setIsValid({ ...isValid, lastName: true });
+      } else {
+        setIsValid({ ...isValid, lastName: false });
+      }
     }
   };
 
@@ -56,43 +84,69 @@ const Signup = () => {
   return (
     <div className='login'>
       <div className='login-container'>
-        <h1 className='login-header'>{page}</h1>
+        <Typography component='h1' variant='h5' className='login-header'>
+          Sign up
+        </Typography>
       </div>
       <form className='login-form' onSubmit={handleSubmit} method='POST'>
-        <label name='email' className='login-form-label'>
-          Email
-        </label>
-        <input
-          className='login-form-input'
-          type='email'
-          name='email'
-          value={email}
-          onChange={onChangeEmail}
+        <TextField
+          margin='normal'
+          required
+          fullWidth
+          id='firstName'
+          label='First Name'
+          value={input.firstName}
+          onChange={(e) => onChange(e.target.value, "firstName")}
         />
-        <label className='login-form-label' name='password'>
-          Password
-        </label>
-        <input
-          className='login-form-input'
+        <TextField
+          required
+          fullWidth
+          margin='normal'
+          id='lastName'
+          onChange={(e) => onChange(e.target.value, "lastName")}
+          value={input.lastName}
+          label='Last Name'
+        />
+        <TextField
+          required
+          fullWidth
+          margin='normal'
+          label='Email'
+          value={input.email}
+          onChange={(e) => onChange(e.target.value, "email")}
+        />
+        <TextField
+          required
+          fullWidth
+          margin='normal'
+          label='Password'
           type='password'
-          name='password'
-          value={password}
-          onChange={onChangePassword}
+          value={input.password}
+          onChange={(e) => onChange(e.target.value, "password")}
         />
-        {isEmail && isPassword ? (
-          <button className='login-form-submit' type='submit'>
+        {isValid.email &&
+        isValid.password &&
+        isValid.firstName &&
+        isValid.lastName ? (
+          <Button
+            type='submit'
+            variant='contained'
+            fullWidth
+            sx={{ mt: 3, mb: 2 }}
+          >
             Sign Up
-          </button>
+          </Button>
         ) : (
-          <button className='login-form-submit' disabled>
+          <Button variant='contained' disabled fullWidth sx={{ mt: 3, mb: 2 }}>
             Sign Up
-          </button>
+          </Button>
         )}
       </form>
       {message ? <p className='login-error'>{message}</p> : <></>}
       <div className='signup-link'>
-        <p>Have an account?</p>
-        <Link to='/login'>Log in</Link>
+        <Link href='/login' variant='body2' sx={{ mt: 2, mr: 6 }}>
+          Already have an account? Log in
+        </Link>
       </div>
     </div>
   );

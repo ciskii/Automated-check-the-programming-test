@@ -10,10 +10,12 @@ import {
 } from "react-router-dom";
 
 import Dashboard from "pages/dashboard/Dashboard";
-import Login from "pages/login/Login";
 import Quiz from "pages/quiz/Quiz";
 import Navbar from "components/Navbar";
+import Login from "pages/login/Login";
+import LoginMUI from "pages/login/LoginMUI";
 import Signup from "pages/login/Signup";
+import SignUpMUI from "pages/login/SignupMUI";
 import "./app.css";
 
 const RequireAuth = (props) => {
@@ -50,6 +52,9 @@ const App = () => {
             }
           />
           <Route path='/login' element={<Login />}></Route>
+          <Route path='/loginmui' element={<LoginMUI />}></Route>
+          {/* <Route path='/signup' element={<Signup />}></Route> */}
+          <Route path='/signupmui' element={<SignUpMUI />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>
       </div>

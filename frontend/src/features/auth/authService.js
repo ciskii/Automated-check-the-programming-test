@@ -12,7 +12,6 @@ const login = (user, rejectWithValue) => {
       { withCredentials: true }
     )
     .then((res) => {
-      // localStorage.setItem("loginStatus", JSON.stringify(true));
       return res.data;
     })
     .catch((error) => {
@@ -27,7 +26,6 @@ const logout = () => {
     withCredentials: true,
   })
     .then((res) => {
-      // localStorage.removeItem("loginStatus");
       return res.data;
     })
     .catch((err) => console.log("err", err));
@@ -40,11 +38,12 @@ const signup = (user, rejectWithValue) => {
       {
         email: user.email,
         password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       { withCredentials: true }
     )
     .then((res) => {
-      localStorage.setItem("loginStatus", JSON.stringify(true));
       return res.data;
     })
 
@@ -54,11 +53,9 @@ const signup = (user, rejectWithValue) => {
 };
 
 const checkLoggedIn = async () => {
-  console.log("checkLoggedIn call");
   const res = await axios.get(api + "isLoggedIn", {
     withCredentials: true,
   });
-  console.log("res", res);
 };
 
 const getMe = async () => {

@@ -101,15 +101,10 @@ const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(checkLoggedIn.pending, (state, action) => {
-        state.isLoading = true;
-      })
       .addCase(checkLoggedIn.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.isLoggedIn = true;
       })
       .addCase(checkLoggedIn.rejected, (state, action) => {
-        state.isLoading = false;
         state.isLoggedIn = false;
       })
       .addCase(logout.fulfilled, (state) => {

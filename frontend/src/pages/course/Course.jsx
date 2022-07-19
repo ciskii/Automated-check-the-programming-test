@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { FaPlus } from "react-icons/fa";
-import { CgNotes } from "react-icons/cg";
-import { GoChecklist } from "react-icons/go";
-import { AiOutlineTable } from "react-icons/ai";
 import { FiArrowRightCircle } from "react-icons/fi";
 
-import "./list.css";
+import "./course.css";
 
-const List = (props) => {
+const Course = (props) => {
   const [quiz, setQuiz] = useState(["mid1", "mid2", "semi", "final"]);
   const [curHover, setCurHover] = useState("");
 
@@ -39,7 +36,6 @@ const List = (props) => {
 
       {item === curHover ? (
         <div className='quiz-card'>
-          {/* <div className='quiz-card text-focus-in'> */}
           <Link to='/quiz'>
             <div className='quiz-card-item '>
               <p className='quiz-card-item-text'>Editor</p>
@@ -64,6 +60,7 @@ const List = (props) => {
   if (!props.isPopUp) {
     return null;
   }
+
   return (
     <div className='list'>
       <div className='list-overlay' onClick={props.onClose} />
@@ -81,4 +78,4 @@ const List = (props) => {
   );
 };
 
-export default List;
+export default Course;

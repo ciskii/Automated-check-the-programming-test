@@ -15,20 +15,10 @@ const {
   deleteCourse,
 } = require("../controllers/courseController");
 
-// @access Teacher, Student
 router.get("/getAll", isAuth, getAllCourses);
-
-// @access Teacher, Student
 router.get("/get/:id", isAuth, getCourse);
-
-// @access Teacher
 router.post("/create", isTeacher, createCourse);
-// router.post("/create", createCourse);
-
-// @access Teacher
 router.put("/update/:id", isTeacher, updateCourse);
-
-// @access Teacher
 router.delete("/delete/:id", isTeacher, deleteCourse);
 
 module.exports = router;

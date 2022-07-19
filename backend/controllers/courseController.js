@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const { Course } = require("../models");
 
+// @desc    Create a course
+// @route   POST /api/course/create
+// @access  Teacher
 const createCourse = (req, res) => {
   const { courseId, name } = req.body;
 
@@ -11,6 +14,9 @@ const createCourse = (req, res) => {
     .catch((err) => console.log("err", err));
 };
 
+// @desc    Get all teacher's courses
+// @route   GET /api/course/getAll
+// @access  ? Teacher
 const getAllCourses = asyncHandler(async (req, res) => {
   const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
   if (courses) {
@@ -20,6 +26,9 @@ const getAllCourses = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get a specific course
+// @route   GET /api/course/get/:id
+// @access  ? Teacher
 const getCourse = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const course = await Course.findOne({ where: { id: id } });
@@ -30,6 +39,9 @@ const getCourse = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update a specific course
+// @route   PUT /api/course/update/:id
+// @access  Teacher
 const updateCourse = (req, res) => {
   // todo check if string was empty
   const { id } = req.params;
@@ -47,6 +59,9 @@ const updateCourse = (req, res) => {
     });
 };
 
+// @desc    Delete a specific course
+// @route   DELETE /api/course/delete/:id
+// @access  Teacher
 const deleteCourse = (req, res) => {
   const { id } = req.params;
   Course.destroy({ where: { id: id } })

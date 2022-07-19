@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import Dashboard from "pages/dashboard/Dashboard";
+import FormDialog from "pages/dashboard/AddCourse";
 import Quiz from "pages/quiz/Quiz";
 import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
@@ -35,6 +36,7 @@ const App = () => {
               <RequireAuth>
                 <Navbar />
                 <Dashboard />
+                {/* <FormDialog /> */}
               </RequireAuth>
             }
           />

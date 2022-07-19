@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
 import { FaPlus } from "react-icons/fa";
 import { FiArrowRightCircle } from "react-icons/fi";
+
+import Typography from "@mui/material/Typography";
 
 import "./course.css";
 
@@ -65,7 +66,12 @@ const Course = (props) => {
     <div className='list'>
       <div className='list-overlay' onClick={props.onClose} />
       <div className='list-container'>
-        <h1 className='list-container-header'>{props.course}</h1>
+        <Typography
+          sx={{ pb: (2, 2), mb: "50px", borderBottom: 1 }}
+          variant='h4'
+        >
+          {props.courseId}
+        </Typography>
         <div className='list-container-quiz'>
           {quizList}
           <Link to='/quiz' className='quiz quiz-create' onClick={addCourse}>

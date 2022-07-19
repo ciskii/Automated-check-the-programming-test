@@ -4,20 +4,35 @@ const { Course } = require("../models");
 // @desc    Create a course
 // @route   POST /api/course/create
 // @access  Teacher
-const createCourse = (req, res) => {
+const createCourse = asyncHandler(async (req, res) => {
   const { courseId, courseName } = req.body;
 
-  Course.create({
-    courseId: courseId,
-    name: courseName,
-    TeacherId: req.user.id,
-  })
-    .then((course) => {
-      console.log("course", course);
-      res.json({ course: course });
+  const courses = await Course.findOne({
+    where: { TeacherId: req.user.id, courseId: courseId },
+  });
+
+  console.log("courses", courses);
+
+  if (!courses) {
+    Course.create({
+      courseId: courseId,
+      name: courseName,
+      TeacherId: req.user.id,
     })
-    .catch((err) => console.log("err", err));
-};
+      .then((course) => {
+        res.json({ course: course });
+      })
+      .catch((err) => {
+        res.status(400);
+        throw new Error(err);
+      });
+  } else {
+    res.status(400);
+    throw new Error(
+      `You already have this Course ID. Please use a different Course ID.`
+    );
+  }
+});
 
 // @desc    Get all teacher's courses
 // @route   GET /api/course/getAll
@@ -25,6 +40,7 @@ const createCourse = (req, res) => {
 const getAllCourses = asyncHandler(async (req, res) => {
   const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
   if (courses) {
+    console.log("courses", courses);
     res.json({ courses: courses });
   } else {
     throw new Error("There is no course yet.");

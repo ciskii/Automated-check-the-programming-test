@@ -1,13 +1,12 @@
 const axios = require("axios");
 const api = "http://localhost:5000/api/course/";
 
-const create = async (course, rejectWithValue) => {
+const create = async (quiz, rejectWithValue) => {
   try {
     const res = await axios.post(
       api + "create",
       {
-        courseId: course.courseId,
-        courseName: course.courseName,
+        name: quiz.name,
       },
       { withCredentials: true }
     );

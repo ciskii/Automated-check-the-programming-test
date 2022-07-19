@@ -1,67 +1,68 @@
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import { useSelector, useDispatch } from "react-redux";
+
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
 import Course from "pages/course/Course";
-import CourseForm from "../course/CourseForm";
+import AddCourse from "./AddCourse";
+import { getAllCourses } from "features/course/courseSlice";
 import "./dashboard.css";
 
-// Show Courses
 const Dashboard = () => {
-  const courses = [
-    "val101",
-    "val102",
-    "val103",
-    "cs404",
-    "val101",
-    "val102",
-    "val103",
-    "cs404",
-    "val101",
-  ];
-
-  const [course, setCourse] = useState(courses);
   const [isPopUp, setIsPopUp] = useState(false);
-  const [isFormPopUp, setIsFormPopUp] = useState(false);
-  const [courseCard, setCourseCard] = useState("");
+  const [course, setCourse] = useState({
+    courseId: "",
+    courseName: "",
+  });
 
-  const addCourse = () => {
-    setCourse([...course, "New101"]);
-  };
+  const { courses, isIdle } = useSelector((state) => state.course);
+  const dispatch = useDispatch();
 
   const onClick = (item) => {
     setIsPopUp(true);
-    setCourseCard(item);
+    setCourse({
+      courseId: item.courseId,
+      name: item.name,
+    });
   };
 
-  const courseList = course.map((item, index) => (
-    <div className='course' onClick={() => onClick(item)} key={index}>
-      {item}
-    </div>
-  ));
+  useEffect(() => {
+    if (isIdle) {
+      dispatch(getAllCourses());
+    }
+  }, [courses, dispatch]);
 
   return (
     <div className='dashboard'>
-      <Course
-        isPopUp={isPopUp}
-        course={courseCard}
-        onClose={() => setIsPopUp(false)} // Close pop up when user click at overlay
-      />
-      <CourseForm
-        isFormPopUp={isFormPopUp}
-        onClose={() => setIsFormPopUp(false)} // Close pop up when user click at overlay
-      />
       <div className='dashboard-container'>
-        <h1 className='dashboard-container-header'>Course List</h1>
+        <Course
+          isPopUp={isPopUp}
+          onClose={() => setIsPopUp(false)}
+          courseId={course.courseId}
+          courseName={course.name}
+        />
+
+        <Typography
+          sx={{ pb: (2, 2), mb: "50px", borderBottom: 1 }}
+          variant='h4'
+        >
+          Course List
+        </Typography>
+
         <div className='dashboard-container-course'>
-          {courseList}
-          <div
-            className='course course-create'
-            onClick={() => setIsFormPopUp(true)}
-          >
-            <FaPlus className='' />
-            Add a course
-          </div>
+          {courses.map((item) => (
+            <div className='course' key={item.id}>
+              <Button
+                fullWidth
+                variant='outlined'
+                onClick={() => onClick(item)}
+              >
+                {item.courseId}
+              </Button>
+            </div>
+          ))}
+          <AddCourse />
         </div>
       </div>
     </div>

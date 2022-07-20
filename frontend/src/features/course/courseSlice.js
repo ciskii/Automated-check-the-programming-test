@@ -2,7 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import courseService from "./courseService";
 
 const initialState = {
-  course: null,
+  course: {
+    id: "",
+    courseId: "",
+    name: "",
+  },
   courses: [],
   isIdle: true,
   isSuccess: false,
@@ -34,11 +38,18 @@ const courseSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.course = null;
+      state.course = {
+        id: "",
+        courseId: "",
+        name: "",
+      };
       state.courses = [];
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+    },
+    setCourse: (state, action) => {
+      state.course = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -69,5 +80,5 @@ const courseSlice = createSlice({
   },
 });
 
-export const { reset } = courseSlice.actions;
+export const { reset, setCourse } = courseSlice.actions;
 export default courseSlice.reducer;

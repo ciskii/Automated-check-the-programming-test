@@ -1,0 +1,57 @@
+/* !main */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.editor-title {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.editor--title-label {
+  padding-bottom: 10px;
+  color: #a0aabf;
+  font-size: 11px;
+}
+
+.editor-container {
+  flex: 1;
+  display: flex;
+  height: var(--height-quiz);
+}
+
+.editor-title-name {
+  border: none;
+}
+
+/* !editor show */
+
+.editor-show {
+  flex: 1;
+  padding: 15px;
+  width: 50vw;
+  overflow: auto;
+}
+
+.markdown-body pre {
+  padding: 0px !important;
+}
+
+/* !editor */
+
+.quiz-editor {
+  flex: 1;
+  overflow: auto;
+  width: 50vw;
+  border-right: 1px solid #eeeeee;
+  font-size: 14px;
+}
+
+.cm-line span {
+  font-family: monospace;
+}

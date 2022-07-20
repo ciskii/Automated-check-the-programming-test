@@ -1,9 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import courseService from "./courseService";
+import quizService from "./quizService";
 
 const initialState = {
-  course: null,
-  courses: [],
+  quiz: {
+    id: "",
+    quizId: "",
+    name: "",
+  },
+  quizzes: [],
   isIdle: true,
   isSuccess: false,
   isError: false,
@@ -12,25 +16,25 @@ const initialState = {
 };
 
 export const create = createAsyncThunk(
-  "course/create",
-  async (course, { rejectWithValue }) => {
-    const response = await courseService.create(course, rejectWithValue);
+  "quiz/create",
+  async (quiz, { rejectWithValue }) => {
+    const response = await quizService.create(quiz, rejectWithValue);
 
     return response;
   }
 );
 
-export const getAllCourses = createAsyncThunk(
-  "course/getAllCourses",
-  async (course, { rejectWithValue }) => {
-    const response = await courseService.getAllCourses(course, rejectWithValue);
+export const getAllQuizzes = createAsyncThunk(
+  "quiz/getAllQuizzes",
+  async (quiz, { rejectWithValue }) => {
+    const response = await quizService.getAllQuizzes(quiz, rejectWithValue);
 
     return response;
   }
 );
 
-const courseSlice = createSlice({
-  name: "course",
+const quizSlice = createSlice({
+  name: "quiz",
   initialState,
   reducers: {
     reset: (state) => {
@@ -47,27 +51,27 @@ const courseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(create.fulfilled, (state, action) => {
-        state.course = action.payload;
+        state.quiz = action.payload;
         state.isSuccess = true;
       })
       .addCase(create.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getAllCourses.pending, (state) => {
+      .addCase(getAllQuizzes.pending, (state) => {
         state.isIdle = false;
         state.isLoading = true;
       })
-      .addCase(getAllCourses.fulfilled, (state, action) => {
-        state.courses = action.payload;
+      .addCase(getAllQuizzes.fulfilled, (state, action) => {
+        state.quizzes = action.payload;
         state.isSuccess = true;
       })
-      .addCase(getAllCourses.rejected, (state, action) => {
+      .addCase(getAllQuizzes.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       });
   },
 });
 
-export const { reset } = courseSlice.actions;
-export default courseSlice.reducer;
+export const { reset } = quizSlice.actions;
+export default quizSlice.reducer;

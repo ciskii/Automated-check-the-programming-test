@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { create, getAllCourses, reset } from "features/course/courseSlice";
+import { create, getAllQuizzes, reset } from "features/quiz/quizSlice";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -11,55 +11,48 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-const AddCourse = () => {
+const AddQuiz = (props) => {
   const [open, setOpen] = React.useState(false);
 
   const [input, setInput] = useState({
-    courseId: "",
-    courseName: "",
+    quizName: "",
   });
 
   //props
   const [isValid, setIsValid] = useState({
-    courseId: false,
-    courseName: false,
+    quizName: false,
   });
 
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const onChange = (value, inputField) => {
-    if (inputField === "courseId") {
-      setInput({ ...input, courseId: value });
-      if (value.length >= 5) {
-        setIsValid({ ...isValid, courseId: true });
-      } else {
-        setIsValid({ ...isValid, courseId: false });
-      }
-    } else if (inputField === "courseName") {
-      setInput({ ...input, courseName: value });
+    if (inputField === "quizName") {
+      setInput({ ...input, quizName: value });
       if (value.length >= 1) {
-        setIsValid({ ...isValid, courseName: true });
+        setIsValid({ ...isValid, quizName: true });
       } else {
-        setIsValid({ ...isValid, courseName: false });
+        setIsValid({ ...isValid, quizName: false });
       }
     }
   };
 
   const onSubmit = (e) => {
+    // console.log("course", course);
     e.preventDefault();
-    //props
+    console.log("course.id", course.id);
+    console.log("input.quizName", input.quizName);
     dispatch(
       create({
-        courseId: input.courseId,
-        courseName: input.courseName,
+        CourseId: course.id,
+        name: input.quizName,
       })
     )
       .unwrap()
       .then(() => {
         dispatch(reset());
-        dispatch(getAllCourses());
+        dispatch(getAllQuizzes());
       });
   };
 
@@ -74,45 +67,34 @@ const AddCourse = () => {
   return (
     <>
       <Button variant='outlined' onClick={handleClickOpen}>
-        Add a new course
-        {/* props */}
+        Add a new quiz
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add a new course</DialogTitle>
-        {/* props */}
+        <DialogTitle>Add a new quiz</DialogTitle>
         <DialogContent>
           <form
-            className='courseForm-form' //props
+            className='courseForm-form'
             method='POST'
             onSubmit={onSubmit}
-            id='course-submit' //props
+            id='quiz-submit'
           >
             <TextField
               margin='normal'
-              name='courseId' //props
+              name='quizName'
               required
               fullWidth
-              label='Course ID' //props
-              value={input.couresId}
-              onChange={(e) => onChange(e.target.value, "courseId")}
-            />
-            <TextField
-              margin='normal'
-              name='courseName' //props
-              required
-              fullWidth
-              label='Course Name' //props
-              value={input.courseName}
-              onChange={(e) => onChange(e.target.value, "courseName")} //props
+              label='Quiz Name'
+              value={input.quizName}
+              onChange={(e) => onChange(e.target.value, "quizName")}
             />
           </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          {isValid.courseId && isValid.courseName ? (
+          {isValid.quizName ? (
             <Button
               type='submit'
-              form='course-submit'
+              form='quiz-submit'
               onClick={handleClose}
               variant='contained'
             >
@@ -129,4 +111,4 @@ const AddCourse = () => {
   );
 };
 
-export default AddCourse;
+export default AddQuiz;

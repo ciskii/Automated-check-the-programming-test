@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiArrowRightCircle } from "react-icons/fi";
 
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import AddQuiz from "./AddQuiz";
 import "./course.css";
 
 const Course = (props) => {
@@ -37,7 +39,7 @@ const Course = (props) => {
 
       {item === curHover ? (
         <div className='quiz-card'>
-          <Link to='/quiz'>
+          <Link to='/quiz-creator'>
             <div className='quiz-card-item '>
               <p className='quiz-card-item-text'>Editor</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />
@@ -58,10 +60,6 @@ const Course = (props) => {
     </div>
   ));
 
-  if (!props.isPopUp) {
-    return null;
-  }
-
   return (
     <div className='list'>
       <div className='list-overlay' onClick={props.onClose} />
@@ -74,10 +72,7 @@ const Course = (props) => {
         </Typography>
         <div className='list-container-quiz'>
           {quizList}
-          <Link to='/quiz' className='quiz quiz-create' onClick={addCourse}>
-            <FaPlus className='' />
-            Add a quiz
-          </Link>
+          <AddQuiz />
         </div>
       </div>
     </div>

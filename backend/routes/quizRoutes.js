@@ -12,13 +12,13 @@ const {
 } = require("../controllers/quizController");
 
 // @access Teacher, Student
-router.get("/getAll/:CourseId", isAuth, getAllQuizzes);
+router.get("/getAll", isAuth, getAllQuizzes);
 
 // @access Teacher, Student
 router.get("/get/:id", isAuth, getQuiz);
 
 // @access Teacher
-router.post("/create/:CourseId", isTeacher, createQuiz);
+router.post("/create", isTeacher, createQuiz);
 
 // @access Teacher
 router.put("/update/:id", isTeacher, updateQuiz);

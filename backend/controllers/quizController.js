@@ -2,8 +2,10 @@ const asyncHandler = require("express-async-handler");
 const { Quiz } = require("../models");
 
 const createQuiz = (req, res) => {
-  const { CourseId } = req.params;
-  const { name } = req.body;
+  const { CourseId, name } = req.body;
+
+  console.log("id", CourseId);
+  console.log("name", name);
 
   Quiz.create({ name: name, CourseId: CourseId })
     .then((quiz) => {

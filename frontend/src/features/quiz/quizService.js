@@ -1,11 +1,12 @@
 const axios = require("axios");
-const api = "http://localhost:5000/api/course/";
+const api = "http://localhost:5000/api/quiz/";
 
 const create = async (quiz, rejectWithValue) => {
   try {
     const res = await axios.post(
       api + "create",
       {
+        CourseId: quiz.CourseId,
         name: quiz.name,
       },
       { withCredentials: true }
@@ -16,18 +17,24 @@ const create = async (quiz, rejectWithValue) => {
   }
 };
 
-const getAllCourses = async (course, rejectWithValue) => {
+const getAllQuizzes = async (quiz, rejectWithValue) => {
   try {
-    const res = await axios.get(api + "getAll", { withCredentials: true });
+    const res = await axios.get(
+      api + "getAll",
+      {
+        CourseId: quiz.CourseId,
+      },
+      { withCredentials: true }
+    );
     console.log("res.data", res.data.courses);
     return res.data.courses;
   } catch (err) {
     return rejectWithValue(err.response.data.message);
   }
 };
-const courseService = {
+const quizService = {
   create,
-  getAllCourses,
+  getAllQuizzes,
 };
 
-export default courseService;
+export default quizService;

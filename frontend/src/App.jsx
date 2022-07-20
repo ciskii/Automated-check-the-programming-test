@@ -9,10 +9,11 @@ import {
 
 import Dashboard from "pages/dashboard/Dashboard";
 import FormDialog from "pages/dashboard/AddCourse";
-import Quiz from "pages/quiz/Quiz";
+import Question from "pages/question/Question";
 import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
 import Signup from "pages/login/Signup";
+import Course from "pages/course/Course";
 import "./app.css";
 
 const RequireAuth = (props) => {
@@ -36,18 +37,25 @@ const App = () => {
               <RequireAuth>
                 <Navbar />
                 <Dashboard />
-                {/* <FormDialog /> */}
               </RequireAuth>
             }
           />
           <Route
-            path='/quiz'
+            path='/quiz-creator'
             element={
               <RequireAuth>
-                <Quiz />
+                <Question />
               </RequireAuth>
             }
           />
+          {/* <Route
+            path='/course/:id'
+            element={
+              <RequireAuth>
+                <Course />
+              </RequireAuth>
+            }
+          /> */}
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>

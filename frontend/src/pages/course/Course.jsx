@@ -15,7 +15,6 @@ import "./course.css";
 const Course = (props) => {
   const [curHover, setCurHover] = useState("");
   const { quizzes, message } = useSelector((state) => state.quiz);
-  const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
 
   const onMouseEnter = (item) => {
@@ -25,8 +24,6 @@ const Course = (props) => {
   const onMouseLeave = () => {
     setCurHover("");
   };
-
-  console.log("!quizzes", !quizzes);
 
   return (
     <div className='list'>
@@ -75,7 +72,7 @@ const Course = (props) => {
             <></>
           )}
 
-          <AddQuiz />
+          <AddQuiz id={props.id} />
         </div>
       </div>
     </div>

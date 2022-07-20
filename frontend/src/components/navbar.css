@@ -42,6 +42,7 @@
   border: 1px solid var(--color-dashboard-border);
   color: var(--color-dashboard-font);
   background-color: white;
+  z-index: 1000;
 }
 
 .nav-dd-ctn-link {

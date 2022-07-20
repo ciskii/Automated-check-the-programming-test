@@ -37,17 +37,7 @@ const courseSlice = createSlice({
   name: "course",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.course = {
-        id: "",
-        courseId: "",
-        name: "",
-      };
-      state.courses = [];
-      state.isSuccess = false;
-      state.isError = false;
-      state.message = "";
-    },
+    reset: () => initialState,
     setCourse: (state, action) => {
       state.course = action.payload;
     },

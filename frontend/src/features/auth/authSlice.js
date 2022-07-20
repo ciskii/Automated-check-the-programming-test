@@ -52,14 +52,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.user = null;
-      state.isLoading = false;
-      state.isSuccess = false;
-      state.isError = false;
-      state.isLoggedIn = false;
-      state.message = "";
-    },
+    reset: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -107,14 +100,7 @@ const authSlice = createSlice({
       .addCase(checkLoggedIn.rejected, (state, action) => {
         state.isLoggedIn = false;
       })
-      .addCase(logout.fulfilled, (state) => {
-        state.user = null;
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.isError = false;
-        state.isLoggedIn = false;
-        state.message = "";
-      });
+      .addCase(logout.fulfilled, () => initialState);
   },
 });
 

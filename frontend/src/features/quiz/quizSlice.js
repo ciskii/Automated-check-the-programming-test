@@ -36,16 +36,7 @@ const quizSlice = createSlice({
   name: "quiz",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.quiz = {
-        id: "",
-        name: "",
-      };
-      state.quizzes = [];
-      state.isSuccess = false;
-      state.isError = false;
-      state.message = "";
-    },
+    reset: () => initialState,
     setQuiz: (state, action) => {
       state.quiz = action.payload;
     },

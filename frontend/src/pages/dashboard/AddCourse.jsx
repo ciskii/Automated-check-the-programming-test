@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { create, getAllCourses, reset } from "features/course/courseSlice";
 
+import { BiPlus } from "react-icons/bi";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -10,6 +12,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material/CssBaseline";
+import { purple } from "@mui/material/colors";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const AddCourse = () => {
   const [open, setOpen] = React.useState(false);
@@ -74,36 +85,35 @@ const AddCourse = () => {
   return (
     <>
       <Button variant='outlined' onClick={handleClickOpen}>
-        Add a new course
-        {/* props */}
+        <BiPlus /> Course
       </Button>
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new course</DialogTitle>
-        {/* props */}
         <DialogContent>
           <form
-            className='courseForm-form' //props
+            className='courseForm-form'
             method='POST'
             onSubmit={onSubmit}
-            id='course-submit' //props
+            id='course-submit'
           >
             <TextField
               margin='normal'
-              name='courseId' //props
+              name='courseId'
               required
               fullWidth
-              label='Course ID' //props
+              label='Course ID'
               value={input.couresId}
               onChange={(e) => onChange(e.target.value, "courseId")}
             />
             <TextField
               margin='normal'
-              name='courseName' //props
+              name='courseName'
               required
               fullWidth
-              label='Course Name' //props
+              label='Course Name'
               value={input.courseName}
-              onChange={(e) => onChange(e.target.value, "courseName")} //props
+              onChange={(e) => onChange(e.target.value, "courseName")}
             />
           </form>
         </DialogContent>

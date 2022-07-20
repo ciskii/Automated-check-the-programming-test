@@ -3,9 +3,11 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
-import "./navbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, getMe, reset } from "features/auth/authSlice";
+import { reset as courseReset } from "features/course/courseSlice";
+import { reset as quizReset } from "features/quiz/quizSlice";
+import "./navbar.css";
 
 const Navbar = () => {
   const [isDropDown, setIsDropDown] = useState(false);
@@ -19,7 +21,9 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    // dispatch(reset());
+    dispatch(reset());
+    dispatch(courseReset());
+    dispatch(quizReset());
     navigate("/login", { replace: true });
   };
 

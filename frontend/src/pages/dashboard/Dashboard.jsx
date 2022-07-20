@@ -7,8 +7,8 @@ import Typography from "@mui/material/Typography";
 import Course from "pages/course/Course";
 import AddCourse from "./AddCourse";
 import { getAllCourses, setCourse } from "features/course/courseSlice";
-import "./dashboard.css";
 import { getAllQuizzes } from "features/quiz/quizSlice";
+import "./dashboard.css";
 
 const Dashboard = () => {
   const [isPopUp, setIsPopUp] = useState(false);

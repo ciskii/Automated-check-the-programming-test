@@ -19,6 +19,7 @@ import "./app.css";
 const RequireAuth = (props) => {
   const { isLoggedIn } = useSelector((state) => state.auth);
 
+  console.log("isLoggedIn", isLoggedIn);
   if (!isLoggedIn) {
     return <Navigate to='/login' replace={true} />;
   } else {
@@ -40,22 +41,16 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route
+          {/* <Route
             path='/quiz-creator'
             element={
               <RequireAuth>
                 <Question />
               </RequireAuth>
             }
-          />
-          {/* <Route
-            path='/course/:id'
-            element={
-              <RequireAuth>
-                <Course />
-              </RequireAuth>
-            }
           /> */}
+
+          <Route path='/quiz-creator' element={<Question />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>

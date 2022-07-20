@@ -18,14 +18,12 @@ const AddQuiz = (props) => {
     quizName: "",
   });
 
-  //props
   const [isValid, setIsValid] = useState({
     quizName: false,
   });
 
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
 
   const onChange = (value, inputField) => {
     if (inputField === "quizName") {
@@ -39,10 +37,7 @@ const AddQuiz = (props) => {
   };
 
   const onSubmit = (e) => {
-    // console.log("course", course);
     e.preventDefault();
-    console.log("course.id", course.id);
-    console.log("input.quizName", input.quizName);
     dispatch(
       create({
         CourseId: course.id,
@@ -52,7 +47,7 @@ const AddQuiz = (props) => {
       .unwrap()
       .then(() => {
         dispatch(reset());
-        dispatch(getAllQuizzes());
+        dispatch(getAllQuizzes(props.id));
       });
   };
 

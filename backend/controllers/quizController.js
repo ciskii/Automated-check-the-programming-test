@@ -3,10 +3,6 @@ const { Quiz } = require("../models");
 
 const createQuiz = (req, res) => {
   const { CourseId, name } = req.body;
-
-  console.log("id", CourseId);
-  console.log("name", name);
-
   Quiz.create({ name: name, CourseId: CourseId })
     .then((quiz) => {
       res.json({ quiz: quiz });
@@ -16,8 +12,11 @@ const createQuiz = (req, res) => {
 
 const getAllQuizzes = asyncHandler(async (req, res) => {
   const { CourseId } = req.params;
-  const quizzes = await Quiz.findAll({ where: { CourseId: CourseId } });
-  if (quizzes) {
+  const quizzes = await Quiz.findAll({
+    where: { CourseId: parseInt(CourseId) },
+  });
+  console.log("quizzes", quizzes);
+  if (quizzes.length !== 0) {
     res.json({ quizzes: quizzes });
   } else {
     throw new Error("There is no quiz yet.");

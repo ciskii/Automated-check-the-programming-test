@@ -4,7 +4,6 @@ import quizService from "./quizService";
 const initialState = {
   quiz: {
     id: "",
-    quizId: "",
     name: "",
   },
   quizzes: [],
@@ -26,8 +25,8 @@ export const create = createAsyncThunk(
 
 export const getAllQuizzes = createAsyncThunk(
   "quiz/getAllQuizzes",
-  async (quiz, { rejectWithValue }) => {
-    const response = await quizService.getAllQuizzes(quiz, rejectWithValue);
+  async (CourseId, { rejectWithValue }) => {
+    const response = await quizService.getAllQuizzes(CourseId, rejectWithValue);
 
     return response;
   }
@@ -38,11 +37,17 @@ const quizSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.course = null;
-      state.courses = [];
+      state.quiz = {
+        id: "",
+        name: "",
+      };
+      state.quizzes = [];
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+    },
+    setQuiz: (state, action) => {
+      state.quiz = action.payload;
     },
   },
   extraReducers: (builder) => {

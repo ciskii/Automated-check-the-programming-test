@@ -12,7 +12,7 @@ const {
 } = require("../controllers/quizController");
 
 // @access Teacher, Student
-router.get("/getAll", isAuth, getAllQuizzes);
+router.get("/getAll/:CourseId", isAuth, getAllQuizzes);
 
 // @access Teacher, Student
 router.get("/get/:id", isAuth, getQuiz);

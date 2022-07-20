@@ -8,6 +8,7 @@ import Course from "pages/course/Course";
 import AddCourse from "./AddCourse";
 import { getAllCourses, setCourse } from "features/course/courseSlice";
 import "./dashboard.css";
+import { getAllQuizzes } from "features/quiz/quizSlice";
 
 const Dashboard = () => {
   const [isPopUp, setIsPopUp] = useState(false);
@@ -15,7 +16,6 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const onClick = (item) => {
-    setIsPopUp(true);
     dispatch(
       setCourse({
         id: item.id,
@@ -23,6 +23,9 @@ const Dashboard = () => {
         name: item.name,
       })
     );
+    dispatch(getAllQuizzes(item.id))
+      .unwrap()
+      .then(() => setIsPopUp(true));
   };
 
   useEffect(() => {

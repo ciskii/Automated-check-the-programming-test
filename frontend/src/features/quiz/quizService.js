@@ -17,17 +17,12 @@ const create = async (quiz, rejectWithValue) => {
   }
 };
 
-const getAllQuizzes = async (quiz, rejectWithValue) => {
+const getAllQuizzes = async (CourseId, rejectWithValue) => {
   try {
-    const res = await axios.get(
-      api + "getAll",
-      {
-        CourseId: quiz.CourseId,
-      },
-      { withCredentials: true }
-    );
-    console.log("res.data", res.data.courses);
-    return res.data.courses;
+    const res = await axios.get(api + "getAll/" + CourseId, {
+      withCredentials: true,
+    });
+    return res.data.quizzes;
   } catch (err) {
     return rejectWithValue(err.response.data.message);
   }

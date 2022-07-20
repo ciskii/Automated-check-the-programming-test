@@ -32,7 +32,6 @@ router.post("/signupStudent", signUpStudent);
 router.post("/signupTeacher", signupTeacher);
 router.get("/getMe", isAuth, getMe);
 router.get("/isLoggedIn", (req, res) => {
-  console.log("req.user", req.user);
   if (req.isAuthenticated()) {
     res.status(200).json({ isLoggedin: true });
   } else res.status(401).json({ isLoggedin: false });

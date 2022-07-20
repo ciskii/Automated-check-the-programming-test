@@ -20,7 +20,6 @@ const create = async (course, rejectWithValue) => {
 const getAllCourses = async (course, rejectWithValue) => {
   try {
     const res = await axios.get(api + "getAll", { withCredentials: true });
-    console.log("res.data", res.data.courses);
     return res.data.courses;
   } catch (err) {
     return rejectWithValue(err.response.data.message);

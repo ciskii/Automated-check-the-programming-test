@@ -11,8 +11,6 @@ const createCourse = asyncHandler(async (req, res) => {
     where: { TeacherId: req.user.id, courseId: courseId },
   });
 
-  console.log("courses", courses);
-
   if (!courses) {
     Course.create({
       courseId: courseId,
@@ -40,7 +38,6 @@ const createCourse = asyncHandler(async (req, res) => {
 const getAllCourses = asyncHandler(async (req, res) => {
   const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
   if (courses) {
-    console.log("courses", courses);
     res.json({ courses: courses });
   } else {
     throw new Error("There is no course yet.");

@@ -41,16 +41,16 @@ const App = () => {
               </RequireAuth>
             }
           />
-          {/* <Route
+          <Route
             path='/quiz-creator'
             element={
               <RequireAuth>
                 <Question />
               </RequireAuth>
             }
-          /> */}
+          />
 
-          <Route path='/quiz-creator' element={<Question />}></Route>
+          {/* <Route path='/quiz-creator' element={<Question />}></Route> */}
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>

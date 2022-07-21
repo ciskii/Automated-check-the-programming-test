@@ -1,19 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { FaPlus } from "react-icons/fa";
+import { FiArrowRightCircle } from "react-icons/fi";
+
+import { getAllQuizzes, setQuiz } from "features/quiz/quizSlice";
 import "./quiz.css";
 
-const Quiz = () => {
+const Quiz = (props) => {
+  const [curHover, setCurHover] = useState("");
+  const dispatch = useDispatch();
+
+  const quiz = props.quiz;
+
+  const handleSetQuiz = () => {
+    dispatch(setQuiz(quiz));
+  };
+
+  const onMouseEnter = (quiz) => {
+    setCurHover(quiz);
+  };
+
+  const onMouseLeave = () => {
+    setCurHover("");
+  };
+
   return (
     <div
       className='quiz'
-      key={index}
-      onMouseEnter={() => onMouseEnter(item)}
-      onMouseLeave={() => onMouseLeave(item)}
+      onMouseEnter={() => onMouseEnter(quiz)}
+      onMouseLeave={() => onMouseLeave(quiz)}
     >
-      {item === curHover ? (
+      {quiz === curHover ? (
         <div className='quiz-card'>
-          <Link to='/quiz-creator'>
+          <Link
+            to='/quiz-creator'
+            className='question-link'
+            onClick={handleSetQuiz}
+          >
             <div className='quiz-card-item '>
-              <p className='quiz-card-item-text'>Editor</p>
+              <p className='quiz-card-item-text'>Questions</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />
             </div>
           </Link>
@@ -27,7 +54,7 @@ const Quiz = () => {
           </div>
         </div>
       ) : (
-        <div className='quiz-item'>{item.name}</div>
+        <div className='quiz-item'>{quiz.name}</div>
       )}
     </div>
   );

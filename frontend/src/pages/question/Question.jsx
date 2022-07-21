@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { create, reset } from "features/question/questionSlice";
 import { debounce } from "lodash";
 
 import ReactMarkdown from "react-markdown";
@@ -35,6 +38,8 @@ const Question = () => {
   const [page, setPage] = useState(1);
   const [curPage, setCurPage] = useState(1);
   const [questions, setQuestions] = useState([]);
+  const { quiz } = useSelector((state) => state.quiz);
+  const dispatch = useDispatch();
 
   const handleChange = (e, value) => {
     const newQ = [...questions]; // newQ -> new question
@@ -44,7 +49,7 @@ const Question = () => {
     setCodeCur(questions[value - 1]);
   };
 
-  const onClick = () => {
+  const handleAddQuestion = () => {
     const newQ = [...questions];
     newQ[curPage - 1] = codeCur;
     setQuestions(newQ);
@@ -70,6 +75,12 @@ const Question = () => {
     }
   };
 
+  const handleSave = () => {
+    const newQ = [...questions]; // newQ -> new question
+    newQ[curPage - 1] = codeCur;
+    dispatch(create({ newQ: newQ, QuizId: quiz.id }));
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -87,7 +98,7 @@ const Question = () => {
     (value, viewUpdate) => debounce(changeHandler, 300),
     []
   );
-  console.log("curPage", curPage);
+
   return (
     <div className='editor'>
       <div className='editor-title'>
@@ -100,14 +111,18 @@ const Question = () => {
             <IconButton
               color='primary'
               aria-label='add a question'
-              onClick={onClick}
+              onClick={handleAddQuestion}
             >
               <AddIcon />
             </IconButton>
           </Tooltip>
 
           <Tooltip title='Save'>
-            <IconButton color='primary' aria-label='Save a quiz'>
+            <IconButton
+              color='primary'
+              aria-label='Save a quiz'
+              onClick={handleSave}
+            >
               <SaveIcon />
             </IconButton>
           </Tooltip>
@@ -186,6 +201,7 @@ const Question = () => {
           }}
         />
       </div>
+
       <Stack
         spacing={2}
         justifyContent='center'

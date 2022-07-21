@@ -2,10 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import quizService from "./quizService";
 
 const initialState = {
-  quiz: {
-    id: "",
-    name: "",
-  },
+  quiz: {},
   quizzes: [],
   isIdle: true,
   isSuccess: false,
@@ -69,5 +66,5 @@ const quizSlice = createSlice({
   },
 });
 
-export const { reset } = quizSlice.actions;
+export const { reset, setQuiz } = quizSlice.actions;
 export default quizSlice.reducer;

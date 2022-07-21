@@ -60,6 +60,10 @@
   color: var(--color-dashboard-font);
 }
 
+.question-link {
+  text-decoration: none;
+}
+
 .quiz-card {
   position: absolute;
   display: flex;

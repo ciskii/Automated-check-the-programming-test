@@ -15,7 +15,6 @@ const Quiz = (props) => {
   const quiz = props.quiz;
 
   const handleSetQuiz = () => {
-    console.log("go to question");
     dispatch(setQuiz(quiz));
   };
 

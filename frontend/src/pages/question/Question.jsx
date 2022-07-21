@@ -38,13 +38,20 @@ import "github-markdown-css";
 
 const Question = () => {
   const [codeCur, setCodeCur] = useState(""); // current code at selected page
-  const [open, setOpen] = useState(false); // delete modal
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
   const [curQuestions, setCurQuestions] = useState([]); // current questions on client
+  const [open, setOpen] = useState(false); // delete modal
   const { isIdle, questions } = useSelector((state) => state.question);
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
+
+  const thisReset = () => {
+    // const [codeCur, setCodeCur] = useState(""); // current code at selected page
+    // const [page, setPage] = useState(1); // total page number
+    // const [curPage, setCurPage] = useState(1); // current selected page
+    // const [curQuestions, setCurQuestions] = useState([]);
+  };
 
   const getNewQuestion = () => {
     // ! what a step! HOLY
@@ -62,7 +69,6 @@ const Question = () => {
     setCodeCur(curQuestions[value - 1].questionObj);
   };
 
-  // todo
   const handleAddQuestion = () => {
     if (curQuestions.length !== 0) {
       const newQuestion = curQuestions.map((item) => {
@@ -114,27 +120,59 @@ const Question = () => {
     }
   };
 
-  // todo
-  // 2 cases know when call getAllQuestions
-  // - if questions.length == 0
-  //   save :
-  //   add :
-  //
-  // - if questions.length >= 1
-  //   add :
-  //  ? call createOne api
-  //  ? or add new one to current questions array
-  //    -> when save let backend check if this question have no question id yet then create a new one and update an exist question
-  //
+  const handleSave = async () => {
+    if (curQuestions.length !== 0) {
+      const newQuestion = curQuestions.map((item) => {
+        return { ...item };
+      });
 
-  const handleSave = () => {
-    const newQuestion = curQuestions.map((item) => {
-      return { ...item };
-    });
+      newQuestion[curPage - 1].questionObj = codeCur;
+      dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }))
+        .unwrap()
+        .then((res) => {
+          console.log("res", res);
+          dispatch(getAllQuestions(quiz.id))
+            .unwrap()
+            .then((res) => {
+              setCurQuestions(res);
+              setPage(res.length);
+              setCodeCur(res[curPage - 1].questionObj);
+            });
+        });
+    } else {
+      const newQuestion = [
+        {
+          id: "new",
+          questionObj: codeCur,
+        },
+      ];
+      dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }))
+        .unwrap()
+        .then((res) => {
+          console.log("res", res);
+          dispatch(getAllQuestions(quiz.id))
+            .unwrap()
+            .then((res) => {
+              setCurQuestions(res);
+              setPage(res.length);
+              setCodeCur(res[curPage - 1].questionObj);
+            });
+        });
+    }
 
-    newQuestion[curPage - 1].questionObj = codeCur;
-    console.log("newQuestion", newQuestion);
-    dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }));
+    // if (createSuccess) {
+    //   dispatch(getAllQuestions(quiz.id))
+    //     .unwrap()
+    //     .then((res) => {
+    //       console.log("hey");
+    //       setCurQuestions(res);
+    //       setPage(res.length);
+    //       setCodeCur(res[0].questionObj);
+    //     })
+    //     .catch((err) => {
+    //       console.log("err", err);
+    //     });
+    // }
   };
 
   const handleClickOpen = () => {
@@ -156,23 +194,19 @@ const Question = () => {
   );
 
   useEffect(() => {
-    if (isIdle) {
-      dispatch(getAllQuestions(quiz.id))
-        .unwrap()
-        .then((res) => {
-          console.log("res", res);
-          // array of questions object ->
-          // QuizId, questionObj, id
-          if (res.length !== 0) {
-            setCurQuestions(res);
-            setPage(res.length);
-            setCodeCur(res[0].questionObj);
-          }
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    }
+    dispatch(getAllQuestions(quiz.id))
+      .unwrap()
+      .then((res) => {
+        console.log("res", res);
+        if (res.length !== 0) {
+          setCurQuestions(res);
+          setPage(res.length);
+          setCodeCur(res[0].questionObj);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   }, []);
 
   return (

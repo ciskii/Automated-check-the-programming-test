@@ -7,6 +7,7 @@ const createQuestion = asyncHandler(async (req, res) => {
 
   const newQuestions = await Promise.all(
     questions.map(async (question) => {
+      console.log("question", question);
       const id = question.id;
       const questionObj = question.questionObj;
       if (id === "new") {
@@ -26,12 +27,10 @@ const createQuestion = asyncHandler(async (req, res) => {
       }
     })
   );
-  console.log("newQuestions", newQuestions);
-  // Question.create({ questionObj: questionObj, QuizId: QuizId })
-  //   .then((question) => {
-  //     res.json({ question: question });
-  //   })
-  //   .catch((err) => console.log("err", err));
+  if (newQuestions) {
+    console.log("newQuestions", newQuestions);
+    res.json(newQuestions);
+  }
 });
 
 const createOneQuestion = asyncHandler(async (req, res) => {
@@ -57,7 +56,7 @@ const getAllQuestions = asyncHandler(async (req, res) => {
   const { QuizId } = req.params;
   const questions = await Question.findAll({ where: { QuizId: QuizId } });
   if (questions) {
-    res.json({ questions: questions });
+    res.json(questions);
   } else {
     throw new Error("There is no question yet.");
   }

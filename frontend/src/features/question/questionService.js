@@ -11,6 +11,8 @@ const create = async (question, rejectWithValue) => {
       },
       { withCredentials: true }
     );
+    console.log("res.data", res.data);
+
     return res.data;
   } catch (err) {
     return rejectWithValue(err.response.data.message);
@@ -38,8 +40,7 @@ const getAllQuestions = async (QuizId, rejectWithValue) => {
     const res = await axios.get(api + "getAll/" + QuizId, {
       withCredentials: true,
     });
-    console.log("res.data.questions", res.data.questions);
-    return res.data.questions;
+    return res.data;
   } catch (err) {
     return rejectWithValue(err.response.data.message);
   }

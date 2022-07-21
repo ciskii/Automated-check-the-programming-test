@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { create, reset } from "features/question/questionSlice";
+import {
+  create,
+  getAllQuestions,
+  reset,
+} from "features/question/questionSlice";
 import { debounce } from "lodash";
 
 import ReactMarkdown from "react-markdown";
@@ -24,8 +28,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import { myTheme, code } from "./theme";
@@ -33,26 +35,31 @@ import "./question.css";
 import "github-markdown-css";
 
 const Question = () => {
-  const [codeCur, setCodeCur] = useState(code);
-  const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(1);
-  const [curPage, setCurPage] = useState(1);
-  const [questions, setQuestions] = useState([]);
+  const [codeCur, setCodeCur] = useState(code); // current code at selected page
+  const [open, setOpen] = useState(false); // delete modal
+  const [page, setPage] = useState(1); // total page number
+  const [curPage, setCurPage] = useState(1); // current selected page
+  const [curQuestions, setCurQuestions] = useState([]); // current questions on client
+  const { isIdle, questions } = useSelector((state) => state.question);
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
 
   const handleChange = (e, value) => {
-    const newQ = [...questions]; // newQ -> new question
-    newQ[curPage - 1] = codeCur;
-    setQuestions(newQ);
+    const newQ = [...curQuestions]; // newQ -> new question
+    // newQ[curPage - 1].questionObj = codeCur;
+    // setCurQuestions(newQ);
     setCurPage(value);
-    setCodeCur(questions[value - 1]);
+    setCodeCur(curQuestions[value - 1]);
+    // console.log("curQuestions[value - 1]", curQuestions[value - 1]);
+    // console.log("newQ", newQ);
+    // console.log("value", value);
+    // console.log("curQuestions", curQuestions);
   };
 
   const handleAddQuestion = () => {
-    const newQ = [...questions];
+    const newQ = [...curQuestions];
     newQ[curPage - 1] = codeCur;
-    setQuestions(newQ);
+    setCurQuestions(newQ);
     setPage(page + 1);
     setCurPage(page + 1);
     setCodeCur("");
@@ -60,23 +67,23 @@ const Question = () => {
 
   const delQ = () => {
     // delQ -> delete a question
-    const newQ = [...questions];
+    const newQ = [...curQuestions];
     newQ.splice(curPage - 1, 1);
 
     setCurPage(1);
     if (page === 1) {
       newQ[0] = "";
-      setQuestions(newQ);
+      setCurQuestions(newQ);
       setCodeCur("");
     } else {
-      setQuestions(newQ);
+      setCurQuestions(newQ);
       setPage(page - 1);
-      setCodeCur(questions[0]);
+      setCodeCur(curQuestions[0]);
     }
   };
 
   const handleSave = () => {
-    const newQ = [...questions]; // newQ -> new question
+    const newQ = [...curQuestions]; // newQ -> new question
     newQ[curPage - 1] = codeCur;
     dispatch(create({ newQ: newQ, QuizId: quiz.id }));
   };
@@ -98,6 +105,19 @@ const Question = () => {
     (value, viewUpdate) => debounce(changeHandler, 300),
     []
   );
+
+  useEffect(() => {
+    if (isIdle) {
+      dispatch(getAllQuestions(quiz.id))
+        .unwrap()
+        .then((res) => {
+          setCurQuestions(res); // array of questions object ->
+          // QuizId, questionObj, id
+          setPage(res.length);
+          setCodeCur(res[0].questionObj);
+        });
+    }
+  }, []);
 
   return (
     <div className='editor'>

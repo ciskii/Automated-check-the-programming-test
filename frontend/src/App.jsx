@@ -8,23 +8,30 @@ import {
 } from "react-router-dom";
 
 import Dashboard from "pages/dashboard/Dashboard";
-import FormDialog from "pages/dashboard/AddCourse";
 import Question from "pages/question/Question";
 import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
 import Signup from "pages/login/Signup";
-import Course from "pages/course/Course";
 import "./app.css";
+import { checkLoggedIn } from "features/auth/authSlice";
 
 const RequireAuth = (props) => {
   const { isLoggedIn } = useSelector((state) => state.auth);
-
-  console.log("isLoggedIn", isLoggedIn);
   if (!isLoggedIn) {
     return <Navigate to='/login' replace={true} />;
   } else {
     return props.children;
   }
+  // const dispatch = useDispatch();
+  // dispatch(checkLoggedIn())
+  //   .unwrap()
+  //   .then(() => {
+  //     if (!isLoggedIn) {
+  //       return <Navigate to='/login' replace={true} />;
+  //     } else {
+  //       return props.children;
+  //     }
+  //   });
 };
 
 const App = () => {

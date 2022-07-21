@@ -2,10 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import questionService from "./questionService";
 
 const initialState = {
-  question: {
-    id: "",
-    name: "",
-  },
+  question: {},
   questions: [],
   isIdle: true,
   isSuccess: false,
@@ -26,7 +23,7 @@ export const create = createAsyncThunk(
 export const getAllQuestions = createAsyncThunk(
   "question/getAllQuestions",
   async (QuizId, { rejectWithValue }) => {
-    const response = await questionService.getAllQuizzes(
+    const response = await questionService.getAllQuestions(
       QuizId,
       rejectWithValue
     );

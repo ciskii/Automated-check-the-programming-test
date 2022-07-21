@@ -1,16 +1,57 @@
 const asyncHandler = require("express-async-handler");
 const { Question } = require("../models");
 
-const createQuestion = (req, res) => {
+const createQuestion = asyncHandler(async (req, res) => {
   const { QuizId } = req.params;
-  const { questionObj } = req.body;
+  const { questions } = req.body; // array of questions
 
-  Question.create({ questionObj: questionObj, QuizId: QuizId })
+  const newQuestions = await Promise.all(
+    questions.map(async (question) => {
+      const id = question.id;
+      const questionObj = question.questionObj;
+      if (id === "new") {
+        // create new one
+        const res = await Question.create({
+          questionObj: questionObj,
+          QuizId: QuizId,
+        });
+        return res;
+      } else {
+        // update an exist one
+        const res = await Question.update(
+          { questionObj: questionObj },
+          { where: { id: id } }
+        );
+        return res;
+      }
+    })
+  );
+  console.log("newQuestions", newQuestions);
+  // Question.create({ questionObj: questionObj, QuizId: QuizId })
+  //   .then((question) => {
+  //     res.json({ question: question });
+  //   })
+  //   .catch((err) => console.log("err", err));
+});
+
+const createOneQuestion = asyncHandler(async (req, res) => {
+  const { QuizId } = req.params;
+  console.log("QuizId", QuizId);
+  // const { questionObj } = req.body; // array of questions
+
+  Question.create({ questionObj: "", QuizId: QuizId })
     .then((question) => {
+      console.log("question", question);
       res.json({ question: question });
     })
     .catch((err) => console.log("err", err));
-};
+
+  // Question.create({ questionObj: questionObj, QuizId: QuizId })
+  //   .then((question) => {
+  //     res.json({ question: question });
+  //   })
+  //   .catch((err) => console.log("err", err));
+});
 
 const getAllQuestions = asyncHandler(async (req, res) => {
   const { QuizId } = req.params;
@@ -59,6 +100,7 @@ const deleteQuestion = (req, res) => {
 
 module.exports = {
   createQuestion,
+  createOneQuestion,
   getAllQuestions,
   getQuestion,
   updateQuestion,

@@ -20,6 +20,15 @@ export const create = createAsyncThunk(
   }
 );
 
+export const createOne = createAsyncThunk(
+  "question/createOne",
+  async (QuizId, { rejectWithValue }) => {
+    const response = await questionService.createOne(QuizId, rejectWithValue);
+
+    return response;
+  }
+);
+
 export const getAllQuestions = createAsyncThunk(
   "question/getAllQuestions",
   async (QuizId, { rejectWithValue }) => {
@@ -47,10 +56,21 @@ const questionSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(create.fulfilled, (state, action) => {
-        state.question = action.payload;
+        state.questions = action.payload;
         state.isSuccess = true;
       })
       .addCase(create.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(createOne.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createOne.fulfilled, (state, action) => {
+        state.question = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(createOne.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       })

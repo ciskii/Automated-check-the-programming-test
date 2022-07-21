@@ -9,6 +9,7 @@ const {
   getQuestion,
   updateQuestion,
   deleteQuestion,
+  createOneQuestion,
 } = require("../controllers/questionController");
 
 // @access Teacher, Student
@@ -19,6 +20,8 @@ router.get("/get/:id", isAuth, getQuestion);
 
 // @access Teacher
 router.post("/create/:QuizId", isTeacher, createQuestion);
+
+router.post("/createOne/:QuizId", isTeacher, createOneQuestion);
 
 // @access Teacher
 router.put("/update/:id", isTeacher, updateQuestion);

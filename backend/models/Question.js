@@ -3,9 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     questionObj: {
       type: DataTypes.TEXT,
       allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
     },
   });
 

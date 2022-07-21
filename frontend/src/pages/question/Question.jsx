@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  create,
-  getAllQuestions,
-  reset,
-} from "features/question/questionSlice";
+
 import { debounce } from "lodash";
 
 import ReactMarkdown from "react-markdown";
@@ -30,12 +26,18 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import {
+  create,
+  createOne,
+  getAllQuestions,
+  reset,
+} from "features/question/questionSlice";
 import { myTheme, code } from "./theme";
 import "./question.css";
 import "github-markdown-css";
 
 const Question = () => {
-  const [codeCur, setCodeCur] = useState(code); // current code at selected page
+  const [codeCur, setCodeCur] = useState(""); // current code at selected page
   const [open, setOpen] = useState(false); // delete modal
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
@@ -44,48 +46,95 @@ const Question = () => {
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
 
+  const getNewQuestion = () => {
+    // ! what a step! HOLY
+    const newQuestion = curQuestions.map((item) => {
+      return { ...item };
+    }); // copy new object in question array
+
+    newQuestion[curPage - 1].questionObj = codeCur; // update selected page question to current code
+    return newQuestion;
+  };
+
   const handleChange = (e, value) => {
-    const newQ = [...curQuestions]; // newQ -> new question
-    // newQ[curPage - 1].questionObj = codeCur;
-    // setCurQuestions(newQ);
+    setCurQuestions(getNewQuestion());
     setCurPage(value);
-    setCodeCur(curQuestions[value - 1]);
-    // console.log("curQuestions[value - 1]", curQuestions[value - 1]);
-    // console.log("newQ", newQ);
-    // console.log("value", value);
-    // console.log("curQuestions", curQuestions);
+    setCodeCur(curQuestions[value - 1].questionObj);
   };
 
+  // todo
   const handleAddQuestion = () => {
-    const newQ = [...curQuestions];
-    newQ[curPage - 1] = codeCur;
-    setCurQuestions(newQ);
-    setPage(page + 1);
-    setCurPage(page + 1);
-    setCodeCur("");
-  };
+    if (curQuestions.length !== 0) {
+      const newQuestion = curQuestions.map((item) => {
+        return { ...item };
+      }); // copy new object in question array
 
-  const delQ = () => {
-    // delQ -> delete a question
-    const newQ = [...curQuestions];
-    newQ.splice(curPage - 1, 1);
-
-    setCurPage(1);
-    if (page === 1) {
-      newQ[0] = "";
-      setCurQuestions(newQ);
+      newQuestion.push({
+        id: "new",
+        questionObj: "",
+      });
+      newQuestion[curPage - 1].questionObj = codeCur;
+      setCurQuestions(newQuestion);
+      setPage(page + 1);
+      setCurPage(page + 1);
       setCodeCur("");
     } else {
-      setCurQuestions(newQ);
+      const newQuestion = [
+        {
+          id: "new",
+          questionObj: codeCur,
+        }, // there are 2 object because the one and the new one
+        {
+          id: "new",
+          questionObj: "",
+        },
+      ];
+      setCurQuestions(newQuestion);
+      setPage(page + 1);
+      setCurPage(page + 1);
+      setCodeCur("");
+    }
+  };
+
+  // todo
+  const delQ = () => {
+    // delQ -> delete a question
+    const newQuestion = [...curQuestions];
+    newQuestion.splice(curPage - 1, 1);
+    setCurPage(1);
+
+    if (page === 1) {
+      newQuestion[0] = "";
+      setCurQuestions(newQuestion);
+      setCodeCur("");
+    } else {
+      setCurQuestions(newQuestion);
       setPage(page - 1);
       setCodeCur(curQuestions[0]);
     }
   };
 
+  // todo
+  // 2 cases know when call getAllQuestions
+  // - if questions.length == 0
+  //   save :
+  //   add :
+  //
+  // - if questions.length >= 1
+  //   add :
+  //  ? call createOne api
+  //  ? or add new one to current questions array
+  //    -> when save let backend check if this question have no question id yet then create a new one and update an exist question
+  //
+
   const handleSave = () => {
-    const newQ = [...curQuestions]; // newQ -> new question
-    newQ[curPage - 1] = codeCur;
-    dispatch(create({ newQ: newQ, QuizId: quiz.id }));
+    const newQuestion = curQuestions.map((item) => {
+      return { ...item };
+    });
+
+    newQuestion[curPage - 1].questionObj = codeCur;
+    console.log("newQuestion", newQuestion);
+    dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }));
   };
 
   const handleClickOpen = () => {
@@ -111,10 +160,17 @@ const Question = () => {
       dispatch(getAllQuestions(quiz.id))
         .unwrap()
         .then((res) => {
-          setCurQuestions(res); // array of questions object ->
+          console.log("res", res);
+          // array of questions object ->
           // QuizId, questionObj, id
-          setPage(res.length);
-          setCodeCur(res[0].questionObj);
+          if (res.length !== 0) {
+            setCurQuestions(res);
+            setPage(res.length);
+            setCodeCur(res[0].questionObj);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
         });
     }
   }, []);

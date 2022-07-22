@@ -42,6 +42,7 @@ const authUser = async (username, password, done) => {
   const teacher = await findTeacher();
   const student = await findStudent();
 
+  console.log("student", student);
   if (teacher) {
     done(null, teacher);
   } else if (student) {

@@ -7,7 +7,6 @@ const createQuestion = asyncHandler(async (req, res) => {
 
   const newQuestions = await Promise.all(
     questions.map(async (question) => {
-      console.log("question", question);
       const id = question.id;
       const questionObj = question.questionObj;
       if (id === "new") {

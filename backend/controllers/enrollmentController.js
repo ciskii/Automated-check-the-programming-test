@@ -1,17 +1,34 @@
 const asyncHandler = require("express-async-handler");
-const { Enrollment } = require("../models");
+const { Enrollment, Course } = require("../models");
 
 //  @access Student
-const enrollCourse = (req, res) => {
+const enrollCourse = asyncHandler(async (req, res) => {
   const { id } = req.user; // Student ID
-  const { CourseId } = req.body; // Course ID that student want to enroll
+  const { courseId } = req.body; // Course ID that student want to enroll
 
-  Enrollment.create({ StudentId: id, CourseId: CourseId })
-    .then((enrolled) => {
-      res.json({ enrolled: enrolled });
-    })
-    .catch((err) => console.log("err", err));
-};
+  const course = await Course.findOne({ where: { courseId: courseId } });
+
+  // console.log("course", course);
+  if (course) {
+    const enrolled = await Enrollment.findOne({
+      where: { StudentId: id, CourseId: course.id },
+    });
+    if (!enrolled) {
+      Enrollment.create({ StudentId: id, CourseId: course.id })
+        .then((enrolled) => {
+          console.log("enrolled", enrolled);
+          res.json(enrolled);
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
+    } else {
+      throw new Error(`You already enrolled this course.`);
+    }
+  } else {
+    throw new Error(`This Course ID doesn't exist.`);
+  }
+});
 
 // @access Teacher
 const getEnrolledStudents = asyncHandler(async (req, res) => {

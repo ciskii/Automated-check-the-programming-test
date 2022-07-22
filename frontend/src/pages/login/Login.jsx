@@ -33,7 +33,7 @@ const Login = () => {
       .unwrap()
       .then(() => {
         dispatch(checkLoggedIn());
-        navigate("/", { replace: true });
+        // navigate("/", { replace: true });
       });
   };
 

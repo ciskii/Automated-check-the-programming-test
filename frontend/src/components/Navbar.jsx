@@ -11,7 +11,6 @@ import "./navbar.css";
 
 const Navbar = () => {
   const [isDropDown, setIsDropDown] = useState(false);
-  // const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

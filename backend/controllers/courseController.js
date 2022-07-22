@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { Course } = require("../models");
+const { Course, Enrollment } = require("../models");
 
 // @desc    Create a course
 // @route   POST /api/course/create
@@ -32,15 +32,28 @@ const createCourse = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get all teacher's courses
+// @desc    Get all user's courses
 // @route   GET /api/course/getAll
-// @access  ? Teacher
+// @access  Teacher, Student
 const getAllCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
-  if (courses) {
-    res.json({ courses: courses });
-  } else {
-    throw new Error("There is no course yet.");
+  // if (req.session.passport.user.role === "student") {
+  if (req.role === "student") {
+    const courses = await Enrollment.findAll({
+      where: { StudentId: req.user.id },
+    });
+    if (courses) {
+      res.json({ courses: courses });
+    } else {
+      throw new Error("There is no course yet.");
+    }
+    // } else if (req.session.passport.user.role === "teacher") {
+  } else if (req.role === "teacher") {
+    const courses = await Course.findAll({ where: { TeacherId: req.user.id } });
+    if (courses) {
+      res.json({ courses: courses });
+    } else {
+      throw new Error("There is no course yet.");
+    }
   }
 });
 

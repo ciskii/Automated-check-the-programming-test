@@ -1,5 +1,6 @@
 const axios = require("axios");
 const api = "http://localhost:5000/api/course/";
+const enrollmentApi = "http://localhost:5000/api/enrollment/";
 
 const create = async (course, rejectWithValue) => {
   try {
@@ -8,6 +9,21 @@ const create = async (course, rejectWithValue) => {
       {
         courseId: course.courseId,
         courseName: course.courseName,
+      },
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
+const enrollCourse = async (courseId, rejectWithValue) => {
+  try {
+    const res = await axios.post(
+      enrollmentApi + "enrollCourse",
+      {
+        courseId: courseId,
       },
       { withCredentials: true }
     );
@@ -28,6 +44,7 @@ const getAllCourses = async (course, rejectWithValue) => {
 const courseService = {
   create,
   getAllCourses,
+  enrollCourse,
 };
 
 export default courseService;

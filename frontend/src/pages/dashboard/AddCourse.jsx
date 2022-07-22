@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { create, getAllCourses, reset } from "features/course/courseSlice";
+import {
+  create,
+  enrollCourse,
+  getAllCourses,
+  reset,
+} from "features/course/courseSlice";
 
 import { BiPlus } from "react-icons/bi";
 
@@ -10,35 +14,22 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material/CssBaseline";
-import { purple } from "@mui/material/colors";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+// import Enroll from "./Enroll";
 
 const AddCourse = () => {
   const [open, setOpen] = React.useState(false);
-
   const [input, setInput] = useState({
     courseId: "",
     courseName: "",
   });
-
-  //props
   const [isValid, setIsValid] = useState({
     courseId: false,
     courseName: false,
   });
 
-  const { course } = useSelector((state) => state.course);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onChange = (value, inputField) => {
     if (inputField === "courseId") {
@@ -60,18 +51,26 @@ const AddCourse = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    //props
-    dispatch(
-      create({
-        courseId: input.courseId,
-        courseName: input.courseName,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(reset());
-        dispatch(getAllCourses());
-      });
+    if (user.role === "teacher") {
+      dispatch(
+        create({
+          courseId: input.courseId,
+          courseName: input.courseName,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(reset());
+          dispatch(getAllCourses());
+        });
+    } else if (user.role === "student") {
+      dispatch(enrollCourse(input.courseId))
+        .unwrap()
+        .then(() => {
+          dispatch(reset());
+          dispatch(getAllCourses());
+        });
+    }
   };
 
   const handleClickOpen = () => {
@@ -82,12 +81,8 @@ const AddCourse = () => {
     setOpen(false);
   };
 
-  return (
-    <>
-      <Button variant='outlined' onClick={handleClickOpen}>
-        <BiPlus /> Course
-      </Button>
-
+  const teacherForm = () => {
+    return (
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new course</DialogTitle>
         <DialogContent>
@@ -135,6 +130,58 @@ const AddCourse = () => {
           )}
         </DialogActions>
       </Dialog>
+    );
+  };
+
+  const studentForm = () => {
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add a new course</DialogTitle>
+        <DialogContent>
+          <form
+            className='courseForm-form'
+            method='POST'
+            onSubmit={onSubmit}
+            id='course-submit'
+          >
+            <TextField
+              margin='normal'
+              name='courseId'
+              required
+              fullWidth
+              label='Course ID'
+              value={input.couresId}
+              onChange={(e) => onChange(e.target.value, "courseId")}
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          {isValid.courseId ? (
+            <Button
+              type='submit'
+              form='course-submit'
+              onClick={handleClose}
+              variant='contained'
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button variant='contained' disabled>
+              Submit
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  return (
+    <>
+      <Button variant='outlined' onClick={handleClickOpen}>
+        <BiPlus /> Course
+      </Button>
+      {user.role === "teacher" ? teacherForm() : studentForm()}
     </>
   );
 };

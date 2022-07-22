@@ -41,14 +41,6 @@ export const logout = createAsyncThunk("auth/logout", async (user) => {
   return response;
 });
 
-export const getMe = createAsyncThunk(
-  "auth/getMe",
-  async ({ rejectWithValue }) => {
-    const response = await authService.getMe(rejectWithValue);
-    return response;
-  }
-);
-
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -82,29 +74,18 @@ const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getMe.pending, (state, action) => {
-        state.isLoading = true;
-      })
-      .addCase(getMe.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.user = action.payload;
-      })
-      .addCase(getMe.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
       .addCase(checkLoggedIn.pending, (state, action) => {
         state.isIdle = false;
       })
       .addCase(checkLoggedIn.fulfilled, (state, action) => {
         state.isSuccess = true;
         state.isLoggedIn = true;
+        state.user = action.payload;
       })
       .addCase(checkLoggedIn.rejected, (state, action) => {
         state.isSuccess = true;
         state.isLoggedIn = false;
+        state.message = action.payload;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.isSuccess = true;

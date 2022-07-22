@@ -31,10 +31,6 @@ router.post("/logout", isAuth, logoutUser);
 router.post("/signupStudent", signUpStudent);
 router.post("/signupTeacher", signupTeacher);
 router.get("/getMe", isAuth, getMe);
-router.get("/isLoggedIn", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.status(200).json({ isLoggedin: true });
-  } else res.status(400).json({ isLoggedin: false });
-});
+router.get("/isLoggedIn", isAuth, getMe);
 
 module.exports = router;

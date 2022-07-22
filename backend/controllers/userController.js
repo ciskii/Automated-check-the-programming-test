@@ -93,7 +93,15 @@ const signupTeacher = asyncHandler(async (req, res) => {
 // @route   POST /api/users/getMe
 // @access  Private
 const getMe = (req, res) => {
-  res.json(req.user);
+  const { id, email, firstName, lastName } = req.user;
+  const user = {
+    id: id,
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    role: req.role,
+  };
+  res.json(user);
 };
 
 // @desc    Hash password function

@@ -24,6 +24,18 @@ export const create = createAsyncThunk(
   }
 );
 
+export const enrollCourse = createAsyncThunk(
+  "course/enrollCourse",
+  async (courseId, { rejectWithValue }) => {
+    const response = await courseService.enrollCourse(
+      courseId,
+      rejectWithValue
+    );
+
+    return response;
+  }
+);
+
 export const getAllCourses = createAsyncThunk(
   "course/getAllCourses",
   async (course, { rejectWithValue }) => {
@@ -52,6 +64,17 @@ const courseSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(create.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(enrollCourse.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(enrollCourse.fulfilled, (state, action) => {
+        state.course = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(enrollCourse.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       })

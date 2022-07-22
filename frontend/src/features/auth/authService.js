@@ -47,16 +47,10 @@ const signup = async (user, rejectWithValue) => {
 };
 
 const checkLoggedIn = async () => {
-  const res = await axios.get(api + "isLoggedIn", {
-    withCredentials: true,
-  });
-  return res.data.isLoggedIn;
-};
-
-const getMe = async () => {
   const res = await axios.get(api + "getMe", {
     withCredentials: true,
   });
+  return res.data;
 };
 
 const authService = {
@@ -64,7 +58,6 @@ const authService = {
   signup,
   checkLoggedIn,
   logout,
-  getMe,
 };
 
 export default authService;

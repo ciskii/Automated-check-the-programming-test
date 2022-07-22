@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 
+import { checkLoggedIn } from "features/auth/authSlice";
 import "./login.css";
 
 const Login = () => {
@@ -22,15 +23,18 @@ const Login = () => {
     password: false,
   });
 
-  const { user, message, isLoggedIn } = useSelector((state) => state.auth);
+  const { message, isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await dispatch(
-      login({ email: input.email, password: input.password })
-    ).unwrap();
+    dispatch(login({ email: input.email, password: input.password }))
+      .unwrap()
+      .then(() => {
+        dispatch(checkLoggedIn());
+        navigate("/", { replace: true });
+      });
 
     // * if navigate function is here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
     // * it has to be in useEffect
@@ -55,11 +59,9 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn || user) {
-      navigate("/");
-    }
-  }, [user, isLoggedIn]);
+  // if (isLoggedIn) {
+  //   navigate("/", { replace: true });
+  // }
 
   return (
     <div className='login'>

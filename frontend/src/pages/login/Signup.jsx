@@ -7,9 +7,9 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-
 import validator from "validator";
 
+import { checkLoggedIn } from "features/auth/authSlice";
 import "./signup.css";
 
 const Signup = () => {
@@ -45,7 +45,12 @@ const Signup = () => {
     )
       .unwrap()
       .then(() => {
-        dispatch(login({ email: input.email, password: input.password }));
+        dispatch(login({ email: input.email, password: input.password }))
+          .unwrap()
+          .then(() => {
+            dispatch(checkLoggedIn());
+            navigate("/", { replace: true });
+          });
       });
   };
 
@@ -81,11 +86,9 @@ const Signup = () => {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn || user) {
-      navigate("/");
-    }
-  }, [user, isLoggedIn, dispatch]);
+  if (isLoggedIn) {
+    navigate("/", { replace: true });
+  }
 
   return (
     <div className='login'>

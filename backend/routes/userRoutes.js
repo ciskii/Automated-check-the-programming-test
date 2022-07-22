@@ -33,8 +33,9 @@ router.post("/signupTeacher", signupTeacher);
 router.get("/getMe", isAuth, getMe);
 router.get("/isLoggedIn", (req, res) => {
   if (req.isAuthenticated()) {
+    console.log("logged in");
     res.status(200).json({ isLoggedin: true });
-  } else res.status(401).json({ isLoggedin: false });
+  } else res.status(400).json({ isLoggedin: false });
 });
 
 module.exports = router;

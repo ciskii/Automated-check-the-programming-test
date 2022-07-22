@@ -4,8 +4,13 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
   Navigate,
+  useLocation,
 } from "react-router-dom";
+
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import Dashboard from "pages/dashboard/Dashboard";
 import Question from "pages/question/Question";
@@ -13,25 +18,21 @@ import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
 import Signup from "pages/login/Signup";
 import "./app.css";
-import { checkLoggedIn } from "features/auth/authSlice";
 
 const RequireAuth = (props) => {
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  if (!isLoggedIn) {
-    return <Navigate to='/login' replace={true} />;
+  const { isLoggedIn, isSuccess } = useSelector((state) => state.auth);
+  let location = useLocation();
+
+  // ! use isSuccess instead of isIdle because we want to know when the api called is finished not when started calling api
+  if (!isSuccess) {
+    return null;
   } else {
-    return props.children;
+    if (isLoggedIn) {
+      return props.children;
+    } else {
+      return <Navigate to='/login' state={{ from: location }} replace={true} />;
+    }
   }
-  // const dispatch = useDispatch();
-  // dispatch(checkLoggedIn())
-  //   .unwrap()
-  //   .then(() => {
-  //     if (!isLoggedIn) {
-  //       return <Navigate to='/login' replace={true} />;
-  //     } else {
-  //       return props.children;
-  //     }
-  //   });
 };
 
 const App = () => {
@@ -56,8 +57,6 @@ const App = () => {
               </RequireAuth>
             }
           />
-
-          {/* <Route path='/quiz-creator' element={<Question />}></Route> */}
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
         </Routes>

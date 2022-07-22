@@ -197,7 +197,7 @@ const Question = () => {
     dispatch(getAllQuestions(quiz.id))
       .unwrap()
       .then((res) => {
-        console.log("res", res);
+        // console.log("res", res);
         if (res.length !== 0) {
           setCurQuestions(res);
           setPage(res.length);

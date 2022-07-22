@@ -50,13 +50,13 @@ const checkLoggedIn = async () => {
   const res = await axios.get(api + "isLoggedIn", {
     withCredentials: true,
   });
+  return res.data.isLoggedIn;
 };
 
 const getMe = async () => {
-  const res = await await axios.get(api + "getMe", {
+  const res = await axios.get(api + "getMe", {
     withCredentials: true,
   });
-  console.log("res.data", res.data);
 };
 
 const authService = {

@@ -11,7 +11,7 @@ import "./navbar.css";
 
 const Navbar = () => {
   const [isDropDown, setIsDropDown] = useState(false);
-  const user = useSelector((state) => state.auth.user);
+  // const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,11 +27,11 @@ const Navbar = () => {
     navigate("/login", { replace: true });
   };
 
-  const getInfo = () => {
-    console.log("this is getInfo");
-    const user = dispatch(getMe());
-    console.log("user", user);
-  };
+  // const getInfo = () => {
+  //   console.log("this is getInfo");
+  //   const user = dispatch(getMe());
+  //   console.log("user", user);
+  // };
 
   return (
     <div className='nav'>
@@ -47,7 +47,8 @@ const Navbar = () => {
             </div>
 
             <div className='nav-dd-ctn-group'>
-              <div className='nav-dd-ctn-link' onClick={getInfo}>
+              {/* <div className='nav-dd-ctn-link' onClick={getInfo}> */}
+              <div className='nav-dd-ctn-link'>
                 <FaUserCircle className='nav-dd-ctn-link-btn' />
                 <p>Your Profile</p>
               </div>

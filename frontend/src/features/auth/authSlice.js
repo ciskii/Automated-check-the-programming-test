@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   isError: false,
   isSuccess: false,
+  isIdle: true,
   isLoading: false,
   isLoggedIn: false,
   message: "",
@@ -94,10 +95,15 @@ const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(checkLoggedIn.pending, (state, action) => {
+        state.isIdle = false;
+      })
       .addCase(checkLoggedIn.fulfilled, (state, action) => {
+        state.isSuccess = true;
         state.isLoggedIn = true;
       })
       .addCase(checkLoggedIn.rejected, (state, action) => {
+        state.isSuccess = true;
         state.isLoggedIn = false;
       })
       .addCase(logout.fulfilled, () => initialState);

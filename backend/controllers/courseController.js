@@ -38,10 +38,24 @@ const createCourse = asyncHandler(async (req, res) => {
 const getAllCourses = asyncHandler(async (req, res) => {
   // if (req.session.passport.user.role === "student") {
   if (req.role === "student") {
-    const courses = await Enrollment.findAll({
+    // find enrolled courses
+    const enrolledCourses = await Enrollment.findAll({
       where: { StudentId: req.user.id },
     });
-    if (courses) {
+
+    if (enrolledCourses) {
+      // get enrolled courses info
+      const courses = await Promise.all(
+        enrolledCourses.map(async (course) => {
+          console.log("course.CourseId", course.CourseId);
+          const res = await Course.findOne({
+            where: { id: course.CourseId },
+          });
+          return res;
+        })
+      );
+
+      console.log("courses", courses);
       res.json({ courses: courses });
     } else {
       throw new Error("There is no course yet.");

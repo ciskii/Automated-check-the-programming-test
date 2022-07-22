@@ -35,6 +35,21 @@ const RequireAuth = (props) => {
   }
 };
 
+const Redirect = (props) => {
+  const { isLoggedIn, isSuccess } = useSelector((state) => state.auth);
+  let location = useLocation();
+
+  if (!isSuccess) {
+    return null;
+  } else {
+    if (isLoggedIn) {
+      return <Navigate to='/' state={{ from: location }} />;
+    } else {
+      return props.children;
+    }
+  }
+};
+
 const App = () => {
   return (
     <Router>
@@ -57,8 +72,22 @@ const App = () => {
               </RequireAuth>
             }
           />
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/signup' element={<Signup />}></Route>
+          <Route
+            path='/login'
+            element={
+              <Redirect>
+                <Login />
+              </Redirect>
+            }
+          />
+          <Route
+            path='/signup'
+            element={
+              <Redirect>
+                <Signup />
+              </Redirect>
+            }
+          />
         </Routes>
       </div>
     </Router>

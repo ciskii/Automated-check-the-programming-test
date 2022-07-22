@@ -35,10 +35,6 @@ const Login = () => {
         dispatch(checkLoggedIn());
         navigate("/", { replace: true });
       });
-
-    // * if navigate function is here: it'll navigate to the '/' path before isSuccess update so it'll redirect to this page again
-    // * it has to be in useEffect
-    // * -----> navigate("/"); <-----
   };
 
   const onChange = (value, inputField) => {
@@ -58,10 +54,6 @@ const Login = () => {
       }
     }
   };
-
-  // if (isLoggedIn) {
-  //   navigate("/", { replace: true });
-  // }
 
   return (
     <div className='login'>

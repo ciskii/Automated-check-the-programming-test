@@ -106,7 +106,10 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.isLoggedIn = false;
       })
-      .addCase(logout.fulfilled, () => initialState);
+      .addCase(logout.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoggedIn = false;
+      });
   },
 });
 

@@ -2,136 +2,69 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { debounce } from "lodash";
-
-import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
+import MarkdownRenderer from "./MarkdownRenderer";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import "katex/dist/katex.min.css";
 import CodeMirror from "@uiw/react-codemirror";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogTitle from "@mui/material/DialogTitle";
 
-import {
-  create,
-  createOne,
-  getAllQuestions,
-  reset,
-} from "features/question/questionSlice";
+import { create, reset } from "features/answer/answerSlice";
+import { getAllQuestions } from "features/question/questionSlice";
 import { myTheme } from "./theme";
 import "github-markdown-css";
 import "./answer.css";
 
-const MarkdownRenderer = React.memo((markdownQuestion) => {
-  return (
-    <ReactMarkdown
-      className='editor-show markdown-body'
-      children={markdownQuestion.question}
-      remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeKatex]}
-      components={{
-        code({ node, inline, className, children, ...props }) {
-          const match = /language-(\w+)/.exec(className || "");
-          return !inline && match ? (
-            <SyntaxHighlighter
-              children={String(children).replace(/\n$/, "")}
-              language={match[1]}
-              style={githubGist}
-              PreTag='div'
-              showLineNumbers={true}
-              wrapLines={true}
-              wrapLongLines={true}
-              {...props}
-            />
-          ) : (
-            <code className={className} {...props}>
-              {children}
-            </code>
-          );
-        },
-      }}
-    />
-  );
-});
-
 const Answer = () => {
-  const [codeCur, setCodeCur] = useState(""); // current code at selected page
-  const [curQuestion, setCurQuestion] = useState(""); //current question on that page
+  const [curCode, setCurCode] = useState(""); // current code at selected page
+  const [curCodes, setCurCodes] = useState([]); // set of current code for each questions  array of obj. {QuestionObj, answerObj}
+  const [curQuestion, setCurQuestion] = useState(""); //current question on selected page
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
-  const { isIdle, questions } = useSelector((state) => state.question);
-  const { quiz } = useSelector((state) => state.quiz);
+
+  const { isIdle, questions } = useSelector((state) => state.question); // Questions from teacher
+  const { quiz } = useSelector((state) => state.quiz); // quiz obj.
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
 
   const handleChangePage = (e, value) => {
+    const newCodes = curCodes.map((item) => {
+      return { ...item };
+    });
+    newCodes[curPage - 1].answerObj = curCode;
+    setCurCodes(newCodes);
+
+    setCurCode(curCodes[value - 1].answerObj);
     setCurPage(value);
-    setCurQuestion(questions[value - 1].questionObj); // single question
+    setCurQuestion(questions[value - 1].questionObj); // change question for new page
   };
 
   const handleSave = async () => {
-    // if (curQuestions.length !== 0) {
-    //   const newQuestion = curQuestions.map((item) => {
-    //     return { ...item };
-    //   });
-    //   newQuestion[curPage - 1].questionObj = codeCur;
-    //   dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
+    const savedAnswers = curCodes.map((item) => {
+      return { ...item };
+    });
+    savedAnswers[curPage - 1].answerObj = curCode;
+
+    dispatch(create(savedAnswers)).unwrap();
+    // .then((res) => {
+    //   dispatch(getAllQuestions(params.QuizId))
     //     .unwrap()
     //     .then((res) => {
-    //       dispatch(getAllQuestions(params.QuizId))
-    //         .unwrap()
-    //         .then((res) => {
-    //           setCurQuestions(res);
-    //           setPage(res.length);
-    //           setCodeCur(res[curPage - 1].questionObj);
-    //         });
+    //       setCurQuestions(res);
+    //       setPage(res.length);
+    //       setCurCode(res[curPage - 1].questionObj);
     //     });
-    // } else {
-    //   const newQuestion = [
-    //     {
-    //       id: "new",
-    //       questionObj: codeCur,
-    //     },
-    //   ];
-    //   dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
-    //     .unwrap()
-    //     .then((res) => {
-    //       console.log("res", res);
-    //       dispatch(getAllQuestions(params.QuizId))
-    //         .unwrap()
-    //         .then((res) => {
-    //           setCurQuestions(res);
-    //           setPage(res.length);
-    //           setCodeCur(res[curPage - 1].questionObj);
-    //         });
-    //     });
-    // }
+    // });
   };
 
   // * try to understand useCallback and useMemo
   const changeHandler = useCallback((value, viewUpdate) => {
-    setCodeCur(value);
-  }, []);
-
-  // dont need these
-  const debouncedChangeHandler = useMemo((value, viewUpdate) => {
-    debounce(changeHandler, 300);
+    setCurCode(value);
   }, []);
 
   useEffect(() => {
@@ -139,6 +72,13 @@ const Answer = () => {
       .unwrap()
       .then((res) => {
         if (res.length !== 0) {
+          const initialCodes = res.map((item) => {
+            return {
+              QuestionId: item.id, // question id
+              answerObj: "",
+            };
+          }); // create default code for each question
+          setCurCodes(initialCodes);
           setCurQuestion(res[0].questionObj);
           setPage(res.length);
         }
@@ -176,36 +116,9 @@ const Answer = () => {
 
       <div className='editor-container'>
         <MarkdownRenderer question={curQuestion} />
-        {/* <ReactMarkdown
-          className='editor-show markdown-body'
-          children={delayedMarkdown}
-          remarkPlugins={[remarkGfm, remarkMath]}
-          rehypePlugins={[rehypeKatex]}
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, "")}
-                  language={match[1]}
-                  style={githubGist}
-                  PreTag='div'
-                  showLineNumbers={true}
-                  wrapLines={true}
-                  wrapLongLines={true}
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        /> */}
 
         <CodeMirror
-          value={codeCur}
+          value={curCode}
           extensions={[markdown({ base: markdownLanguage })]}
           onChange={changeHandler}
           height='100%'

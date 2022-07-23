@@ -24,7 +24,7 @@ const {
 // ----------- Answer Router ------------
 router.get("/getAll/:QuestionId", isAuth, getAllAnswers);
 router.get("/get/:id", isAuth, getAnswer);
-router.post("/create/:QuestionId", isAuth, createAnswer);
+router.post("/create/", isAuth, createAnswer);
 router.put("/update/:id", isAuth, updateAnswer);
 router.delete("/delete/:id", isAuth, deleteAnswer);
 

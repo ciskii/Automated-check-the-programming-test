@@ -2,16 +2,27 @@ const asyncHandler = require("express-async-handler");
 const { Answer } = require("../models");
 
 // ---------- Answer obj API ----------------
-const createAnswer = (req, res) => {
-  const { QuestionId } = req.params;
-  const { answerObj } = req.body;
+const createAnswer = asyncHandler(async (req, res) => {
+  const { savedAnswers } = req.body;
+  console.log("savedAnswers", savedAnswers);
 
-  Answer.create({ answerObj: answerObj, QuestionId: QuestionId })
-    .then((answer) => {
-      res.json({ answer: answer });
+  const answers = await Promise.all(
+    savedAnswers.map(async (answer) => {
+      const { answerObj, QuestionId } = answer;
+      const res = await Answer.create({
+        answerObj: answerObj,
+        QuestionId: QuestionId,
+      });
+      return res;
     })
-    .catch((err) => console.log("err", err));
-};
+  );
+  console.log("answers", answers);
+  // Answer.create({ answerObj: answerObj, QuestionId: QuestionId })
+  //   .then((answer) => {
+  //     res.json({ answer: answer });
+  //   })
+  //   .catch((err) => console.log("err", err));
+});
 
 const getAllAnswers = asyncHandler(async (req, res) => {
   const { QuestionId } = req.params;

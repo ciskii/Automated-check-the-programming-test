@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import courseReducer from "../features/course/courseSlice";
 import quizReducer from "../features/quiz/quizSlice";
 import questionReducer from "../features/question/questionSlice";
+import answerReducer from "../features/answer/answerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     course: courseReducer,
     quiz: quizReducer,
     question: questionReducer,
+    answer: answerReducer,
   },
 });

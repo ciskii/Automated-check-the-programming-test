@@ -74,7 +74,7 @@ const App = () => {
             }
           />
           <Route
-            path='/quiz'
+            path='/quiz/:QuizId'
             element={
               <RequireAuth>
                 <Answer />

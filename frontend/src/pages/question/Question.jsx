@@ -123,11 +123,10 @@ const Question = () => {
       });
 
       newQuestion[curPage - 1].questionObj = codeCur;
-      dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }))
+      dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then((res) => {
-          console.log("res", res);
-          dispatch(getAllQuestions(quiz.id))
+          dispatch(getAllQuestions(params.QuizId))
             .unwrap()
             .then((res) => {
               setCurQuestions(res);
@@ -142,11 +141,11 @@ const Question = () => {
           questionObj: codeCur,
         },
       ];
-      dispatch(create({ newQuestion: newQuestion, QuizId: quiz.id }))
+      dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then((res) => {
           console.log("res", res);
-          dispatch(getAllQuestions(quiz.id))
+          dispatch(getAllQuestions(params.QuizId))
             .unwrap()
             .then((res) => {
               setCurQuestions(res);
@@ -157,7 +156,7 @@ const Question = () => {
     }
 
     // if (createSuccess) {
-    //   dispatch(getAllQuestions(quiz.id))
+    //   dispatch(getAllQuestions(params.QuizId))
     //     .unwrap()
     //     .then((res) => {
     //       console.log("hey");

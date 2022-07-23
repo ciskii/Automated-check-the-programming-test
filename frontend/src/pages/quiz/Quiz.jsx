@@ -40,7 +40,7 @@ const Quiz = (props) => {
             onClick={handleSetQuiz}
           >
             <div className='quiz-card-item '>
-              <p className='quiz-card-item-text'>Questions</p>
+              <p className='quiz-card-item-text'>Create Quiz</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />
             </div>
           </Link>

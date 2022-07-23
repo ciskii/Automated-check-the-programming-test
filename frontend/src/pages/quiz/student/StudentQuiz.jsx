@@ -34,7 +34,11 @@ const StudentQuiz = (props) => {
     >
       {quiz === curHover ? (
         <div className='quiz-card'>
-          <Link to='/quiz' className='question-link' onClick={handleSetQuiz}>
+          <Link
+            to={`/quiz/${quiz.id}`}
+            className='question-link'
+            onClick={handleSetQuiz}
+          >
             <div className='quiz-card-item '>
               <p className='quiz-card-item-text'>Quiz</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />

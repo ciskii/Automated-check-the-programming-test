@@ -1,16 +1,17 @@
 .nav {
   display: flex;
-  background-color: #373d49;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   height: 4rem;
-  color: white;
+  background-color: #1976d2;
 }
 
 .nav-home {
   cursor: pointer;
   color: white;
+
+  text-decoration: none;
 }
 
 .nav-dd {

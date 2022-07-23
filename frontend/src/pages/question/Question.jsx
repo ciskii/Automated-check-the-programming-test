@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { debounce } from "lodash";
 
@@ -17,6 +17,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import HomeIcon from "@mui/icons-material/Home";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
@@ -33,8 +34,8 @@ import {
   reset,
 } from "features/question/questionSlice";
 import { myTheme, code } from "./theme";
-import "./question.css";
 import "github-markdown-css";
+import "./question.css";
 
 const Question = () => {
   const [codeCur, setCodeCur] = useState(""); // current code at selected page
@@ -45,13 +46,8 @@ const Question = () => {
   const { isIdle, questions } = useSelector((state) => state.question);
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
-
-  const thisReset = () => {
-    // const [codeCur, setCodeCur] = useState(""); // current code at selected page
-    // const [page, setPage] = useState(1); // total page number
-    // const [curPage, setCurPage] = useState(1); // current selected page
-    // const [curQuestions, setCurQuestions] = useState([]);
-  };
+  const navigate = useNavigate();
+  const params = useParams();
 
   const getNewQuestion = () => {
     // ! what a step! HOLY
@@ -194,7 +190,7 @@ const Question = () => {
   );
 
   useEffect(() => {
-    dispatch(getAllQuestions(quiz.id))
+    dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       .unwrap()
       .then((res) => {
         // console.log("res", res);
@@ -212,10 +208,16 @@ const Question = () => {
   return (
     <div className='editor'>
       <div className='editor-title'>
-        <div className='editor-title-label'>
-          <p>DOCUMENT NAME</p>
-        </div>
-
+        <Stack direction='row' spacing={1}>
+          <Link to='/'>
+            <Tooltip title='Home'>
+              <IconButton aria-label='home'>
+                <HomeIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+        </Stack>
+        <h4 className='editor-title-label'>{quiz.name}</h4>
         <Stack direction='row' spacing={1}>
           <Tooltip title='Create'>
             <IconButton

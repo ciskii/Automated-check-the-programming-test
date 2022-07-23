@@ -64,7 +64,6 @@ const Login = () => {
       </div>
       <form className='login-form' onSubmit={handleSubmit} method='POST'>
         <TextField
-          required
           fullWidth
           margin='normal'
           label='Email'
@@ -72,7 +71,6 @@ const Login = () => {
           onChange={(e) => onChange(e.target.value, "email")}
         />
         <TextField
-          required
           fullWidth
           margin='normal'
           label='Password'

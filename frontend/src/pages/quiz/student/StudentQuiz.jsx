@@ -6,9 +6,9 @@ import { FaPlus } from "react-icons/fa";
 import { FiArrowRightCircle } from "react-icons/fi";
 
 import { getAllQuizzes, setQuiz } from "features/quiz/quizSlice";
-import "./quiz.css";
+import "./studentQuiz.css";
 
-const Quiz = (props) => {
+const StudentQuiz = (props) => {
   const [curHover, setCurHover] = useState("");
   const dispatch = useDispatch();
 
@@ -34,24 +34,20 @@ const Quiz = (props) => {
     >
       {quiz === curHover ? (
         <div className='quiz-card'>
-          <Link
-            to={`/quiz-creator/${quiz.id}`}
-            className='question-link'
-            onClick={handleSetQuiz}
-          >
+          <Link to='/quiz' className='question-link' onClick={handleSetQuiz}>
             <div className='quiz-card-item '>
-              <p className='quiz-card-item-text'>Questions</p>
+              <p className='quiz-card-item-text'>Quiz</p>
               <FiArrowRightCircle className='quiz-card-item-icon' />
             </div>
           </Link>
-          <div className='quiz-card-item '>
+          {/* <div className='quiz-card-item '>
             <FiArrowRightCircle className='quiz-card-item-icon' />
             <p>Solution</p>
-          </div>
-          <div className='quiz-card-item'>
+          </div> */}
+          {/* <div className='quiz-card-item'>
             <FiArrowRightCircle className='quiz-card-item-icon' />
             <p>Student</p>
-          </div>
+          </div> */}
         </div>
       ) : (
         <div className='quiz-item'>{quiz.name}</div>
@@ -60,4 +56,4 @@ const Quiz = (props) => {
   );
 };
 
-export default Quiz;
+export default StudentQuiz;

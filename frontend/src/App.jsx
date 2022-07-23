@@ -14,6 +14,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import Dashboard from "pages/dashboard/Dashboard";
 import Question from "pages/question/Question";
+import Answer from "pages/answer/Answer";
 import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
 import Signup from "pages/login/Signup";
@@ -65,10 +66,18 @@ const App = () => {
             }
           />
           <Route
-            path='/quiz-creator'
+            path='/quiz-creator/:QuizId'
             element={
               <RequireAuth>
                 <Question />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='/quiz'
+            element={
+              <RequireAuth>
+                <Answer />
               </RequireAuth>
             }
           />
@@ -86,6 +95,14 @@ const App = () => {
               <Redirect>
                 <Signup />
               </Redirect>
+            }
+          />
+          <Route
+            path='*'
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
             }
           />
         </Routes>

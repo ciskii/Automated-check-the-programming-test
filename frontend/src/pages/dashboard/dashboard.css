@@ -15,8 +15,8 @@
 
 .dashboard-container-header {
   padding: 20px 0px;
-  margin-bottom: 50px;
-  border-bottom: 1px solid var(--color-dashboard-border);
+  /* margin-bottom: 50px; */
+  /* border-bottom: 1px solid var(--color-dashboard-border); */
 }
 
 .dashboard-container-course {

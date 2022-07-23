@@ -4,6 +4,9 @@ import { FiLogOut, FiSettings } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+
 import { checkLoggedIn, logout, reset } from "features/auth/authSlice";
 import { reset as courseReset } from "features/course/courseSlice";
 import { reset as quizReset } from "features/quiz/quizSlice";
@@ -28,17 +31,21 @@ const Navbar = () => {
       });
   };
 
-  // const getInfo = () => {
-  //   console.log("this is getInfo");
-  //   const user = dispatch(getMe());
-  //   console.log("user", user);
-  // };
+  const theme = createTheme({
+    palette: {
+      neutral: {
+        main: "#64748B",
+        contrastText: "#fff",
+      },
+    },
+  });
 
   return (
     <div className='nav'>
       <Link to='/' className='nav-home'>
-        Quiz Maker
+        Automated Markdown Quiz
       </Link>
+
       <div className='nav-dd'>
         <FaUserCircle className='nav-dd-btn' onClick={onClick} />
         {isDropDown ? (

@@ -3,7 +3,7 @@ import enrollmentService from "./enrollmentService";
 
 const initialState = {
   course: {},
-  courses: [],
+  enrolledStudents: [],
   isIdle: true,
   isSuccess: false,
   isError: false,
@@ -23,10 +23,13 @@ export const enrollCourse = createAsyncThunk(
   }
 );
 
-export const getAllCourses = createAsyncThunk(
-  "enrollment/getAllCourses",
-  async (course, { rejectWithValue }) => {
-    const response = await courseService.getAllCourses(course, rejectWithValue);
+export const getEnrolledStudents = createAsyncThunk(
+  "enrollment/getEnrolledStudents",
+  async (CourseId, { rejectWithValue }) => {
+    const response = await enrollmentService.getEnrolledStudents(
+      CourseId,
+      rejectWithValue
+    );
 
     return response;
   }
@@ -53,19 +56,19 @@ const enrollmentSlice = createSlice({
       .addCase(enrollCourse.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(getEnrolledStudents.pending, (state) => {
+        state.isIdle = false;
+        state.isLoading = true;
+      })
+      .addCase(getEnrolledStudents.fulfilled, (state, action) => {
+        state.enrolledStudents = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(getEnrolledStudents.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
       });
-    // .addCase(getAllCourses.pending, (state) => {
-    //   state.isIdle = false;
-    //   state.isLoading = true;
-    // })
-    // .addCase(getAllCourses.fulfilled, (state, action) => {
-    //   state.courses = action.payload;
-    //   state.isSuccess = true;
-    // })
-    // .addCase(getAllCourses.rejected, (state, action) => {
-    //   state.isError = true;
-    //   state.message = action.payload;
-    // });
   },
 });
 

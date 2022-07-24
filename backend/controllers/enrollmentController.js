@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { Enrollment, Course } = require("../models");
+const { Enrollment, Course, Student } = require("../models");
 
 //  @access Student
 const enrollCourse = asyncHandler(async (req, res) => {
@@ -32,12 +32,25 @@ const enrollCourse = asyncHandler(async (req, res) => {
 
 // @access Teacher
 const getEnrolledStudents = asyncHandler(async (req, res) => {
-  const { CourseId } = req.params; // use params because when user click at the course on client, the client will retrieve Course Id from getCOurse API and attach to the url then they'll request from that url
+  const { CourseId } = req.body; // use params because when user click at the course on client, the client will retrieve Course Id from getCOurse API and attach to the url then they'll request from that url
   const enrolledStudents = await Enrollment.findAll({
     where: { CourseId: CourseId },
   });
+
   if (enrolledStudents) {
-    res.json({ enrolledStudents: enrolledStudents });
+    const students = await Promise.all(
+      enrolledStudents.map(async (student) => {
+        const res = await Student.findOne({
+          where: { id: student.StudentId },
+        });
+        return {
+          id: student.StudentId,
+          firstName: res.firstName,
+          lastName: res.lastName,
+        };
+      })
+    );
+    res.json(students);
   } else {
     throw new Error("There is no enrolled student yet.");
   }

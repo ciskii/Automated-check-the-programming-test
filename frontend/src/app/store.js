@@ -4,6 +4,7 @@ import courseReducer from "../features/course/courseSlice";
 import quizReducer from "../features/quiz/quizSlice";
 import questionReducer from "../features/question/questionSlice";
 import answerReducer from "../features/answer/answerSlice";
+import enrollmentReducer from "../features/enrollment/enrollmentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     quiz: quizReducer,
     question: questionReducer,
     answer: answerReducer,
+    enrollment: enrollmentReducer,
   },
 });

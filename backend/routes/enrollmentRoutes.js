@@ -14,7 +14,12 @@ const {
 } = require("../controllers/enrollmentController");
 
 router.post("/enrollCourse", isStudent, enrollCourse);
-router.get("/getStudents/:CourseId", isAuth, getEnrolledStudents);
+router.post(
+  "/getStudents",
+
+  isAuth,
+  getEnrolledStudents
+);
 router.delete("/drop", isTeacher, dropEnrolledStudent);
 
 module.exports = router;

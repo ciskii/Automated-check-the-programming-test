@@ -7,6 +7,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
+import EnrolledStudents from "./EnrolledStudents";
 import AddQuiz from "./AddQuiz";
 import "./course.css";
 import Quiz from "pages/quiz/Quiz";
@@ -25,7 +26,15 @@ const Course = (props) => {
       <div className='list-overlay' onClick={props.onClose} />
 
       <div className='list-container'>
-        <Box sx={{ width: "100%", typography: "body1" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            width: "100%",
+            typography: "body1",
+          }}
+        >
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
@@ -51,7 +60,9 @@ const Course = (props) => {
                 <AddQuiz id={props.id} />
               </div>
             </TabPanel>
-            <TabPanel value='2'>Item Two</TabPanel>
+            <TabPanel value='2' sx={{ px: (0, 0), height: "100%" }}>
+              <EnrolledStudents />
+            </TabPanel>
           </TabContext>
         </Box>
       </div>

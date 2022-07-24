@@ -18,6 +18,7 @@ import Answer from "pages/answer/Answer";
 import Navbar from "components/Navbar";
 import Login from "pages/login/Login";
 import Signup from "pages/login/Signup";
+import Preview from "pages/preview/Preview";
 import "./app.css";
 
 const RequireAuth = (props) => {
@@ -94,6 +95,14 @@ const App = () => {
             element={
               <Redirect>
                 <Signup />
+              </Redirect>
+            }
+          />
+          <Route
+            path='/student-answers'
+            element={
+              <Redirect>
+                <Preview />
               </Redirect>
             }
           />

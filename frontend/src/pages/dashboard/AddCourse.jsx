@@ -7,7 +7,7 @@ import {
   reset,
 } from "features/course/courseSlice";
 
-import { BiPlus } from "react-icons/bi";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -178,8 +178,8 @@ const AddCourse = () => {
 
   return (
     <>
-      <Button variant='outlined' onClick={handleClickOpen}>
-        <BiPlus /> Course
+      <Button variant='outlined' color='success' onClick={handleClickOpen}>
+        <AddCircleOutlineRoundedIcon sx={{ fontSize: 14, mb: 0.25 }} /> Course
       </Button>
       {user.role === "teacher" ? teacherForm() : studentForm()}
     </>

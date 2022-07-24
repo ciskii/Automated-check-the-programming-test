@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { create, getAllQuizzes, reset } from "features/quiz/quizSlice";
 
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -61,8 +62,8 @@ const AddQuiz = (props) => {
 
   return (
     <>
-      <Button variant='outlined' onClick={handleClickOpen}>
-        Add a new quiz
+      <Button variant='outlined' color='success' onClick={handleClickOpen}>
+        <AddCircleOutlineRoundedIcon sx={{ fontSize: 14, mb: 0.25 }} /> Quiz
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new quiz</DialogTitle>

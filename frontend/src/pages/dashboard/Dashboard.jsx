@@ -75,6 +75,8 @@ const Dashboard = () => {
                 variant='outlined'
                 onClick={() => onClick(item)}
                 color='info'
+                className='course'
+                key={item.id}
               >
                 {item.courseId}
               </Button>

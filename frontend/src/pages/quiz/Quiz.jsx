@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { FaPlus } from "react-icons/fa";
-import { FiArrowRightCircle } from "react-icons/fi";
+import Button from "@mui/material/Button";
 
 import { getAllQuizzes, setQuiz } from "features/quiz/quizSlice";
 import "./quiz.css";
 
 const Quiz = (props) => {
-  const [curHover, setCurHover] = useState("");
   const dispatch = useDispatch();
 
   const quiz = props.quiz;
@@ -18,46 +16,57 @@ const Quiz = (props) => {
     dispatch(setQuiz(quiz));
   };
 
-  const onMouseEnter = (quiz) => {
-    setCurHover(quiz);
-  };
-
-  const onMouseLeave = () => {
-    setCurHover("");
-  };
-
   return (
-    <div
-      className='quiz'
-      onMouseEnter={() => onMouseEnter(quiz)}
-      onMouseLeave={() => onMouseLeave(quiz)}
-    >
-      {quiz === curHover ? (
-        <div className='quiz-card'>
-          <Link
-            to={`/quiz-creator/${quiz.id}`}
-            className='question-link'
-            onClick={handleSetQuiz}
-          >
-            <div className='quiz-card-item '>
-              <p className='quiz-card-item-text'>Create Quiz</p>
-              <FiArrowRightCircle className='quiz-card-item-icon' />
-            </div>
-          </Link>
-          <div className='quiz-card-item '>
-            <FiArrowRightCircle className='quiz-card-item-icon' />
-            <p>Solution</p>
-          </div>
-          <div className='quiz-card-item'>
-            <FiArrowRightCircle className='quiz-card-item-icon' />
-            <p>Student</p>
-          </div>
-        </div>
-      ) : (
-        <div className='quiz-item'>{quiz.name}</div>
-      )}
-    </div>
+    <>
+      <Link
+        to={`/quiz-creator/${quiz.id}`}
+        className='question-link'
+        onClick={handleSetQuiz}
+      >
+        <Button
+          fullWidth
+          variant='outlined'
+          // onClick={() => onClick(item)}
+          className='quiz'
+          color='info'
+        >
+          {quiz.name}
+        </Button>
+      </Link>
+    </>
   );
 };
 
 export default Quiz;
+
+// const [curHover, setCurHover] = useState("");
+
+// const onMouseEnter = (quiz) => {
+//   setCurHover(quiz);
+// };
+
+// const onMouseLeave = () => {
+//   setCurHover("");
+// };
+
+{
+  /* <div
+        className='quiz'
+        onMouseEnter={() => onMouseEnter(quiz)}
+        onMouseLeave={() => onMouseLeave(quiz)}
+      >
+        {quiz === curHover ? (
+          <div className='quiz-card'>
+            
+              <div className='quiz-card-item '>
+                <p className='quiz-card-item-text'>Create Quiz</p>
+                <FiArrowRightCircle className='quiz-card-item-icon' />
+              </div>
+            </Link>
+          
+          </div>
+        ) : (
+          <div className='quiz-item'>{quiz.name}</div>
+        )}
+      </div> */
+}

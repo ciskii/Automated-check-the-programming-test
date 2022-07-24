@@ -15,7 +15,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { create, reset } from "features/answer/answerSlice";
 import { getAllQuestions } from "features/question/questionSlice";
-import { myTheme } from "./theme";
+import { myTheme } from "utils/theme";
 import "github-markdown-css";
 import "./answer.css";
 
@@ -26,6 +26,7 @@ const Answer = () => {
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
 
+  const { user } = useSelector((state) => state.auth);
   const { isIdle, questions } = useSelector((state) => state.question); // Questions from teacher
   const { quiz } = useSelector((state) => state.quiz); // quiz obj.
   const dispatch = useDispatch();
@@ -44,12 +45,17 @@ const Answer = () => {
     setCurQuestion(questions[value - 1].questionObj); // change question for new page
   };
 
+  console.log("user", user);
   const handleSave = async () => {
-    const savedAnswers = curCodes.map((item) => {
+    const savedAnswersObj = curCodes.map((item) => {
       return { ...item };
     });
-    savedAnswers[curPage - 1].answerObj = curCode;
+    savedAnswersObj[curPage - 1].answerObj = curCode;
 
+    const savedAnswers = {
+      id: user.id,
+      savedAnswersObj: savedAnswersObj,
+    };
     dispatch(create(savedAnswers)).unwrap();
     // .then((res) => {
     //   dispatch(getAllQuestions(params.QuizId))

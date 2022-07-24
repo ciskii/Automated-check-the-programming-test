@@ -3,7 +3,7 @@ const { Answer } = require("../models");
 
 // ---------- Answer obj API ----------------
 const createAnswer = asyncHandler(async (req, res) => {
-  const { savedAnswers } = req.body;
+  const { savedAnswers, id } = req.body;
   console.log("savedAnswers", savedAnswers);
 
   const answers = await Promise.all(
@@ -12,6 +12,7 @@ const createAnswer = asyncHandler(async (req, res) => {
       const res = await Answer.create({
         answerObj: answerObj,
         QuestionId: QuestionId,
+        StudentId: id,
       });
       return res;
     })

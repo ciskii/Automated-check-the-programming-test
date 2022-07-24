@@ -10,7 +10,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import { DataGrid } from "@mui/x-data-grid";
 
 const EnrolledStudents = () => {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = React.useState("0");
+  const { quizzes } = useSelector((state) => state.quiz);
+  // todo check if no quiz yet
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -22,15 +24,6 @@ const EnrolledStudents = () => {
       type: "number",
       width: 90,
     },
-    // {
-    //   field: "fullName",
-    //   headerName: "Full name",
-    //   description: "This column has a value getter and is not sortable.",
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (params) =>
-    //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    // },
   ];
 
   const rows = [
@@ -49,6 +42,9 @@ const EnrolledStudents = () => {
     setValue(newValue);
   };
 
+  const tabs = () => {
+    return;
+  };
   return (
     <>
       <Box sx={{ height: "100%", width: "100%", typography: "body1" }}>
@@ -67,21 +63,27 @@ const EnrolledStudents = () => {
               orientation='vertical'
               sx={{ borderRight: 1, borderColor: "divider" }}
             >
-              <Tab label='Quiz 1' value='1' />
-              <Tab label='Quiz 2' value='2' />
+              {quizzes.map((quiz, index) => (
+                <Tab label={quiz.name} value={index.toString()} />
+              ))}
             </TabList>
-            <TabPanel value='1' sx={{ width: "100%" }}>
-              <div style={{ height: 400, width: "100%" }}>
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  checkboxSelection
-                />
-              </div>
-            </TabPanel>
-            <TabPanel value='2'>item 2</TabPanel>
+
+            {quizzes.map((quiz, index) => (
+              // value has to be string here
+              <TabPanel value={index.toString()} sx={{ width: "100%" }}>
+                <div style={{ height: 400, width: "100%" }}>
+                  <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                  />
+                </div>
+              </TabPanel>
+            ))}
+
+            {/* <TabPanel value='2'>item 2</TabPanel> */}
           </Box>
         </TabContext>
       </Box>

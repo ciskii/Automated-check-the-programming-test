@@ -33,7 +33,7 @@ import {
   getAllQuestions,
   reset,
 } from "features/question/questionSlice";
-import { myTheme, code } from "./theme";
+import { myTheme } from "utils/theme";
 import "github-markdown-css";
 import "./question.css";
 

@@ -7,10 +7,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT(5, 2),
       defaultValue: 0,
     },
+    answerType: {
+      type: DataTypes.TEXT,
+    },
   });
 
   Answer.associate = (models) => {
     Answer.belongsTo(models.Question);
+    Answer.belongsTo(models.Student);
   };
 
   return Answer;

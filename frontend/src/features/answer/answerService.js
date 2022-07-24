@@ -6,7 +6,8 @@ const create = async (savedAnswers, rejectWithValue) => {
     const res = await axios.post(
       api + "create",
       {
-        savedAnswers: savedAnswers, // array of saved answers
+        id: savedAnswers.id,
+        savedAnswers: savedAnswers.savedAnswersObj, // array of saved answers
       },
       { withCredentials: true }
     );

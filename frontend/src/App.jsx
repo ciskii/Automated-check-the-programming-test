@@ -83,6 +83,14 @@ const App = () => {
             }
           />
           <Route
+            path='/student-answers'
+            element={
+              <RequireAuth>
+                <Preview />
+              </RequireAuth>
+            }
+          />
+          <Route
             path='/login'
             element={
               <Redirect>
@@ -95,14 +103,6 @@ const App = () => {
             element={
               <Redirect>
                 <Signup />
-              </Redirect>
-            }
-          />
-          <Route
-            path='/student-answers'
-            element={
-              <Redirect>
-                <Preview />
               </Redirect>
             }
           />

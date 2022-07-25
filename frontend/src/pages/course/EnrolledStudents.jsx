@@ -1,34 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { getEnrolledStudents } from "features/enrollment/enrollmentSlice";
-// todo check if no quiz yet
+import { useNavigate } from "react-router-dom";
 
+// todo check if there is no quiz yet -> there is nothing to render
 const EnrolledStudents = () => {
-  const [value, setValue] = React.useState("0");
+  const [value, setValue] = useState("0");
   const { quizzes } = useSelector((state) => state.quiz);
+
+  // todo check if there is no quiz yet -> what will be the initial state
+  const [quizId, setQuizId] = useState(quizzes[0].id);
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const columns = [
-    // { field: "id", headerName: "ID", width: 70 },
-    { field: "firstName", headerName: "First name", width: 130 },
-    { field: "lastName", headerName: "Last name", width: 130 },
-    {
-      field: "score",
-      headerName: "Score",
-      type: "number",
-      width: 90,
+  const linkAnswer = useCallback(
+    (row) => () => {
+      navigate(`/student-answers/qId/${quizId}/sId/${row.id}`);
     },
-  ];
+    [quizId]
+  );
+
+  const columns = useMemo(
+    () => [
+      { field: "firstName", headerName: "First name", width: 130 },
+      { field: "lastName", headerName: "Last name", width: 130 },
+      {
+        field: "score",
+        headerName: "Score",
+        type: "number",
+        width: 90,
+      },
+      {
+        field: "actions",
+        type: "actions",
+        width: 80,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<AssignmentIcon />}
+            label="Student's Answers"
+            onClick={linkAnswer(params.row)}
+          />,
+        ],
+      },
+    ],
+    [linkAnswer]
+  );
 
   const rows = enrolledStudents;
 
@@ -61,13 +89,18 @@ const EnrolledStudents = () => {
               sx={{ borderRight: 1, borderColor: "divider" }}
             >
               {quizzes.map((quiz, index) => (
-                <Tab label={quiz.name} value={index.toString()} />
+                <Tab
+                  label={quiz.name}
+                  value={index.toString()}
+                  onClick={() => {
+                    setQuizId(quiz.id);
+                  }} // set quiz id state
+                />
               ))}
             </TabList>
 
             {quizzes.map((quiz, index) => (
-              // {/* value has to be string here */}
-              <TabPanel value={index.toString()} sx={{ width: "100%" }}>
+              <TabPanel value={index.toString()} sx={{ width: "100%", pt: 0 }}>
                 <div style={{ height: 400, width: "100%" }}>
                   <DataGrid
                     rows={rows}
@@ -75,12 +108,11 @@ const EnrolledStudents = () => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
+                    autoHeight
                   />
                 </div>
               </TabPanel>
             ))}
-
-            {/* <TabPanel value='2'>item 2</TabPanel> */}
           </Box>
         </TabContext>
       </Box>

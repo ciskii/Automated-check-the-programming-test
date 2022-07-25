@@ -17,19 +17,29 @@ const createAnswer = asyncHandler(async (req, res) => {
       return res;
     })
   );
-  console.log("answers", answers);
-  // Answer.create({ answerObj: answerObj, QuestionId: QuestionId })
-  //   .then((answer) => {
-  //     res.json({ answer: answer });
-  //   })
-  //   .catch((err) => console.log("err", err));
+
+  if (answers) {
+    console.log("answers", answers);
+    res.json(answers);
+  }
 });
 
 const getAllAnswers = asyncHandler(async (req, res) => {
-  const { QuestionId } = req.params;
-  const answers = await Answer.findAll({ where: { QuestionId: QuestionId } });
+  const { StudentId } = req.params;
+  const { questionIds } = req.body;
+
+  const answers = await Promise.all(
+    questionIds.map(async (QuestionId) => {
+      const answer = await Answer.findOne({
+        where: { QuestionId: QuestionId, StudentId: StudentId },
+      });
+
+      return answer;
+    })
+  );
+
   if (answers) {
-    res.json({ answers: answers });
+    res.json(answers);
   } else {
     throw new Error("There is no answer yet.");
   }

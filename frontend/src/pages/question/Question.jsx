@@ -29,7 +29,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import {
   create,
-  createOne,
   getAllQuestions,
   reset,
 } from "features/question/questionSlice";

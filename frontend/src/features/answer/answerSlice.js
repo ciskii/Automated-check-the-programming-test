@@ -20,17 +20,14 @@ export const create = createAsyncThunk(
   }
 );
 
-// export const getAllQuestions = createAsyncThunk(
-//   "answer/getAllQuestions",
-//   async (QuizId, { rejectWithValue }) => {
-//     const response = await answerService.getAllQuestions(
-//       QuizId,
-//       rejectWithValue
-//     );
+export const getAllAnswers = createAsyncThunk(
+  "answer/getAllAnswers",
+  async (ids, { rejectWithValue }) => {
+    const response = await answerService.getAllAnswers(ids, rejectWithValue);
 
-//     return response;
-//   }
-// );
+    return response;
+  }
+);
 
 const answerSlice = createSlice({
   name: "answer",
@@ -53,21 +50,21 @@ const answerSlice = createSlice({
       .addCase(create.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(getAllAnswers.pending, (state) => {
+        state.isIdle = false;
+        state.isLoading = true;
+      })
+      .addCase(getAllAnswers.fulfilled, (state, action) => {
+        state.answers = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(getAllAnswers.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
       });
-    // .addCase(getAllQuestions.pending, (state) => {
-    //   state.isIdle = false;
-    //   state.isLoading = true;
-    // })
-    // .addCase(getAllQuestions.fulfilled, (state, action) => {
-    //   state.answers = action.payload;
-    //   state.isSuccess = true;
-    // })
-    // .addCase(getAllQuestions.rejected, (state, action) => {
-    //   state.isError = true;
-    //   state.message = action.payload;
-    // });
   },
 });
 
-export const { reset, setQuestion } = answerSlice.actions;
+export const { reset, setAnswer } = answerSlice.actions;
 export default answerSlice.reducer;

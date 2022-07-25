@@ -83,7 +83,7 @@ const App = () => {
             }
           />
           <Route
-            path='/student-answers'
+            path='/student-answers/qId/:QuizId/sId/:StudentId'
             element={
               <RequireAuth>
                 <Preview />

@@ -20,11 +20,18 @@ const create = async (savedAnswers, rejectWithValue) => {
   }
 };
 
-const getAllAnswers = async (QuizId, rejectWithValue) => {
+const getAllAnswers = async (ids, rejectWithValue) => {
+  console.log("ids", ids);
   try {
-    const res = await axios.get(api + "getAll/" + QuizId, {
-      withCredentials: true,
-    });
+    const res = await axios.post(
+      api + `getAll/${ids.StudentId}`,
+      {
+        questionIds: ids.questionIds,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     return res.data;
   } catch (err) {
     return rejectWithValue(err.response.data.message);

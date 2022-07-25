@@ -13,7 +13,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
 
-import { create, reset } from "features/answer/answerSlice";
+import { create, getAllAnswers, reset } from "features/answer/answerSlice";
 import { getAllQuestions } from "features/question/questionSlice";
 import { myTheme } from "utils/theme";
 import "github-markdown-css";
@@ -68,11 +68,18 @@ const Preview = () => {
   }, []);
 
   useEffect(() => {
+    // todo
+    // get quiz's questions -> params.QuizId
+    // get student's answers -> params.StudentId, QuestionId
+
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       .unwrap()
       .then((res) => {
         if (res.length !== 0) {
+          let questionIds = [];
+
           const initialCodes = res.map((item) => {
+            questionIds.push(item.id);
             return {
               QuestionId: item.id, // question id
               answerObj: "",
@@ -81,6 +88,13 @@ const Preview = () => {
           setCurCodes(initialCodes);
           setCurQuestion(res[0].questionObj);
           setPage(res.length);
+
+          dispatch(
+            getAllAnswers({
+              questionIds: questionIds,
+              StudentId: params.StudentId,
+            })
+          );
         }
       })
       .catch((err) => {

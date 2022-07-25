@@ -12,12 +12,19 @@ import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
+import TextField from "@mui/material/TextField";
+import HelpIcon from "@mui/icons-material/Help";
 
-import { create, getAllAnswers, reset } from "features/answer/answerSlice";
-import { getAllQuestions } from "features/question/questionSlice";
 import { myTheme } from "utils/theme";
+import {
+  provideScore,
+  getAllAnswers,
+  reset,
+} from "features/answer/answerSlice";
+import { getAllQuestions } from "features/question/questionSlice";
 import "github-markdown-css";
 import "./preview.css";
+import { scrollPastEnd } from "@codemirror/view";
 
 const Preview = () => {
   const [curCode, setCurCode] = useState(""); // current code at selected page
@@ -25,7 +32,9 @@ const Preview = () => {
   const [curQuestion, setCurQuestion] = useState(""); //current question on selected page
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
+  const [curScore, setCurScore] = useState(0);
 
+  const { user } = useSelector((state) => state.auth);
   const { isIdle, questions } = useSelector((state) => state.question); // Questions from teacher
   const { quiz } = useSelector((state) => state.quiz); // quiz obj.
   const dispatch = useDispatch();
@@ -37,8 +46,9 @@ const Preview = () => {
       return { ...item };
     });
     newCodes[curPage - 1].answerObj = curCode;
-    setCurCodes(newCodes);
 
+    setCurCodes(newCodes);
+    setCurScore(curCodes[value - 1].score);
     setCurCode(curCodes[value - 1].answerObj);
     setCurPage(value);
     setCurQuestion(questions[value - 1].questionObj); // change question for new page
@@ -50,16 +60,19 @@ const Preview = () => {
     });
     savedAnswers[curPage - 1].answerObj = curCode;
 
-    dispatch(create(savedAnswers)).unwrap();
-    // .then((res) => {
-    //   dispatch(getAllQuestions(params.QuizId))
-    //     .unwrap()
-    //     .then((res) => {
-    //       setCurQuestions(res);
-    //       setPage(res.length);
-    //       setCurCode(res[curPage - 1].questionObj);
-    //     });
-    // });
+    dispatch(provideScore(savedAnswers)).unwrap();
+
+    // dispatch(create(savedAnswers))
+    //   .unwrap()
+    //   .then((res) => {
+    //     dispatch(getAllQuestions(params.QuizId))
+    //       .unwrap()
+    //       .then((res) => {
+    //         setCurQuestions(res);
+    //         setPage(res.length);
+    //         setCurCode(res[curPage - 1].questionObj);
+    //       });
+    //   });
   };
 
   // * try to understand useCallback and useMemo
@@ -67,34 +80,46 @@ const Preview = () => {
     setCurCode(value);
   }, []);
 
+  const scoreChangeHandler = (e) => {
+    const newScores = curCodes.map((item) => {
+      return { ...item };
+    });
+
+    newScores[curPage - 1].score = e.target.value;
+    setCurScore(e.target.value);
+    setCurCodes(newScores);
+  };
+
   useEffect(() => {
-    // todo
-    // get quiz's questions -> params.QuizId
-    // get student's answers -> params.StudentId, QuestionId
-
-    dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
+    dispatch(getAllQuestions(params.QuizId))
       .unwrap()
-      .then((res) => {
-        if (res.length !== 0) {
+      .then((resQuestions) => {
+        if (resQuestions.length !== 0) {
           let questionIds = [];
-
-          const initialCodes = res.map((item) => {
+          resQuestions.forEach((item) => {
             questionIds.push(item.id);
-            return {
-              QuestionId: item.id, // question id
-              answerObj: "",
-            };
-          }); // create default code for each question
-          setCurCodes(initialCodes);
-          setCurQuestion(res[0].questionObj);
-          setPage(res.length);
+          });
+          setCurQuestion(resQuestions[0].questionObj);
+          setPage(resQuestions.length);
 
+          // todo check if there's no answer
           dispatch(
             getAllAnswers({
               questionIds: questionIds,
               StudentId: params.StudentId,
             })
-          );
+          )
+            .unwrap()
+            .then((resAnswers) => {
+              if (resAnswers.length !== 0) {
+                setCurCode(resAnswers[0].answerObj);
+                setCurScore(resAnswers[0].score);
+                setCurCodes(resAnswers);
+              }
+            })
+            .catch((err) => {
+              console.log("err", err);
+            });
         }
       })
       .catch((err) => {
@@ -104,8 +129,8 @@ const Preview = () => {
 
   return (
     <div className='editor'>
-      <div className='editor-title'>
-        <Stack direction='row' spacing={1}>
+      <div className='editor-title' style={{ justifyContent: "flex-start" }}>
+        <Stack direction='row' spacing={1} sx={{ flex: "1" }}>
           <Link to='/'>
             <Tooltip title='Home'>
               <IconButton aria-label='home'>
@@ -113,9 +138,23 @@ const Preview = () => {
               </IconButton>
             </Tooltip>
           </Link>
+          <h4 className='editor-title-label'>{quiz.name}</h4>
         </Stack>
-        <h4 className='editor-title-label'>{quiz.name}</h4>
         <Stack direction='row' spacing={1}>
+          <TextField
+            value={curScore}
+            onChange={scoreChangeHandler}
+            id='outlined-basic'
+            label='Score'
+            color='warning'
+            variant='outlined'
+            sx={{
+              width: 1,
+            }}
+            size='small'
+            focused
+          />
+
           <Tooltip title='Save'>
             <IconButton
               color='primary'

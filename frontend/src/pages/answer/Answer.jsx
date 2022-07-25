@@ -45,7 +45,6 @@ const Answer = () => {
     setCurQuestion(questions[value - 1].questionObj); // change question for new page
   };
 
-  console.log("user", user);
   const handleSave = async () => {
     const savedAnswersObj = curCodes.map((item) => {
       return { ...item };

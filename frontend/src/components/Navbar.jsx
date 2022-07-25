@@ -5,9 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Button from "@mui/material/Button";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-import { checkLoggedIn, logout, reset } from "features/auth/authSlice";
+import { logout, reset } from "features/auth/authSlice";
 import { reset as courseReset } from "features/course/courseSlice";
 import { reset as quizReset } from "features/quiz/quizSlice";
 import "./navbar.css";
@@ -47,7 +49,11 @@ const Navbar = () => {
       </Link>
 
       <div className='nav-dd'>
-        <FaUserCircle className='nav-dd-btn' onClick={onClick} />
+        <Tooltip title='Home'>
+          <IconButton aria-label='user' onClick={onClick}>
+            <AccountCircleIcon />
+          </IconButton>
+        </Tooltip>
         {isDropDown ? (
           <div className='nav-dd-ctn'>
             <div className='nav-dd-ctn-group'>
@@ -57,7 +63,7 @@ const Navbar = () => {
             <div className='nav-dd-ctn-group'>
               {/* <div className='nav-dd-ctn-link' onClick={getInfo}> */}
               <div className='nav-dd-ctn-link'>
-                <FaUserCircle className='nav-dd-ctn-link-btn' />
+                <AccountCircleIcon className='nav-dd-ctn-link-btn' />
                 <p>Your Profile</p>
               </div>
               <div className='nav-dd-ctn-link'>

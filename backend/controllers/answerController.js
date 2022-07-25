@@ -3,7 +3,7 @@ const { Answer } = require("../models");
 
 // ---------- Answer obj API ----------------
 const createAnswer = asyncHandler(async (req, res) => {
-  const { savedAnswers, id } = req.body;
+  const { savedAnswers, StudentId } = req.body;
   console.log("savedAnswers", savedAnswers);
 
   const answers = await Promise.all(
@@ -12,7 +12,7 @@ const createAnswer = asyncHandler(async (req, res) => {
       const res = await Answer.create({
         answerObj: answerObj,
         QuestionId: QuestionId,
-        StudentId: id,
+        StudentId: StudentId,
       });
       return res;
     })
@@ -38,6 +38,7 @@ const getAllAnswers = asyncHandler(async (req, res) => {
     })
   );
 
+  console.log("answers", answers);
   if (answers) {
     res.json(answers);
   } else {
@@ -81,18 +82,28 @@ const deleteAnswer = (req, res) => {
 };
 
 // ---------- Answer Score API ----------------
-const provideScore = (req, res) => {
-  const { id } = req.params;
-  const { score } = req.body;
-
-  Answer.update({ score: score }, { where: { id: id } })
-    .then(() => {
-      res.json({ msg: "This answer has been scored." });
-    })
-    .catch((err) => {
+const provideScore = asyncHandler(async (req, res) => {
+  const { savedAnswers } = req.body;
+  try {
+    const updatedAnswers = await Promise.all(
+      savedAnswers.map(async (answer) => {
+        const { answerObj, score, id } = answer;
+        const updated = await Answer.update(
+          { score: score, answerObj: answerObj },
+          { where: { id: id } }
+        );
+        return updated;
+      })
+    );
+    if (updatedAnswers) {
+      res.status(200).send("Updated success!");
+    }
+  } catch {
+    (err) => {
       throw new Error(err);
-    });
-};
+    };
+  }
+});
 
 const updateScore = (req, res) => {
   const { id } = req.params;

@@ -109,15 +109,15 @@ const EnrolledStudents = () => {
                   };
 
                   // check if student have answer or not
-                  if (studentScores.length != 0) {
-                    studentScores.forEach((item) => {
-                      newRow[`Q${item.QuestionId}`] = item.score;
-                    });
-                  } else {
-                    questions.forEach((item) => {
+                  questions.forEach((item, index) => {
+                    if (studentScores[index]) {
+                      newRow[`Q${studentScores[index].QuestionId}`] =
+                        studentScores[index].score;
+                    } else {
                       newRow[`Q${item.id}`] = 0;
-                    });
-                  }
+                    }
+                  });
+
                   return newRow;
                 });
                 setNewRows(rows);
@@ -164,16 +164,28 @@ const EnrolledStudents = () => {
                       name: student.firstName + " " + student.lastName,
                     };
 
+                    console.log("studentScores", studentScores);
+
                     // add question's score fields
-                    if (studentScores.length != 0) {
-                      studentScores.forEach((item) => {
-                        newRow[`Q${item.QuestionId}`] = item.score;
-                      });
-                    } else {
-                      questions.forEach((item) => {
+                    // if (studentScores.length != 0) {
+                    //   studentScores.forEach((item) => {
+                    //     newRow[`Q${item.QuestionId}`] = item.score;
+                    //   });
+                    // } else {
+                    //   questions.forEach((item) => {
+                    //     newRow[`Q${item.id}`] = 0;
+                    //   });
+                    // }
+
+                    questions.forEach((item, index) => {
+                      if (studentScores[index]) {
+                        newRow[`Q${studentScores[index].QuestionId}`] =
+                          studentScores[index].score;
+                      } else {
                         newRow[`Q${item.id}`] = 0;
-                      });
-                    }
+                      }
+                    });
+
                     return newRow;
                   });
                   setNewRows(rows);

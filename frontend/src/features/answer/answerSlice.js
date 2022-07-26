@@ -48,6 +48,15 @@ export const getScores = createAsyncThunk(
   }
 );
 
+export const getQuizScores = createAsyncThunk(
+  "answer/getQuizScores",
+  async (ids, { rejectWithValue }) => {
+    const response = await answerService.getQuizScores(ids, rejectWithValue);
+
+    return response;
+  }
+);
+
 const answerSlice = createSlice({
   name: "answer",
   initialState,
@@ -101,6 +110,17 @@ const answerSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(getScores.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getQuizScores.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getQuizScores.fulfilled, (state, action) => {
+        state.scores = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(getQuizScores.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       });

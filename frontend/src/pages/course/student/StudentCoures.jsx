@@ -10,6 +10,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import AddQuiz from "../AddQuiz";
 import StudentQuiz from "pages/quiz/student/StudentQuiz";
 import "./studentCourse.css";
+import StudentScores from "./StudentScores";
 
 const StudentCourse = (props) => {
   const [value, setValue] = React.useState("1");
@@ -24,7 +25,13 @@ const StudentCourse = (props) => {
       <div className='list-overlay' onClick={props.onClose} />
 
       <div className='list-container'>
-        <Box sx={{ width: "100%", typography: "body1" }}>
+        <Box
+          sx={{
+            height: "100%",
+            width: "100%",
+            typography: "body1",
+          }}
+        >
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
@@ -50,7 +57,9 @@ const StudentCourse = (props) => {
                 <AddQuiz id={props.id} />
               </div>
             </TabPanel>
-            <TabPanel value='2'>Scores</TabPanel>
+            <TabPanel value='2' sx={{ px: (0, 0), height: "95%" }}>
+              {quizzes ? <StudentScores /> : <p>There's no quiz yet.</p>}
+            </TabPanel>
           </TabContext>
         </Box>
       </div>

@@ -39,7 +39,6 @@ const getAllAnswers = asyncHandler(async (req, res) => {
     })
   );
 
-  console.log("answers", answers);
   if (answers) {
     res.json(answers);
   } else {
@@ -119,6 +118,22 @@ const updateScore = (req, res) => {
     });
 };
 
+// get all answers from 1 student and 1 quiz
+const getQuizScores = asyncHandler(async (req, res) => {
+  const { StudentId, QuizId } = req.params;
+
+  const answers = await Answer.findAll({
+    where: { QuizId: QuizId, StudentId: StudentId },
+  });
+
+  if (answers) {
+    res.json(answers);
+  } else {
+    throw new Error("There is no answer yet.");
+  }
+});
+
+// get all answers from 1 quiz
 const getAllScores = asyncHandler(async (req, res) => {
   const { QuizId } = req.params;
   const answers = await Answer.findAll({ where: { QuizId: QuizId } });
@@ -143,6 +158,7 @@ const getScore = asyncHandler(async (req, res) => {
 module.exports = {
   createAnswer,
   getAllAnswers,
+  getQuizScores,
   getAnswer,
   updateAnswer,
   deleteAnswer,

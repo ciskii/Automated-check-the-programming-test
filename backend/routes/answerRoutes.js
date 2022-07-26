@@ -16,6 +16,7 @@ const {
   provideScore,
   updateScore,
   getAllScores,
+  getQuizScores,
   getScore,
 } = require("../controllers/answerController");
 
@@ -32,6 +33,7 @@ router.delete("/delete/:id", isAuth, deleteAnswer);
 // ------------ Score Route ------------
 router.post("/score/provide", isAuth, provideScore);
 router.get("/score/getAll/:QuizId", isAuth, getAllScores);
+router.get("/score/getQuizScores/:QuizId/:StudentId", isAuth, getQuizScores);
 router.get("/score/get/:id", isAuth, getScore);
 router.put("/score/update/:id", isAuth, updateScore);
 

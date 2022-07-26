@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   Answer.associate = (models) => {
     Answer.belongsTo(models.Question);
     Answer.belongsTo(models.Student);
+    Answer.belongsTo(models.Quiz);
   };
 
   return Answer;

@@ -13,12 +13,10 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { getEnrolledStudents } from "features/enrollment/enrollmentSlice";
 import { useNavigate } from "react-router-dom";
 
-// todo check if there is no quiz yet -> there is nothing to render
 const EnrolledStudents = () => {
   const [value, setValue] = useState("0");
   const { quizzes } = useSelector((state) => state.quiz);
 
-  // todo check if there is no quiz yet -> what will be the initial state
   const [quizId, setQuizId] = useState(quizzes[0].id);
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
   const { course } = useSelector((state) => state.course);
@@ -32,18 +30,30 @@ const EnrolledStudents = () => {
     [quizId]
   );
 
+  function getFullName(params) {
+    return `${params.row.firstName || ""} ${params.row.lastName || ""}`;
+  }
+
   const columns = useMemo(
     () => [
-      { field: "firstName", headerName: "First name", width: 130 },
-      { field: "lastName", headerName: "Last name", width: 130 },
+      // { field: "firstName", headerName: "First name", width: 130 },
+      // { field: "lastName", headerName: "Last name", width: 130 },
+      { field: "id", headerName: "ID", width: 50 },
+      {
+        field: "fullName",
+        headerName: "Full name",
+        width: 160,
+        valueGetter: getFullName,
+      },
       {
         field: "score",
         headerName: "Score",
         type: "number",
-        width: 90,
+        width: 130,
       },
       {
         field: "actions",
+        headerName: "Answers",
         type: "actions",
         width: 80,
         getActions: (params) => [
@@ -66,7 +76,11 @@ const EnrolledStudents = () => {
 
   useEffect(() => {
     if (isIdle) {
-      dispatch(getEnrolledStudents(course.id));
+      dispatch(getEnrolledStudents(course.id))
+        .unwrap()
+        .then((res) => {
+          console.log("res", res);
+        });
     }
   }, [isIdle]);
 
@@ -100,16 +114,20 @@ const EnrolledStudents = () => {
             </TabList>
 
             {quizzes.map((quiz, index) => (
-              <TabPanel value={index.toString()} sx={{ width: "100%", pt: 0 }}>
-                <div style={{ height: 400, width: "100%" }}>
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    autoHeight
-                  />
+              <TabPanel
+                value={index.toString()}
+                sx={{ width: "100%", py: (0, 0) }}
+              >
+                <div style={{ display: "flex", height: "100%" }}>
+                  <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                      rows={rows}
+                      columns={columns}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      // checkboxSelection
+                    />
+                  </div>
                 </div>
               </TabPanel>
             ))}

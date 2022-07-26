@@ -54,6 +54,7 @@ const Answer = () => {
     const savedAnswers = {
       id: user.id,
       savedAnswersObj: savedAnswersObj,
+      QuizId: quiz.id,
     };
     dispatch(create(savedAnswers)).unwrap();
     // .then((res) => {
@@ -73,7 +74,8 @@ const Answer = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
+    // dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
+    dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
       .unwrap()
       .then((res) => {
         if (res.length !== 0) {

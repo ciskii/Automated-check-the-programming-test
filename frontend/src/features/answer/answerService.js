@@ -8,6 +8,7 @@ const create = async (savedAnswers, rejectWithValue) => {
       {
         StudentId: savedAnswers.id,
         savedAnswers: savedAnswers.savedAnswersObj, // array of saved answers
+        QuizId: savedAnswers.QuizId,
       },
       { withCredentials: true }
     );

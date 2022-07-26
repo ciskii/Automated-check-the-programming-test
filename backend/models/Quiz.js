@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     Quiz.hasMany(models.Question, {
       onDelete: "CASCADE",
     });
+    Quiz.hasMany(models.Answer, {
+      onDelete: "CASCADE",
+    });
   };
 
   return Quiz;

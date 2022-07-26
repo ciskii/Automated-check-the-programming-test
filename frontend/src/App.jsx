@@ -75,7 +75,8 @@ const App = () => {
             }
           />
           <Route
-            path='/quiz/:QuizId'
+            // path='/quiz/:QuizId  // not use params because prevent student to access to the quiz
+            path='/quiz'
             element={
               <RequireAuth>
                 <Answer />

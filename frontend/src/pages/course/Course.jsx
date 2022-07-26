@@ -42,7 +42,7 @@ const Course = (props) => {
                 aria-label='lab API tabs example'
               >
                 <Tab label='Quiz List' value='1' />
-                <Tab label='Enrolled students' value='2' />
+                <Tab label='Scores' value='2' />
               </TabList>
             </Box>
             <TabPanel value='1'>
@@ -61,7 +61,7 @@ const Course = (props) => {
               </div>
             </TabPanel>
             <TabPanel value='2' sx={{ px: (0, 0), height: "100%" }}>
-              <EnrolledStudents />
+              {quizzes ? <EnrolledStudents /> : <p>There's no quiz yet.</p>}
             </TabPanel>
           </TabContext>
         </Box>

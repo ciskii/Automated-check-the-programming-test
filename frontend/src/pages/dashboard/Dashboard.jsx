@@ -31,7 +31,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log("first");
     if (isIdle) {
       dispatch(getAllCourses());
     }

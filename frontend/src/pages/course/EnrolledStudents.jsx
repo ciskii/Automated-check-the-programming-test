@@ -10,9 +10,15 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { getEnrolledStudents } from "features/enrollment/enrollmentSlice";
-import { getScores } from "features/answer/answerSlice";
-import { getAllQuestions } from "features/question/questionSlice";
+import {
+  getEnrolledStudents,
+  reset as enrollReset,
+} from "features/enrollment/enrollmentSlice";
+import { getScores, reset as answerReset } from "features/answer/answerSlice";
+import {
+  getAllQuestions,
+  reset as questionReset,
+} from "features/question/questionSlice";
 import { useNavigate } from "react-router-dom";
 import "./enrolled.css";
 
@@ -20,7 +26,8 @@ const EnrolledStudents = () => {
   const [value, setValue] = useState("0");
   const { quizzes } = useSelector((state) => state.quiz);
   const [quizId, setQuizId] = useState(quizzes[0].id);
-  const [columns, setColumns] = useState([
+
+  const initialColumns = [
     { field: "id", headerName: "ID", width: 50 },
     {
       field: "name",
@@ -40,7 +47,9 @@ const EnrolledStudents = () => {
         />,
       ],
     },
-  ]);
+  ];
+
+  const [columns, setColumns] = useState(initialColumns);
   const [newRows, setNewRows] = useState([]);
 
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
@@ -63,7 +72,58 @@ const EnrolledStudents = () => {
   // set quiz id state
   const switchTabHandler = (id) => {
     setQuizId(id);
-    // dispatch(getScores(id));
+    dispatch(getEnrolledStudents(course.id))
+      .unwrap()
+      .then((students) => {
+        dispatch(getAllQuestions(id))
+          .unwrap()
+          .then((questions) => {
+            dispatch(getScores(id))
+              .unwrap()
+              .then((scores) => {
+                // add question columns
+                const newCols = [...initialColumns];
+                let firstQuestionColIndex = 2;
+                questions.forEach((item, index) => {
+                  const questionCol = {
+                    field: `Q${item.id}`,
+                    headerName: `${index + 1}`,
+                    headerClassName: "score-header",
+                    width: 70,
+                  };
+                  newCols.splice(firstQuestionColIndex++, 0, questionCol);
+                });
+                setColumns(newCols);
+
+                // create rows
+                const rows = students.map((student) => {
+                  // check if student have answer or not
+                  const studentScores = scores.filter((item) => {
+                    return student.id === item.StudentId;
+                  });
+
+                  //  new row field
+                  const newRow = {
+                    id: student.id,
+                    name: student.firstName + " " + student.lastName,
+                  };
+
+                  // check if student have answer or not
+                  if (studentScores.length != 0) {
+                    studentScores.forEach((item) => {
+                      newRow[`Q${item.QuestionId}`] = item.score;
+                    });
+                  } else {
+                    questions.forEach((item) => {
+                      newRow[`Q${item.id}`] = 0;
+                    });
+                  }
+                  return newRow;
+                });
+                setNewRows(rows);
+              });
+          });
+      });
   };
 
   useEffect(() => {
@@ -78,7 +138,7 @@ const EnrolledStudents = () => {
                 .unwrap()
                 .then((scores) => {
                   // add question columns
-                  const newCols = [...columns];
+                  const newCols = [...initialColumns];
                   let firstQuestionColIndex = 2;
                   questions.forEach((item, index) => {
                     const questionCol = {
@@ -121,10 +181,12 @@ const EnrolledStudents = () => {
             });
         });
     }
+    return () => {
+      dispatch(enrollReset());
+      dispatch(answerReset());
+      dispatch(questionReset());
+    };
   }, []);
-
-  console.log("columns", columns);
-  console.log("newRows", newRows);
 
   return (
     <>

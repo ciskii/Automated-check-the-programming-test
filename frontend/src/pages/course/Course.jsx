@@ -15,7 +15,6 @@ import Quiz from "pages/quiz/Quiz";
 const Course = (props) => {
   const [value, setValue] = React.useState("1");
   const { quizzes } = useSelector((state) => state.quiz);
-  // const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

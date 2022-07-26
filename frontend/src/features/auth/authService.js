@@ -46,6 +46,25 @@ const signup = async (user, rejectWithValue) => {
   }
 };
 
+const signupTeacher = async (user, rejectWithValue) => {
+  try {
+    const res = await axios.post(
+      api + "signupTeacher",
+      {
+        email: user.email,
+        password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (err) {
+    console.log("err", err);
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
 const checkLoggedIn = async () => {
   const res = await axios.get(api + "getMe", {
     withCredentials: true,
@@ -56,6 +75,7 @@ const checkLoggedIn = async () => {
 const authService = {
   login,
   signup,
+  signupTeacher,
   checkLoggedIn,
   logout,
 };

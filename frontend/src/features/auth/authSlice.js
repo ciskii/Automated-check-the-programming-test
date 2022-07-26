@@ -28,6 +28,14 @@ export const signup = createAsyncThunk(
   }
 );
 
+export const signupTeacher = createAsyncThunk(
+  "auth/signupTeacher",
+  async (user, { rejectWithValue }) => {
+    const response = await authService.signupTeacher(user, rejectWithValue);
+    return response;
+  }
+);
+
 export const checkLoggedIn = createAsyncThunk(
   "auth/checkLoggedIn",
   async (user) => {
@@ -58,7 +66,19 @@ const authSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(signupTeacher.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signupTeacher.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(signupTeacher.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
         state.message = action.payload;
       })
       .addCase(login.pending, (state) => {

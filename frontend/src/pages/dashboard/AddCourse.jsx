@@ -18,7 +18,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // import Enroll from "./Enroll";
 
 const AddCourse = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState({
     courseId: "",
     courseName: "",

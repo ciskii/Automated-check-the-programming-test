@@ -27,7 +27,6 @@ const logoutUser = (req, res, next) => {
 // @access  Public
 const signUpStudent = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-
   if (!email || !password) {
     throw new Error("Please add all fields");
   }
@@ -73,6 +72,7 @@ const signupTeacher = asyncHandler(async (req, res) => {
   });
 
   if (user.length === 1) {
+    res.status(401);
     throw new Error("This email address is already being used.");
   }
 

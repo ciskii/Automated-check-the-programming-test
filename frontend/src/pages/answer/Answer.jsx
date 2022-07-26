@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MarkdownRenderer from "./MarkdownRenderer";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import CodeMirror from "@uiw/react-codemirror";
+import { dracula } from "@uiw/codemirror-theme-dracula";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -31,7 +32,6 @@ const Answer = () => {
   const { quiz } = useSelector((state) => state.quiz); // quiz obj.
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
 
   const handleChangePage = (e, value) => {
     const newCodes = curCodes.map((item) => {

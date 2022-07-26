@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@codemirror/lang-html": "^6.1.0",
+    "@codemirror/lang-sql": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "connect-mongo": "^4.6.0",

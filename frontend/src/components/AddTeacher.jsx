@@ -11,7 +11,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-const AddQuiz = (props) => {
+const AddTeacher = (props) => {
   const [open, setOpen] = React.useState(false);
 
   const [input, setInput] = useState({
@@ -106,4 +106,4 @@ const AddQuiz = (props) => {
   );
 };
 
-export default AddQuiz;
+export default AddTeacher;

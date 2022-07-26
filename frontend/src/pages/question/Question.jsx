@@ -7,10 +7,12 @@ import { debounce } from "lodash";
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { githubLight } from "@uiw/codemirror-theme-github";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { languages } from "@codemirror/language-data";
 import "katex/dist/katex.min.css";
 import CodeMirror from "@uiw/react-codemirror";
 
@@ -143,7 +145,6 @@ const Question = () => {
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then((res) => {
-          console.log("res", res);
           dispatch(getAllQuestions(params.QuizId))
             .unwrap()
             .then((res) => {
@@ -153,20 +154,6 @@ const Question = () => {
             });
         });
     }
-
-    // if (createSuccess) {
-    //   dispatch(getAllQuestions(params.QuizId))
-    //     .unwrap()
-    //     .then((res) => {
-    //       console.log("hey");
-    //       setCurQuestions(res);
-    //       setPage(res.length);
-    //       setCodeCur(res[0].questionObj);
-    //     })
-    //     .catch((err) => {
-    //       console.log("err", err);
-    //     });
-    // }
   };
 
   const handleClickOpen = () => {
@@ -201,6 +188,10 @@ const Question = () => {
       .catch((err) => {
         console.log("err", err);
       });
+
+    return () => {
+      dispatch(reset());
+    };
   }, []);
 
   return (
@@ -276,10 +267,12 @@ const Question = () => {
       <div className='editor-container'>
         <CodeMirror
           value={codeCur}
-          extensions={[markdown({ base: markdownLanguage })]}
+          extensions={[
+            markdown({ base: markdownLanguage, codeLanguages: languages }),
+          ]}
           onChange={debouncedChangeHandler}
           height='100%'
-          theme={myTheme}
+          theme={githubLight}
           className='quiz-editor'
         />
 

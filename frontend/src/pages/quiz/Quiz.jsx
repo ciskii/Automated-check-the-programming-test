@@ -23,13 +23,7 @@ const Quiz = (props) => {
         className='question-link'
         onClick={handleSetQuiz}
       >
-        <Button
-          fullWidth
-          variant='outlined'
-          // onClick={() => onClick(item)}
-          className='quiz'
-          color='info'
-        >
+        <Button fullWidth variant='outlined' className='quiz' color='info'>
           {quiz.name}
         </Button>
       </Link>

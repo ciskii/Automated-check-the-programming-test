@@ -31,7 +31,7 @@ router.delete("/delete/:id", isAuth, deleteAnswer);
 
 // ------------ Score Route ------------
 router.post("/score/provide", isAuth, provideScore);
-router.get("/score/getAll/:QuestionId", isAuth, getAllScores);
+router.get("/score/getAll/:QuizId", isAuth, getAllScores);
 router.get("/score/get/:id", isAuth, getScore);
 router.put("/score/update/:id", isAuth, updateScore);
 

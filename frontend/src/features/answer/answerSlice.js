@@ -4,6 +4,7 @@ import answerService from "./answerService";
 const initialState = {
   answer: {},
   answers: [],
+  scores: [],
   isIdle: true,
   isSuccess: false,
   isError: false,
@@ -20,6 +21,15 @@ export const create = createAsyncThunk(
   }
 );
 
+export const getAllAnswers = createAsyncThunk(
+  "answer/getAllAnswers",
+  async (ids, { rejectWithValue }) => {
+    const response = await answerService.getAllAnswers(ids, rejectWithValue);
+
+    return response;
+  }
+);
+
 export const provideScore = createAsyncThunk(
   "answer/provideScore",
   async (answers, { rejectWithValue }) => {
@@ -29,10 +39,10 @@ export const provideScore = createAsyncThunk(
   }
 );
 
-export const getAllAnswers = createAsyncThunk(
-  "answer/getAllAnswers",
-  async (ids, { rejectWithValue }) => {
-    const response = await answerService.getAllAnswers(ids, rejectWithValue);
+export const getScores = createAsyncThunk(
+  "answer/getScores",
+  async (QuizId, { rejectWithValue }) => {
+    const response = await answerService.getScores(QuizId, rejectWithValue);
 
     return response;
   }
@@ -60,6 +70,18 @@ const answerSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(getAllAnswers.pending, (state) => {
+        state.isIdle = false;
+        state.isLoading = true;
+      })
+      .addCase(getAllAnswers.fulfilled, (state, action) => {
+        state.answers = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(getAllAnswers.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(provideScore.pending, (state) => {
         state.isLoading = true;
       })
@@ -71,15 +93,14 @@ const answerSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getAllAnswers.pending, (state) => {
-        state.isIdle = false;
+      .addCase(getScores.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAllAnswers.fulfilled, (state, action) => {
-        state.answers = action.payload;
+      .addCase(getScores.fulfilled, (state, action) => {
+        state.scores = action.payload;
         state.isSuccess = true;
       })
-      .addCase(getAllAnswers.rejected, (state, action) => {
+      .addCase(getScores.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       });

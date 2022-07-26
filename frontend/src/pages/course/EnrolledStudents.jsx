@@ -11,14 +11,40 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { getEnrolledStudents } from "features/enrollment/enrollmentSlice";
+import { getScores } from "features/answer/answerSlice";
+import { getAllQuestions } from "features/question/questionSlice";
 import { useNavigate } from "react-router-dom";
+import "./enrolled.css";
 
 const EnrolledStudents = () => {
   const [value, setValue] = useState("0");
   const { quizzes } = useSelector((state) => state.quiz);
-
   const [quizId, setQuizId] = useState(quizzes[0].id);
+  const [columns, setColumns] = useState([
+    { field: "id", headerName: "ID", width: 50 },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 160,
+    },
+    {
+      field: "actions",
+      headerName: "Answers",
+      type: "actions",
+      width: 80,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<AssignmentIcon />}
+          label="Student's Answers"
+          onClick={linkAnswer(params.row)}
+        />,
+      ],
+    },
+  ]);
+  const [newRows, setNewRows] = useState([]);
+
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
+  const { questions } = useSelector((state) => state.question);
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,59 +56,75 @@ const EnrolledStudents = () => {
     [quizId]
   );
 
-  function getFullName(params) {
-    return `${params.row.firstName || ""} ${params.row.lastName || ""}`;
-  }
-
-  const columns = useMemo(
-    () => [
-      // { field: "firstName", headerName: "First name", width: 130 },
-      // { field: "lastName", headerName: "Last name", width: 130 },
-      { field: "id", headerName: "ID", width: 50 },
-      {
-        field: "fullName",
-        headerName: "Full name",
-        width: 160,
-        valueGetter: getFullName,
-      },
-      {
-        field: "score",
-        headerName: "Score",
-        type: "number",
-        width: 130,
-      },
-      {
-        field: "actions",
-        headerName: "Answers",
-        type: "actions",
-        width: 80,
-        getActions: (params) => [
-          <GridActionsCellItem
-            icon={<AssignmentIcon />}
-            label="Student's Answers"
-            onClick={linkAnswer(params.row)}
-          />,
-        ],
-      },
-    ],
-    [linkAnswer]
-  );
-
-  const rows = enrolledStudents;
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  // set quiz id state
+  const switchTabHandler = (id) => {
+    setQuizId(id);
+    // dispatch(getScores(id));
   };
 
   useEffect(() => {
     if (isIdle) {
       dispatch(getEnrolledStudents(course.id))
         .unwrap()
-        .then((res) => {
-          console.log("res", res);
+        .then((students) => {
+          dispatch(getAllQuestions(quizId))
+            .unwrap()
+            .then((questions) => {
+              dispatch(getScores(quizId))
+                .unwrap()
+                .then((scores) => {
+                  // add question columns
+                  const newCols = [...columns];
+                  let firstQuestionColIndex = 2;
+                  questions.forEach((item, index) => {
+                    const questionCol = {
+                      field: `Q${item.id}`,
+                      headerName: `${index + 1}`,
+                      headerClassName: "score-header",
+                      width: 70,
+                    };
+                    newCols.splice(firstQuestionColIndex++, 0, questionCol);
+                  });
+                  setColumns(newCols);
+
+                  // create rows
+                  const rows = students.map((student) => {
+                    // check if student have answer or not
+                    const studentScores = scores.filter((item) => {
+                      return student.id === item.StudentId;
+                    });
+
+                    //  new row field
+                    const newRow = {
+                      id: student.id,
+                      name: student.firstName + " " + student.lastName,
+                    };
+
+                    // add question's score fields
+                    if (studentScores.length != 0) {
+                      studentScores.forEach((item) => {
+                        newRow[`Q${item.QuestionId}`] = item.score;
+                      });
+                    } else {
+                      questions.forEach((item) => {
+                        newRow[`Q${item.id}`] = 0;
+                      });
+                    }
+                    return newRow;
+                  });
+                  setNewRows(rows);
+                });
+            });
         });
     }
-  }, [isIdle]);
+  }, []);
+
+  console.log("columns", columns);
+  console.log("newRows", newRows);
 
   return (
     <>
@@ -107,30 +149,24 @@ const EnrolledStudents = () => {
                   label={quiz.name}
                   value={index.toString()}
                   onClick={() => {
-                    setQuizId(quiz.id);
-                  }} // set quiz id state
+                    switchTabHandler(quiz.id);
+                  }}
                 />
               ))}
             </TabList>
 
-            {quizzes.map((quiz, index) => (
-              <TabPanel
-                value={index.toString()}
-                sx={{ width: "100%", py: (0, 0) }}
-              >
-                <div style={{ display: "flex", height: "100%" }}>
-                  <div style={{ flexGrow: 1 }}>
-                    <DataGrid
-                      rows={rows}
-                      columns={columns}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
-                      // checkboxSelection
-                    />
-                  </div>
+            <TabPanel value={value} sx={{ width: "100%", py: (0, 0) }}>
+              <div style={{ display: "flex", height: "100%" }}>
+                <div style={{ flexGrow: 1 }}>
+                  <DataGrid
+                    rows={newRows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
                 </div>
-              </TabPanel>
-            ))}
+              </div>
+            </TabPanel>
           </Box>
         </TabContext>
       </Box>

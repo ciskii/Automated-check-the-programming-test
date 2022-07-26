@@ -120,10 +120,10 @@ const updateScore = (req, res) => {
 };
 
 const getAllScores = asyncHandler(async (req, res) => {
-  const { QuestionId } = req.params;
-  const answers = await Answer.findAll({ where: { QuestionId: QuestionId } });
+  const { QuizId } = req.params;
+  const answers = await Answer.findAll({ where: { QuizId: QuizId } });
   if (answers) {
-    res.json({ answers: answers });
+    res.json(answers);
   } else {
     throw new Error("There is no answer yet.");
   }

@@ -56,10 +56,23 @@ const provideScore = async (savedAnswers, rejectWithValue) => {
   }
 };
 
+const getScores = async (QuizId, rejectWithValue) => {
+  try {
+    const res = await axios.get(api + `score/getAll/${QuizId}`, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
 const answerService = {
   create,
   getAllAnswers,
   provideScore,
+  getScores,
 };
 
 export default answerService;

@@ -31,10 +31,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    console.log("first");
     if (isIdle) {
       dispatch(getAllCourses());
     }
-  }, [courses, dispatch]);
+  }, [course]);
 
   return (
     <div className='dashboard'>

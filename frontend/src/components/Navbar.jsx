@@ -220,7 +220,7 @@ const Navbar = () => {
           </p>
           <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleFormClickOpen}>Sign up teacher</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Log out</MenuItem>
         </Menu>
       ) : (
         <Menu
@@ -236,7 +236,7 @@ const Navbar = () => {
             {user.firstName} {user.lastName}
           </p>
           <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Log out</MenuItem>
         </Menu>
       )}
 

@@ -13,6 +13,11 @@ import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import { create, reset } from "features/answer/answerSlice";
 import { getAllQuestions } from "features/question/questionSlice";
@@ -21,6 +26,12 @@ import "github-markdown-css";
 import "./answer.css";
 
 const Answer = () => {
+  const [language, setLanguage] = React.useState("");
+
+  const handleLanguage = (event) => {
+    setLanguage(event.target.value);
+  };
+
   const [curCode, setCurCode] = useState(""); // current code at selected page
   const [curCodes, setCurCodes] = useState([]); // set of current code for each questions  array of obj. {QuestionObj, answerObj}
   const [curQuestion, setCurQuestion] = useState(""); //current question on selected page
@@ -56,16 +67,11 @@ const Answer = () => {
       savedAnswersObj: savedAnswersObj,
       QuizId: quiz.id,
     };
-    dispatch(create(savedAnswers)).unwrap();
-    // .then((res) => {
-    //   dispatch(getAllQuestions(params.QuizId))
-    //     .unwrap()
-    //     .then((res) => {
-    //       setCurQuestions(res);
-    //       setPage(res.length);
-    //       setCurCode(res[curPage - 1].questionObj);
-    //     });
-    // });
+    dispatch(create(savedAnswers))
+      .unwrap()
+      .then((res) => {
+        navigate("/", { replace: true });
+      });
   };
 
   // * try to understand useCallback and useMemo
@@ -98,7 +104,7 @@ const Answer = () => {
   return (
     <div className='editor'>
       <div className='editor-title'>
-        <Stack direction='row' spacing={1}>
+        <Stack direction='row' sx={{ flex: 1 }} spacing={1}>
           <Link to='/'>
             <Tooltip title='Home'>
               <IconButton aria-label='home'>
@@ -106,18 +112,37 @@ const Answer = () => {
               </IconButton>
             </Tooltip>
           </Link>
+          <h4 className='editor-title-label'>{quiz.name}</h4>
         </Stack>
-        <h4 className='editor-title-label'>{quiz.name}</h4>
-        <Stack direction='row' spacing={1}>
-          <Tooltip title='Save'>
-            <IconButton
-              color='primary'
-              aria-label='Save a quiz'
-              onClick={handleSave}
+        <Stack
+          direction='row'
+          justifyContent='space-between'
+          sx={{ flex: 1 }}
+          spacing={10}
+        >
+          <FormControl sx={{ width: 200, ml: 5 }} size='small'>
+            <InputLabel id='demo-simple-select-label'>Language</InputLabel>
+            <Select
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
+              value={language}
+              label='Language'
+              onChange={handleLanguage}
             >
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
+              <MenuItem value={"javascript"}>javascript</MenuItem>
+              <MenuItem value={"python"}>python</MenuItem>
+              <MenuItem value={"java"}>java</MenuItem>
+              <MenuItem value={"php"}>php</MenuItem>
+              <MenuItem value={"sql"}>sql</MenuItem>
+            </Select>
+          </FormControl>
+          <IconButton
+            color='primary'
+            aria-label='Save a quiz'
+            onClick={handleSave}
+          >
+            <SaveIcon />
+          </IconButton>
         </Stack>
       </div>
 

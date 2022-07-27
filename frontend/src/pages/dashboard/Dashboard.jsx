@@ -71,6 +71,7 @@ const Dashboard = () => {
           {courses.map((item) => (
             <div className='course' key={item.id}>
               <Button
+                sx={{ display: "block" }}
                 fullWidth
                 variant='outlined'
                 onClick={() => onClick(item)}
@@ -78,7 +79,10 @@ const Dashboard = () => {
                 className='course'
                 key={item.id}
               >
-                {item.courseId}
+                <Typography variant='h6'>{item.courseId}</Typography>
+                <Typography variant='caption' sx={{ color: "warning" }}>
+                  {item.name}
+                </Typography>
               </Button>
             </div>
           ))}

@@ -165,14 +165,46 @@ const Question = () => {
   };
 
   // * try to understand useCallback and useMemo
-  const changeHandler = useCallback((value, viewUpdate) => {
+  const changeHandler = useCallback((value) => {
     setCodeCur(value);
   }, []);
 
   const debouncedChangeHandler = useMemo(
-    (value, viewUpdate) => debounce(changeHandler, 300),
-    []
+    (value, viewUpdate) => debounce(changeHandler, 600),
+    [codeCur]
   );
+
+  const MarkdownRenderer = React.memo((codeCur) => {
+    return (
+      <ReactMarkdown
+        className='editor-show markdown-body'
+        children={codeCur.codeCur}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeKatex]}
+        components={{
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || "");
+            return !inline && match ? (
+              <SyntaxHighlighter
+                children={String(children).replace(/\n$/, "")}
+                language={match[1]}
+                style={githubGist}
+                PreTag='div'
+                showLineNumbers={true}
+                wrapLines={true}
+                wrapLongLines={true}
+                {...props}
+              />
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      />
+    );
+  });
 
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
@@ -274,8 +306,10 @@ const Question = () => {
           height='100%'
           theme={githubLight}
           className='quiz-editor'
+          autoFocus={true}
         />
 
+        {/* <MarkdownRenderer codeCur={codeCur} /> */}
         <ReactMarkdown
           className='editor-show markdown-body'
           children={codeCur}

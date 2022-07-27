@@ -8,9 +8,7 @@
 
 .editor-title {
   display: flex;
-  justify-content: space-between;
   padding: 5px 20px;
-  /* background-color: #1976d2; */
   border-bottom: 1px solid #eeeeee;
 }
 

@@ -60,7 +60,9 @@ const Preview = () => {
     });
     savedAnswers[curPage - 1].answerObj = curCode;
 
-    dispatch(provideScore(savedAnswers)).unwrap();
+    dispatch(provideScore(savedAnswers))
+      .unwrap()
+      .then((res) => navigate("/", { replace: true }));
 
     // dispatch(create(savedAnswers))
     //   .unwrap()
@@ -127,6 +129,7 @@ const Preview = () => {
       });
   }, []);
 
+  console.log(curCode);
   return (
     <div className='editor'>
       <div className='editor-title' style={{ justifyContent: "flex-start" }}>

@@ -40,11 +40,15 @@ const EnrolledStudents = () => {
       type: "actions",
       width: 80,
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<AssignmentIcon />}
-          label="Student's Answers"
-          onClick={linkAnswer(params.row)}
-        />,
+        params.row.isAnswer ? (
+          <GridActionsCellItem
+            icon={<AssignmentIcon />}
+            label="Student's Answers"
+            onClick={linkAnswer(params.row)}
+          />
+        ) : (
+          <></>
+        ),
       ],
     },
   ];
@@ -60,6 +64,7 @@ const EnrolledStudents = () => {
 
   const linkAnswer = useCallback(
     (row) => () => {
+      console.log("row", row);
       navigate(`/student-answers/qId/${quizId}/sId/${row.id}`);
     },
     [quizId]
@@ -81,49 +86,53 @@ const EnrolledStudents = () => {
             dispatch(getScores(id))
               .unwrap()
               .then((scores) => {
-                // add question columns
-                const newCols = [...initialColumns];
-                let firstQuestionColIndex = 2;
-                questions.forEach((item, index) => {
-                  const questionCol = {
-                    field: `Q${item.id}`,
-                    headerName: `${index + 1}`,
-                    headerClassName: "score-header",
-                    width: 70,
-                  };
-                  newCols.splice(firstQuestionColIndex++, 0, questionCol);
-                });
-                setColumns(newCols);
-
-                // create rows
-                const rows = students.map((student) => {
-                  // check if student have answer or not
-                  const studentScores = scores.filter((item) => {
-                    return student.id === item.StudentId;
-                  });
-
-                  //  new row field
-                  const newRow = {
-                    id: student.id,
-                    name: student.firstName + " " + student.lastName,
-                  };
-
-                  // check if student have answer or not
-                  questions.forEach((item, index) => {
-                    if (studentScores[index]) {
-                      newRow[`Q${studentScores[index].QuestionId}`] =
-                        studentScores[index].score;
-                    } else {
-                      newRow[`Q${item.id}`] = 0;
-                    }
-                  });
-
-                  return newRow;
-                });
-                setNewRows(rows);
+                tableHandler(students, questions, scores);
               });
           });
       });
+  };
+
+  const tableHandler = (students, questions, scores) => {
+    const newCols = [...initialColumns];
+    let firstQuestionColIndex = 2;
+    questions.forEach((item, index) => {
+      const questionCol = {
+        field: `Q${item.id}`,
+        headerName: `${index + 1}`,
+        headerClassName: "score-header",
+        width: 70,
+      };
+      newCols.splice(firstQuestionColIndex++, 0, questionCol);
+    });
+    setColumns(newCols);
+
+    // create rows
+    const rows = students.map((student) => {
+      // check if student have answer or not
+      const studentScores = scores.filter((item) => {
+        return student.id === item.StudentId;
+      });
+
+      //  new row field
+      const newRow = {
+        id: student.id,
+        name: student.firstName + " " + student.lastName,
+        isAnswer: false,
+      };
+
+      questions.forEach((item, index) => {
+        if (studentScores[index]) {
+          newRow[`Q${studentScores[index].QuestionId}`] =
+            studentScores[index].score;
+          newRow["isAnswer"] = true;
+        } else {
+          newRow[`Q${item.id}`] = 0;
+        }
+      });
+
+      return newRow;
+    });
+    setNewRows(rows);
   };
 
   useEffect(() => {
@@ -137,58 +146,7 @@ const EnrolledStudents = () => {
               dispatch(getScores(quizId))
                 .unwrap()
                 .then((scores) => {
-                  // add question columns
-                  const newCols = [...initialColumns];
-                  let firstQuestionColIndex = 2;
-                  questions.forEach((item, index) => {
-                    const questionCol = {
-                      field: `Q${item.id}`,
-                      headerName: `${index + 1}`,
-                      headerClassName: "score-header",
-                      width: 70,
-                    };
-                    newCols.splice(firstQuestionColIndex++, 0, questionCol);
-                  });
-                  setColumns(newCols);
-
-                  // create rows
-                  const rows = students.map((student) => {
-                    // check if student have answer or not
-                    const studentScores = scores.filter((item) => {
-                      return student.id === item.StudentId;
-                    });
-
-                    //  new row field
-                    const newRow = {
-                      id: student.id,
-                      name: student.firstName + " " + student.lastName,
-                    };
-
-                    console.log("studentScores", studentScores);
-
-                    // add question's score fields
-                    // if (studentScores.length != 0) {
-                    //   studentScores.forEach((item) => {
-                    //     newRow[`Q${item.QuestionId}`] = item.score;
-                    //   });
-                    // } else {
-                    //   questions.forEach((item) => {
-                    //     newRow[`Q${item.id}`] = 0;
-                    //   });
-                    // }
-
-                    questions.forEach((item, index) => {
-                      if (studentScores[index]) {
-                        newRow[`Q${studentScores[index].QuestionId}`] =
-                          studentScores[index].score;
-                      } else {
-                        newRow[`Q${item.id}`] = 0;
-                      }
-                    });
-
-                    return newRow;
-                  });
-                  setNewRows(rows);
+                  tableHandler(students, questions, scores);
                 });
             });
         });

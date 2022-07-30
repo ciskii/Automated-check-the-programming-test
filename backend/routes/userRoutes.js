@@ -29,7 +29,7 @@ router.post("/login", loginUser, (req, res) => {
 
 router.post("/logout", isAuth, logoutUser);
 router.post("/signupStudent", signUpStudent);
-router.post("/signupTeacher", isTeacher, signupTeacher);
+router.post("/signupTeacher", signupTeacher);
 router.get("/getMe", isAuth, getMe);
 router.get("/isLoggedIn", isAuth, getMe);
 

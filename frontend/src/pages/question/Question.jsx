@@ -14,7 +14,7 @@ import rehypeKatex from "rehype-katex";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import "katex/dist/katex.min.css";
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -171,14 +171,14 @@ const Question = () => {
 
   const debouncedChangeHandler = useMemo(
     (value, viewUpdate) => debounce(changeHandler, 600),
-    [codeCur]
+    []
   );
 
-  const MarkdownRenderer = React.memo((codeCur) => {
+  const MarkdownRenderer = React.memo((props) => {
     return (
       <ReactMarkdown
         className='editor-show markdown-body'
-        children={codeCur.codeCur}
+        children={props.codeCur}
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}
         components={{
@@ -309,8 +309,8 @@ const Question = () => {
           autoFocus={true}
         />
 
-        {/* <MarkdownRenderer codeCur={codeCur} /> */}
-        <ReactMarkdown
+        <MarkdownRenderer codeCur={codeCur} />
+        {/* <ReactMarkdown
           className='editor-show markdown-body'
           children={codeCur}
           remarkPlugins={[remarkGfm, remarkMath]}
@@ -336,7 +336,7 @@ const Question = () => {
               );
             },
           }}
-        />
+        /> */}
       </div>
 
       <Stack

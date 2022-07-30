@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signup, login } from "features/auth/authSlice";
+import { signup, signupTeacher, login } from "features/auth/authSlice";
+
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -18,6 +24,7 @@ const Signup = () => {
     password: "",
     firstName: "",
     lastName: "",
+    role: "student",
   });
 
   const [isValid, setIsValid] = useState({
@@ -34,24 +41,45 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
+    console.log("input", input);
     e.preventDefault();
-    dispatch(
-      signup({
-        email: input.email,
-        password: input.password,
-        firstName: input.firstName,
-        lastName: input.lastName,
-      })
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(login({ email: input.email, password: input.password }))
-          .unwrap()
-          .then(() => {
-            dispatch(checkLoggedIn());
-            navigate("/", { replace: true });
-          });
-      });
+    if (input.role === "student") {
+      dispatch(
+        signup({
+          email: input.email,
+          password: input.password,
+          firstName: input.firstName,
+          lastName: input.lastName,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(login({ email: input.email, password: input.password }))
+            .unwrap()
+            .then(() => {
+              dispatch(checkLoggedIn());
+              navigate("/", { replace: true });
+            });
+        });
+    } else {
+      dispatch(
+        signupTeacher({
+          email: input.email,
+          password: input.password,
+          firstName: input.firstName,
+          lastName: input.lastName,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          dispatch(login({ email: input.email, password: input.password }))
+            .unwrap()
+            .then(() => {
+              dispatch(checkLoggedIn());
+              navigate("/", { replace: true });
+            });
+        });
+    }
   };
 
   const onChange = (value, inputField) => {
@@ -83,6 +111,8 @@ const Signup = () => {
       } else {
         setIsValid({ ...isValid, lastName: false });
       }
+    } else if (inputField === "role") {
+      setInput({ ...input, role: value });
     }
   };
 
@@ -133,6 +163,28 @@ const Signup = () => {
           value={input.password}
           onChange={(e) => onChange(e.target.value, "password")}
         />
+        <FormControl fullWidth>
+          <RadioGroup
+            aria-labelledby='demo-controlled-radio-buttons-group'
+            name='controlled-radio-buttons-group'
+            value={input.role}
+            row
+            fullWidth
+            sx={{ display: "flex", justifyContent: "space-around", px: (4, 4) }}
+            onChange={(e) => onChange(e.target.value, "role")}
+          >
+            <FormControlLabel
+              value='student'
+              control={<Radio />}
+              label='Student'
+            />
+            <FormControlLabel
+              value='teacher'
+              control={<Radio />}
+              label='Teacher'
+            />
+          </RadioGroup>
+        </FormControl>
         {isValid.email &&
         isValid.password &&
         isValid.firstName &&

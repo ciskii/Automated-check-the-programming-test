@@ -121,73 +121,73 @@ const Navbar = () => {
     }
   };
 
-  const signUpTeacher = () => {
-    return (
-      <Dialog open={formOpen} onClose={handleFormClose}>
-        <DialogTitle>Sign up teacher</DialogTitle>
-        <DialogContent>
-          <form
-            className='login-form'
-            id='teacher-submit'
-            onSubmit={handleSubmit}
-            method='POST'
-          >
-            <TextField
-              margin='normal'
-              required
-              fullWidth
-              id='firstName'
-              label='First Name'
-              value={input.firstName}
-              onChange={(e) => onChange(e.target.value, "firstName")}
-            />
-            <TextField
-              required
-              fullWidth
-              margin='normal'
-              id='lastName'
-              onChange={(e) => onChange(e.target.value, "lastName")}
-              value={input.lastName}
-              label='Last Name'
-            />
-            <TextField
-              required
-              fullWidth
-              margin='normal'
-              label='Email'
-              value={input.email}
-              onChange={(e) => onChange(e.target.value, "email")}
-            />
-            <TextField
-              required
-              fullWidth
-              margin='normal'
-              label='Password'
-              type='password'
-              value={input.password}
-              onChange={(e) => onChange(e.target.value, "password")}
-            />
-          </form>
-          {message ? <p className='login-error'>{message}</p> : <></>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleFormClose}>Cancel</Button>
-          {isValid.email &&
-          isValid.password &&
-          isValid.firstName &&
-          isValid.lastName ? (
-            <Button type='submit' form='teacher-submit' variant='contained'>
-              Submit
-            </Button>
-          ) : (
-            <Button variant='contained' disabled>
-              Submit
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    );
-  };
+  // const signUpTeacher = () => {
+  //   return (
+  //     <Dialog open={formOpen} onClose={handleFormClose}>
+  //       <DialogTitle>Sign up teacher</DialogTitle>
+  //       <DialogContent>
+  //         <form
+  //           className='login-form'
+  //           id='teacher-submit'
+  //           onSubmit={handleSubmit}
+  //           method='POST'
+  //         >
+  //           <TextField
+  //             margin='normal'
+  //             required
+  //             fullWidth
+  //             id='firstName'
+  //             label='First Name'
+  //             value={input.firstName}
+  //             onChange={(e) => onChange(e.target.value, "firstName")}
+  //           />
+  //           <TextField
+  //             required
+  //             fullWidth
+  //             margin='normal'
+  //             id='lastName'
+  //             onChange={(e) => onChange(e.target.value, "lastName")}
+  //             value={input.lastName}
+  //             label='Last Name'
+  //           />
+  //           <TextField
+  //             required
+  //             fullWidth
+  //             margin='normal'
+  //             label='Email'
+  //             value={input.email}
+  //             onChange={(e) => onChange(e.target.value, "email")}
+  //           />
+  //           <TextField
+  //             required
+  //             fullWidth
+  //             margin='normal'
+  //             label='Password'
+  //             type='password'
+  //             value={input.password}
+  //             onChange={(e) => onChange(e.target.value, "password")}
+  //           />
+  //         </form>
+  //         {message ? <p className='login-error'>{message}</p> : <></>}
+  //       </DialogContent>
+  //       <DialogActions>
+  //         <Button onClick={handleFormClose}>Cancel</Button>
+  //         {isValid.email &&
+  //         isValid.password &&
+  //         isValid.firstName &&
+  //         isValid.lastName ? (
+  //           <Button type='submit' form='teacher-submit' variant='contained'>
+  //             Submit
+  //           </Button>
+  //         ) : (
+  //           <Button variant='contained' disabled>
+  //             Submit
+  //           </Button>
+  //         )}
+  //       </DialogActions>
+  //     </Dialog>
+  //   );
+  // };
 
   return (
     <div className='nav'>
@@ -219,7 +219,7 @@ const Navbar = () => {
             {user.firstName} {user.lastName}
           </p>
           <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleFormClickOpen}>Sign up teacher</MenuItem>
+          {/* <MenuItem onClick={handleFormClickOpen}>Sign up teacher</MenuItem> */}
           <MenuItem onClick={handleLogout}>Log out</MenuItem>
         </Menu>
       ) : (
@@ -240,7 +240,7 @@ const Navbar = () => {
         </Menu>
       )}
 
-      {signUpTeacher()}
+      {/* {signUpTeacher()} */}
     </div>
   );
 };

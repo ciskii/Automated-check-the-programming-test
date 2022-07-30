@@ -35,6 +35,12 @@ const EnrolledStudents = () => {
       width: 160,
     },
     {
+      field: "sum",
+      headerName: "Summary",
+      headerClassName: "score-sum",
+      width: 100,
+    },
+    {
       field: "actions",
       headerName: "Answers",
       type: "actions",
@@ -104,6 +110,7 @@ const EnrolledStudents = () => {
       };
       newCols.splice(firstQuestionColIndex++, 0, questionCol);
     });
+
     setColumns(newCols);
 
     // create rows
@@ -120,16 +127,20 @@ const EnrolledStudents = () => {
         isAnswer: false,
       };
 
+      let sum = 0;
+
       questions.forEach((item, index) => {
         if (studentScores[index]) {
           newRow[`Q${studentScores[index].QuestionId}`] =
             studentScores[index].score;
           newRow["isAnswer"] = true;
+          sum = sum + studentScores[index].score;
         } else {
           newRow[`Q${item.id}`] = 0;
         }
       });
 
+      newRow["sum"] = sum;
       return newRow;
     });
     setNewRows(rows);

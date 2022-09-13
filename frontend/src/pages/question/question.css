@@ -56,6 +56,15 @@
   font-size: 14px;
 }
 
+.solution-editor {
+  flex: 1;
+  overflow: auto;
+  height: 500px;
+  width: 1000px;
+  border: 1px solid #eeeeee;
+  font-size: 14px;
+}
+
 .cm-line span {
   font-family: monospace;
 }

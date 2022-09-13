@@ -4,17 +4,18 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { debounce } from "lodash";
 
-import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { githubLight } from "@uiw/codemirror-theme-github";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
+import MarkdownRenderer from "./MarkdownRenderer";
+
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
+import { githubLight } from "@uiw/codemirror-theme-github";
 import "katex/dist/katex.min.css";
 import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
+
+// import AceEditor from "react-ace";
+// import "ace-builds/src-noconflict/mode-java";
+// import "ace-builds/src-noconflict/theme-github";
+// import "ace-builds/src-noconflict/ext-language_tools";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -27,14 +28,20 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import {
   create,
   getAllQuestions,
   reset,
 } from "features/question/questionSlice";
-import { myTheme } from "utils/theme";
+// import { myTheme } from "utils/theme";
 import "github-markdown-css";
 import "./question.css";
 
@@ -44,11 +51,15 @@ const Question = () => {
   const [curPage, setCurPage] = useState(1); // current selected page
   const [curQuestions, setCurQuestions] = useState([]); // current questions on client
   const [open, setOpen] = useState(false); // delete modal
+
   const { isIdle, questions } = useSelector((state) => state.question);
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
+
+  const [solOpen, setSolOpen] = useState(false);
+  const [solCode, setSolCode] = useState("");
 
   const getNewQuestion = () => {
     // ! what a step! HOLY
@@ -164,6 +175,14 @@ const Question = () => {
     setOpen(false);
   };
 
+  const handleSolClickOpen = () => {
+    setSolOpen(true);
+  };
+
+  const handleSolClose = () => {
+    setSolOpen(false);
+  };
+
   // * try to understand useCallback and useMemo
   const changeHandler = useCallback((value) => {
     setCodeCur(value);
@@ -174,43 +193,24 @@ const Question = () => {
     []
   );
 
-  const MarkdownRenderer = React.memo((props) => {
-    return (
-      <ReactMarkdown
-        className='editor-show markdown-body'
-        children={props.codeCur}
-        remarkPlugins={[remarkGfm, remarkMath]}
-        rehypePlugins={[rehypeKatex]}
-        components={{
-          code({ node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || "");
-            return !inline && match ? (
-              <SyntaxHighlighter
-                children={String(children).replace(/\n$/, "")}
-                language={match[1]}
-                style={githubGist}
-                PreTag='div'
-                showLineNumbers={true}
-                wrapLines={true}
-                wrapLongLines={true}
-                {...props}
-              />
-            ) : (
-              <code className={className} {...props}>
-                {children}
-              </code>
-            );
-          },
-        }}
-      />
-    );
-  });
+  const solChangeHandler = useCallback((value) => {
+    setSolCode(value);
+  }, []);
+  const debounceSolChangeHandler = useMemo(
+    (value, viewUpdate) => debounce(solChangeHandler, 600),
+    []
+  );
+
+  const [age, setAge] = React.useState("");
+
+  const languageChange = (event) => {
+    setAge(event.target.value);
+  };
 
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       .unwrap()
       .then((res) => {
-        // console.log("res", res);
         if (res.length !== 0) {
           setCurQuestions(res);
           setPage(res.length);
@@ -237,8 +237,64 @@ const Question = () => {
               </IconButton>
             </Tooltip>
           </Link>
+
+          <Button variant='outlined' size='small' onClick={handleSolClickOpen}>
+            Solution
+          </Button>
+
+          <Dialog
+            open={solOpen}
+            maxWidth={false}
+            onClose={handleSolClose}
+            // style={{ height: "500px" }}
+          >
+            <DialogTitle id='alert-dialog-title'>Solution</DialogTitle>
+
+            <FormControl fullWidth>
+              <InputLabel id='demo-simple-select-label'>Age</InputLabel>
+              <Select
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                value={age}
+                label='Age'
+                onChange={handleChange}
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+
+            <DialogContent style={{ outline: "none" }}>
+              <CodeMirror
+                value={solCode}
+                extensions={[
+                  markdown({
+                    base: markdownLanguage,
+                    codeLanguages: languages,
+                  }),
+                ]}
+                onChange={debounceSolChangeHandler}
+                className='solution-editor'
+                theme={githubLight}
+                autoFocus={true}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleSolClose}>Cancel</Button>
+              <Button
+                onClick={(e) => {
+                  handleSolClose();
+                }}
+                autoFocus
+                color='error'
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Stack>
-        <h4 className='editor-title-label'>{quiz.name}</h4>
+        {/* <h4 className='editor-title-label'>{quiz.name}</h4> */}
         <Stack direction='row' spacing={1}>
           <Tooltip title='Create'>
             <IconButton
@@ -304,39 +360,12 @@ const Question = () => {
           ]}
           onChange={debouncedChangeHandler}
           height='100%'
-          theme={githubLight}
           className='quiz-editor'
+          theme={githubLight}
           autoFocus={true}
         />
 
         <MarkdownRenderer codeCur={codeCur} />
-        {/* <ReactMarkdown
-          className='editor-show markdown-body'
-          children={codeCur}
-          remarkPlugins={[remarkGfm, remarkMath]}
-          rehypePlugins={[rehypeKatex]}
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, "")}
-                  language={match[1]}
-                  style={githubGist}
-                  PreTag='div'
-                  showLineNumbers={true}
-                  wrapLines={true}
-                  wrapLongLines={true}
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        /> */}
       </div>
 
       <Stack

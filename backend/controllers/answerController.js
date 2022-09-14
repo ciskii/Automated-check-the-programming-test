@@ -8,13 +8,10 @@ const fs = require("fs/promises");
 // ~~~~~~~~~~~~ Answer obj API ~~~~~~~~~~~ //
 const createAnswer = asyncHandler(async (req, res) => {
   const { savedAnswers, StudentId, QuizId } = req.body;
-  // console.log("savedAnswers", savedAnswers);
-
   const answers = await Promise.all(
     savedAnswers.map(async (answer) => {
       const { QuestionId, answerObj, mergeAnswer, language } = answer;
 
-      // ~~~~~~~~~~ call check answer ~~~~~~~~~~ //
       await checkAnswers(StudentId, QuestionId, mergeAnswer, language);
 
       // const res = await Answer.create({
@@ -37,47 +34,50 @@ const createAnswer = asyncHandler(async (req, res) => {
 const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
   let fileName = "";
   let command = "";
-  let testResult;
   if (language === "javascript") {
     fileName = "node_" + StudentId + "_" + QuestionId + ".js";
-    // folderName = "node_student_id_" + StudentId;
     command = "node";
   }
   const filePath = `${__dirname}/compileFiles/${fileName}`;
 
-  const runScript = () => {
+  await createFile(filePath, mergeAnswer);
+  const res = await runScript(command, filePath);
+  console.log("res", res);
+};
+
+const createFile = async (filePath, mergeAnswer) => {
+  try {
+    await fs.writeFile(filePath, mergeAnswer);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const runScript = (command, filePath) => {
+  return new Promise((resolve, reject) => {
+    let testResult;
+    let res;
+
     const child = spawn(command, [filePath]);
     child.stdout.on("data", (data) => {
       testResult = data.toString().slice(0, 1);
-      console.log("testResult", testResult);
-      console.log("testResult", testResult.length);
       if (testResult === "T") {
-        console.log("The answer is True");
-        // save score
+        res = true;
       } else if (testResult === "F") {
-        console.log("The answer is False");
-        // save score
+        res = false;
       }
-      // fs.unlink(filePath);
     });
     child.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
     });
     child.on("close", (code) => {
-      // fs.unlink(filePath);
+      if (code !== 0) {
+        return reject(`Program died with ${code}`);
+      }
+      fs.unlink(filePath);
+      resolve(res);
     });
-  };
-
-  const createFile = async () => {
-    try {
-      await fs.writeFile(filePath, mergeAnswer);
-      runScript();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  createFile();
+  });
 };
 
 const getAllAnswers = asyncHandler(async (req, res) => {

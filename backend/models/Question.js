@@ -6,15 +6,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     params: {
       type: DataTypes.TEXT,
+      defaultValue: "",
     },
     student: {
       type: DataTypes.TEXT,
+      defaultValue: "",
     },
     solution: {
       type: DataTypes.TEXT,
+      defaultValue: "",
     },
     language: {
       type: DataTypes.TEXT,
+      defaultValue: "",
     },
   });
 

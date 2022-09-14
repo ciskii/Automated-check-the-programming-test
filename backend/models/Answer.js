@@ -7,8 +7,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT(5, 2),
       defaultValue: 0,
     },
-    answerType: {
-      type: DataTypes.TEXT,
+    isCorrect: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   });
 

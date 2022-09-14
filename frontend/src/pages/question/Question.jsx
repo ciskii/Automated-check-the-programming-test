@@ -56,30 +56,20 @@ const Question = () => {
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
   const [curQuestions, setCurQuestions] = useState([]); // current questions on client
+
   const [open, setOpen] = useState(false); // delete modal
 
-  const { isIdle, questions } = useSelector((state) => state.question);
-  const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
   const params = useParams();
 
   const [solOpen, setSolOpen] = useState(false);
 
-  const [paramsCode, setParamsCode] = useState("");
-  const [studentCode, setStudentCode] = useState("");
-  const [solutionCode, setSolutionCode] = useState("");
-
-  const [solCode, setSolCode] = useState([
-    {
-      params: "",
-      student: "",
-      solution: "",
-    },
-  ]);
-
-  const [language, setLanguage] = useState("");
-  const languageChange = (e) => {
-    setLanguage(e.target.value);
+  const [curParams, setCurParams] = useState("");
+  const [curStudent, setCurStudent] = useState("");
+  const [curSolution, setCurSolution] = useState("");
+  const [curLanguage, setCurLanguage] = useState("");
+  const curLanguageChange = (e) => {
+    setCurLanguage(e.target.value);
   };
 
   const [tabIndex, setTabIndex] = useState("1");
@@ -94,13 +84,21 @@ const Question = () => {
     }); // copy new object in question array
 
     newQuestion[curPage - 1].questionObj = codeCur; // update selected page question to current code
+    newQuestion[curPage - 1].params = curParams; // update params
+    newQuestion[curPage - 1].student = curStudent; // update params
+    newQuestion[curPage - 1].solution = curSolution; // update params
+
     return newQuestion;
   };
 
   const handleChange = (e, value) => {
     setCurQuestions(getNewQuestion());
     setCurPage(value);
+
     setCodeCur(curQuestions[value - 1].questionObj);
+    setCurParams(curQuestions[value - 1].params);
+    setCurStudent(curQuestions[value - 1].student);
+    setCurSolution(curQuestions[value - 1].solution);
   };
 
   const handleAddQuestion = () => {
@@ -112,6 +110,10 @@ const Question = () => {
       newQuestion.push({
         id: "new",
         questionObj: "",
+        params: "",
+        student: "",
+        solution: "",
+        language: "",
       });
       newQuestion[curPage - 1].questionObj = codeCur;
       setCurQuestions(newQuestion);
@@ -123,10 +125,18 @@ const Question = () => {
         {
           id: "new",
           questionObj: codeCur,
+          params: curParams,
+          student: curStudent,
+          solution: curSolution,
+          language: curLanguage,
         }, // there are 2 object because the one and the new one
         {
           id: "new",
           questionObj: "",
+          params: "",
+          student: "",
+          solution: "",
+          language: "",
         },
       ];
       setCurQuestions(newQuestion);
@@ -206,6 +216,7 @@ const Question = () => {
   };
 
   const handleSolClose = () => {
+    setTabIndex("1");
     setSolOpen(false);
   };
 
@@ -220,13 +231,13 @@ const Question = () => {
   );
 
   const paramsChangeHandler = useCallback((value) => {
-    setParamsCode(value);
+    setCurParams(value);
   }, []);
   const studentChangeHandler = useCallback((value) => {
-    setStudentCode(value);
+    setCurStudent(value);
   }, []);
   const solutionChangeHandler = useCallback((value) => {
-    setSolutionCode(value);
+    setCurSolution(value);
   }, []);
 
   const debounceParams = useMemo(
@@ -241,37 +252,30 @@ const Question = () => {
     (value, viewUpdate) => debounce(solutionChangeHandler, 600),
     []
   );
-  // const paramsChangeHandler = useCallback((value) => {
-  //   setParamsCode(value);
-  // }, []);
-  // const studentChangeHandler = useCallback((value) => {
-  //   setStudentCode(value);
-  // }, []);
-  // const solutionChangeHandler = useCallback((value) => {
-  //   setSolutionCode(value);
-  // }, []);
-
-  // const debounceParams = useMemo(
-  //   (value, viewUpdate) => debounce(paramsChangeHandler, 600),
-  //   []
-  // );
-  // const debounceStudent = useMemo(
-  //   (value, viewUpdate) => debounce(studentChangeHandler, 600),
-  //   []
-  // );
-  // const debounceSolution = useMemo(
-  //   (value, viewUpdate) => debounce(solutionChangeHandler, 600),
-  //   []
-  // );
 
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       .unwrap()
       .then((res) => {
         if (res.length !== 0) {
+          console.table(res);
+
           setCurQuestions(res);
           setPage(res.length);
+
           setCodeCur(res[0].questionObj);
+          if (res[0].params.length !== 0) {
+            setCurParams(res[0].params);
+          }
+          if (res[0].student.length !== 0) {
+            setCurStudent(res[0].student);
+          }
+          if (res[0].solution.length !== 0) {
+            setCurSolution(res[0].solution);
+          }
+          if (res[0].language.length !== 0) {
+            setCurLanguage(res[0].language);
+          }
         }
       })
       .catch((err) => {
@@ -313,9 +317,9 @@ const Question = () => {
                 <Select
                   labelId='demo-simple-select-label'
                   id='demo-simple-select'
-                  value={language}
+                  value={curLanguage}
                   label='Language'
-                  onChange={languageChange}
+                  onChange={curLanguageChange}
                 >
                   <MenuItem value={"cpp"}>C++</MenuItem>
                   <MenuItem value={"java"}>Java</MenuItem>
@@ -341,7 +345,7 @@ const Question = () => {
                   </Box>
                   <TabPanel value='1'>
                     <CodeMirror
-                      value={paramsCode}
+                      value={curParams}
                       extensions={[javascript()]}
                       onChange={debounceParams}
                       className='solution-editor'
@@ -351,7 +355,7 @@ const Question = () => {
                   </TabPanel>
                   <TabPanel value='2'>
                     <CodeMirror
-                      value={studentCode}
+                      value={curStudent}
                       extensions={[javascript()]}
                       onChange={debounceStudent}
                       className='solution-editor'
@@ -361,7 +365,7 @@ const Question = () => {
                   </TabPanel>
                   <TabPanel value='3'>
                     <CodeMirror
-                      value={solutionCode}
+                      value={curSolution}
                       extensions={[javascript()]}
                       onChange={debounceSolution}
                       className='solution-editor'
@@ -372,7 +376,7 @@ const Question = () => {
                 </TabContext>
               </Box>
             </DialogContent>
-            <DialogActions>
+            {/* <DialogActions>
               <Button
                 onClick={(e) => {
                   handleSolClose();
@@ -381,7 +385,7 @@ const Question = () => {
               >
                 Done
               </Button>
-            </DialogActions>
+            </DialogActions> */}
           </Dialog>
         </Stack>
         {/* <h4 className='editor-title-label'>{quiz.name}</h4> */}

@@ -7,6 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    isRelease: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    deadLineTime: {
+      type: DataTypes.DATE,
+    },
   });
 
   Quiz.associate = (models) => {

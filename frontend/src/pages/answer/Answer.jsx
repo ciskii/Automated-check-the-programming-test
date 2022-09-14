@@ -5,7 +5,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MarkdownRenderer from "./MarkdownRenderer";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import CodeMirror from "@uiw/react-codemirror";
-import { dracula } from "@uiw/codemirror-theme-dracula";
+import { githubLight } from "@uiw/codemirror-theme-github";
+import { javascript } from "@codemirror/lang-javascript";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -37,6 +38,11 @@ const Answer = () => {
   const [curQuestion, setCurQuestion] = useState(""); //current question on selected page
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
+
+  const [curParams, setCurParams] = useState("");
+  const [curStudent, setCurStudent] = useState("");
+  const [curSolution, setCurSolution] = useState("");
+  const [curLanguage, setCurLanguage] = useState("");
 
   const { user } = useSelector((state) => state.auth);
   const { isIdle, questions } = useSelector((state) => state.question); // Questions from teacher
@@ -84,14 +90,17 @@ const Answer = () => {
     dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
       .unwrap()
       .then((res) => {
+        console.table(res);
         if (res.length !== 0) {
           const initialCodes = res.map((item) => {
             return {
               QuestionId: item.id, // question id
-              answerObj: "",
+              answerObj: item.student,
+              language: item.language,
             };
           }); // create default code for each question
           setCurCodes(initialCodes);
+          setCurCode(initialCodes[0].answerObj);
           setCurQuestion(res[0].questionObj);
           setPage(res.length);
         }
@@ -114,28 +123,14 @@ const Answer = () => {
           </Link>
           <h4 className='editor-title-label'>{quiz.name}</h4>
         </Stack>
+
         <Stack
           direction='row'
           justifyContent='space-between'
           sx={{ flex: 1 }}
           spacing={10}
         >
-          <FormControl sx={{ width: 200, ml: 5 }} size='small'>
-            <InputLabel id='demo-simple-select-label'>Language</InputLabel>
-            <Select
-              labelId='demo-simple-select-label'
-              id='demo-simple-select'
-              value={language}
-              label='Language'
-              onChange={handleLanguage}
-            >
-              <MenuItem value={"javascript"}>javascript</MenuItem>
-              <MenuItem value={"python"}>python</MenuItem>
-              <MenuItem value={"java"}>java</MenuItem>
-              <MenuItem value={"php"}>php</MenuItem>
-              <MenuItem value={"sql"}>sql</MenuItem>
-            </Select>
-          </FormControl>
+          <h4 className='editor-title-label'>{quiz.name}</h4>
           <IconButton
             color='primary'
             aria-label='Save a quiz'
@@ -151,10 +146,10 @@ const Answer = () => {
 
         <CodeMirror
           value={curCode}
-          extensions={[markdown({ base: markdownLanguage })]}
+          extensions={[javascript()]}
           onChange={changeHandler}
           height='100%'
-          theme={myTheme}
+          theme={githubLight}
           className='quiz-editor'
         />
       </div>

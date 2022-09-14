@@ -1,29 +1,84 @@
 const asyncHandler = require("express-async-handler");
 const { Answer } = require("../models");
 
-// ---------- Answer obj API ----------------
+const path = require("node:path");
+const { spawn } = require("child_process");
+const fs = require("fs/promises");
+
+// ~~~~~~~~~~~~ Answer obj API ~~~~~~~~~~~ //
 const createAnswer = asyncHandler(async (req, res) => {
   const { savedAnswers, StudentId, QuizId } = req.body;
-  console.log("savedAnswers", savedAnswers);
+  // console.log("savedAnswers", savedAnswers);
 
   const answers = await Promise.all(
     savedAnswers.map(async (answer) => {
-      const { answerObj, QuestionId } = answer;
-      const res = await Answer.create({
-        answerObj: answerObj,
-        QuestionId: QuestionId,
-        StudentId: StudentId,
-        QuizId: QuizId,
-      });
-      return res;
+      const { QuestionId, answerObj, mergeAnswer, language } = answer;
+
+      // ~~~~~~~~~~ call check answer ~~~~~~~~~~ //
+      await checkAnswers(StudentId, QuestionId, mergeAnswer, language);
+
+      // const res = await Answer.create({
+      //   answerObj: answerObj,
+      //   QuestionId: QuestionId,
+      //   StudentId: StudentId,
+      //   QuizId: QuizId,
+      // });
+      // return res;
     })
   );
 
-  if (answers) {
-    console.log("answers", answers);
-    res.json(answers);
-  }
+  // if (answers) {
+  //   console.log("answers", answers);
+  //   res.json(answers);
+  // }
 });
+
+// ~~~~~~~~~~ check the answers ~~~~~~~~~~ //
+const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
+  let fileName = "";
+  let command = "";
+  let testResult;
+  if (language === "javascript") {
+    fileName = "node_" + StudentId + "_" + QuestionId + ".js";
+    // folderName = "node_student_id_" + StudentId;
+    command = "node";
+  }
+  const filePath = `${__dirname}/compileFiles/${fileName}`;
+
+  const runScript = () => {
+    const child = spawn(command, [filePath]);
+    child.stdout.on("data", (data) => {
+      testResult = data.toString().slice(0, 1);
+      console.log("testResult", testResult);
+      console.log("testResult", testResult.length);
+      if (testResult === "T") {
+        console.log("The answer is True");
+        // save score
+      } else if (testResult === "F") {
+        console.log("The answer is False");
+        // save score
+      }
+      // fs.unlink(filePath);
+    });
+    child.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
+    child.on("close", (code) => {
+      // fs.unlink(filePath);
+    });
+  };
+
+  const createFile = async () => {
+    try {
+      await fs.writeFile(filePath, mergeAnswer);
+      runScript();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  createFile();
+};
 
 const getAllAnswers = asyncHandler(async (req, res) => {
   const { StudentId } = req.params;

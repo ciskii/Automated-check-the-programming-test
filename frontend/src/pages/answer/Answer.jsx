@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import MarkdownRenderer from "./MarkdownRenderer";
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
@@ -14,11 +13,11 @@ import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+// import Box from "@mui/material/Box";
+// import InputLabel from "@mui/material/InputLabel";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
 
 import { create, reset } from "features/answer/answerSlice";
 import { getAllQuestions } from "features/question/questionSlice";
@@ -27,12 +26,6 @@ import "github-markdown-css";
 import "./answer.css";
 
 const Answer = () => {
-  const [language, setLanguage] = React.useState("");
-
-  const handleLanguage = (event) => {
-    setLanguage(event.target.value);
-  };
-
   const [curCode, setCurCode] = useState(""); // current code at selected page
   const [curCodes, setCurCodes] = useState([]); // set of current code for each questions  array of obj. {QuestionObj, answerObj}
   const [curQuestion, setCurQuestion] = useState(""); //current question on selected page
@@ -68,11 +61,22 @@ const Answer = () => {
     });
     savedAnswersObj[curPage - 1].answerObj = curCode;
 
+    // console.table(savedAnswersObj);
+
+    //  * merge params, student'answer and solution together  //
+    const mergeAnswers = savedAnswersObj.map((item) => {
+      item["mergeAnswer"] =
+        item.params + "\n" + item.answerObj + "\n" + item.solution;
+      // console.log('item["mergeAnswer"]', item["mergeAnswer"]);
+      return item;
+    });
+
     const savedAnswers = {
       id: user.id,
-      savedAnswersObj: savedAnswersObj,
+      savedAnswersObj: mergeAnswers,
       QuizId: quiz.id,
     };
+    // console.table(savedAnswers);
     dispatch(create(savedAnswers))
       .unwrap()
       .then((res) => {
@@ -90,11 +94,13 @@ const Answer = () => {
     dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
       .unwrap()
       .then((res) => {
-        console.table(res);
         if (res.length !== 0) {
+          // console.table(res);
           const initialCodes = res.map((item) => {
             return {
               QuestionId: item.id, // question id
+              params: item.params,
+              solution: item.solution,
               answerObj: item.student,
               language: item.language,
             };

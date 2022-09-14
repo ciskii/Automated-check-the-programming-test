@@ -1,3 +1,4 @@
+
 // Teacher
 const nums = [2, 7, 11, 15];
 const target = 9;
@@ -26,11 +27,10 @@ for (let index = 0; index < output.length; index++) {
     break;
   }
 }
-const test = "T";
 
 if (compare) {
-  console.log("test.length", test.length);
-  console.log(compare);
+  console.log("T");
 } else {
-  console.log(compare);
+  console.log("F");
 }
+

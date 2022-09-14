@@ -1,23 +1,13 @@
-const { spawn, spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 const fs = require("fs/promises");
 
-// const content = `
-// class Solution:
-// def twoSum(self, nums: List[int], target: int) -> List[int]:
-//     for i in range(len(nums)):
-//         for j in range(i + 1, len(nums)):
-//             if nums[j] == target - nums[i]:
-//                 return [i, j]
-
-// x = twoSum()
-// print x
-// `
-
 const content = `
-const nums = [2,7,11,15]
-const target = 9
-const output = [0,1]
+// Teacher
+const nums = [2, 7, 11, 15];
+const target = 9;
+const output = [0, 1];
 
+// Student
 var twoSum = function (nums, target) {
   for (let i = 0; i < nums.length - 1; i++) {
     const rest = nums.slice(i + 1);
@@ -29,30 +19,53 @@ var twoSum = function (nums, target) {
   }
 };
 
-const result = twoSum(nums, target)
+// Teacher
+const result = twoSum(nums, target);
 
-if (result === output) {
-    console.log('T')
-} else {
-    console.log('F')
+let compare = true;
+
+for (let index = 0; index < output.length; index++) {
+  if (output[index] !== result[index]) {
+    compare = false;
+    break;
+  }
 }
+
+if (compare) {
+  console.log("T");
+} else {
+  console.log("F");
+}
+
 `;
 
 const fileName = `hello.js`;
 const folderName = `python`;
 const filePath = `${__dirname}/utils/${folderName}/${fileName}`;
+const newPath = [
+  `${__dirname}/utils/${folderName}/hello1.js`,
+  `${__dirname}/utils/${folderName}/hello2.js`,
+  `${__dirname}/utils/${folderName}/hello3.js`,
+];
 
+console.log("newPath", newPath);
+console.log("filePath", filePath);
 const runScript = () => {
   // run script
   const child = spawn("node", [filePath]);
   let data1;
   child.stdout.on("data", (data) => {
-    // data1 = data;
-    data1 = data.toString();
-    // data1 = parseInt(data);
-    // console.log("output", output);
-    console.log(`stdout: ${data}`);
-    fs.unlink(filePath);
+    data1 = data.toString().slice(0, 1);
+    console.log("data1.length", data1.length);
+    console.log("data1", data1);
+    if (data1 === "T") {
+      console.log("this answer is correct");
+    } else if (data1 === "F") {
+      console.log("this answer is false");
+    }
+    // console.log("data1", data1);
+    // console.log("data1.length", data1.length);
+    // fs.unlink(filePath);
   });
 
   child.stderr.on("data", (data) => {
@@ -67,15 +80,16 @@ const runScript = () => {
 };
 
 // write file with promise
-const createFile = async () => {
+const createFile = async (usePath) => {
   try {
-    await fs.writeFile(filePath, content);
+    await fs.writeFile(usePath, content);
     console.log("Create Success!");
     runScript();
-    // ;
   } catch (err) {
     console.log(err);
   }
 };
 
-createFile();
+for (let i = 0; i < 3; i++) {
+  createFile(newPath[i]);
+}

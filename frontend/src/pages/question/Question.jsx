@@ -7,15 +7,16 @@ import { debounce } from "lodash";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { cpp } from "@codemirror/lang-cpp";
+import { java } from "@codemirror/lang-java";
+import { php } from "@codemirror/lang-php";
+import { python } from "@codemirror/lang-python";
+import { javascript } from "@codemirror/lang-javascript";
+
 import { languages } from "@codemirror/language-data";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import "katex/dist/katex.min.css";
-import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
-
-// import AceEditor from "react-ace";
-// import "ace-builds/src-noconflict/mode-java";
-// import "ace-builds/src-noconflict/theme-github";
-// import "ace-builds/src-noconflict/ext-language_tools";
+import CodeMirror from "@uiw/react-codemirror";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -35,6 +36,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
 import {
   create,
@@ -55,11 +61,31 @@ const Question = () => {
   const { isIdle, questions } = useSelector((state) => state.question);
   const { quiz } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const params = useParams();
 
   const [solOpen, setSolOpen] = useState(false);
-  const [solCode, setSolCode] = useState("");
+
+  const [paramsCode, setParamsCode] = useState("");
+  const [studentCode, setStudentCode] = useState("");
+  const [solutionCode, setSolutionCode] = useState("");
+
+  const [solCode, setSolCode] = useState([
+    {
+      params: "",
+      student: "",
+      solution: "",
+    },
+  ]);
+
+  const [language, setLanguage] = useState("");
+  const languageChange = (e) => {
+    setLanguage(e.target.value);
+  };
+
+  const [tabIndex, setTabIndex] = useState("1");
+  const tabIndexChange = (e, newTabIndex) => {
+    setTabIndex(newTabIndex);
+  };
 
   const getNewQuestion = () => {
     // ! what a step! HOLY
@@ -193,19 +219,50 @@ const Question = () => {
     []
   );
 
-  const solChangeHandler = useCallback((value) => {
-    setSolCode(value);
+  const paramsChangeHandler = useCallback((value) => {
+    setParamsCode(value);
   }, []);
-  const debounceSolChangeHandler = useMemo(
-    (value, viewUpdate) => debounce(solChangeHandler, 600),
+  const studentChangeHandler = useCallback((value) => {
+    setStudentCode(value);
+  }, []);
+  const solutionChangeHandler = useCallback((value) => {
+    setSolutionCode(value);
+  }, []);
+
+  const debounceParams = useMemo(
+    (value, viewUpdate) => debounce(paramsChangeHandler, 600),
     []
   );
+  const debounceStudent = useMemo(
+    (value, viewUpdate) => debounce(studentChangeHandler, 600),
+    []
+  );
+  const debounceSolution = useMemo(
+    (value, viewUpdate) => debounce(solutionChangeHandler, 600),
+    []
+  );
+  // const paramsChangeHandler = useCallback((value) => {
+  //   setParamsCode(value);
+  // }, []);
+  // const studentChangeHandler = useCallback((value) => {
+  //   setStudentCode(value);
+  // }, []);
+  // const solutionChangeHandler = useCallback((value) => {
+  //   setSolutionCode(value);
+  // }, []);
 
-  const [age, setAge] = React.useState("");
-
-  const languageChange = (event) => {
-    setAge(event.target.value);
-  };
+  // const debounceParams = useMemo(
+  //   (value, viewUpdate) => debounce(paramsChangeHandler, 600),
+  //   []
+  // );
+  // const debounceStudent = useMemo(
+  //   (value, viewUpdate) => debounce(studentChangeHandler, 600),
+  //   []
+  // );
+  // const debounceSolution = useMemo(
+  //   (value, viewUpdate) => debounce(solutionChangeHandler, 600),
+  //   []
+  // );
 
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
@@ -242,54 +299,87 @@ const Question = () => {
             Solution
           </Button>
 
-          <Dialog
-            open={solOpen}
-            maxWidth={false}
-            onClose={handleSolClose}
-            // style={{ height: "500px" }}
-          >
-            <DialogTitle id='alert-dialog-title'>Solution</DialogTitle>
-
-            <FormControl fullWidth>
-              <InputLabel id='demo-simple-select-label'>Age</InputLabel>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                value={age}
-                label='Age'
-                onChange={handleChange}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
+          <Dialog open={solOpen} maxWidth={false} onClose={handleSolClose}>
+            <DialogTitle
+              id='alert-dialog-title'
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>Solution</div>
+              <FormControl style={{ width: "150px" }} size='small'>
+                <InputLabel id='demo-simple-select-label'>Language</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  value={language}
+                  label='Language'
+                  onChange={languageChange}
+                >
+                  <MenuItem value={"cpp"}>C++</MenuItem>
+                  <MenuItem value={"java"}>Java</MenuItem>
+                  <MenuItem value={"javascript"}>Node.js</MenuItem>
+                  <MenuItem value={"php"}>PHP</MenuItem>
+                  <MenuItem value={"python"}>Python</MenuItem>
+                </Select>
+              </FormControl>
+            </DialogTitle>
 
             <DialogContent style={{ outline: "none" }}>
-              <CodeMirror
-                value={solCode}
-                extensions={[
-                  markdown({
-                    base: markdownLanguage,
-                    codeLanguages: languages,
-                  }),
-                ]}
-                onChange={debounceSolChangeHandler}
-                className='solution-editor'
-                theme={githubLight}
-                autoFocus={true}
-              />
+              <Box>
+                <TabContext value={tabIndex}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <TabList
+                      onChange={tabIndexChange}
+                      aria-label='lab API tabs example'
+                    >
+                      <Tab label='Params' value='1' />
+                      <Tab label='Student function' value='2' />
+                      <Tab label='Solution ' value='3' />
+                    </TabList>
+                  </Box>
+                  <TabPanel value='1'>
+                    <CodeMirror
+                      value={paramsCode}
+                      extensions={[javascript()]}
+                      onChange={debounceParams}
+                      className='solution-editor'
+                      theme={githubLight}
+                      autoFocus={true}
+                    />
+                  </TabPanel>
+                  <TabPanel value='2'>
+                    <CodeMirror
+                      value={studentCode}
+                      extensions={[javascript()]}
+                      onChange={debounceStudent}
+                      className='solution-editor'
+                      theme={githubLight}
+                      autoFocus={true}
+                    />
+                  </TabPanel>
+                  <TabPanel value='3'>
+                    <CodeMirror
+                      value={solutionCode}
+                      extensions={[javascript()]}
+                      onChange={debounceSolution}
+                      className='solution-editor'
+                      theme={githubLight}
+                      autoFocus={true}
+                    />
+                  </TabPanel>
+                </TabContext>
+              </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleSolClose}>Cancel</Button>
               <Button
                 onClick={(e) => {
                   handleSolClose();
                 }}
                 autoFocus
-                color='error'
               >
-                Save
+                Done
               </Button>
             </DialogActions>
           </Dialog>

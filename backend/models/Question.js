@@ -4,6 +4,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    params: {
+      type: DataTypes.TEXT,
+    },
+    student: {
+      type: DataTypes.TEXT,
+    },
+    solution: {
+      type: DataTypes.TEXT,
+    },
+    language: {
+      type: DataTypes.TEXT,
+    },
   });
 
   Question.associate = (models) => {

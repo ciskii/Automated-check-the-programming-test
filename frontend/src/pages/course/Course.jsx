@@ -13,7 +13,7 @@ import "./course.css";
 import Quiz from "pages/quiz/Quiz";
 
 const Course = (props) => {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
   const { quizzes } = useSelector((state) => state.quiz);
 
   const handleChange = (event, newValue) => {

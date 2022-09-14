@@ -68,6 +68,7 @@ const Question = () => {
   const [curStudent, setCurStudent] = useState("");
   const [curSolution, setCurSolution] = useState("");
   const [curLanguage, setCurLanguage] = useState("");
+
   const curLanguageChange = (e) => {
     setCurLanguage(e.target.value);
   };
@@ -87,6 +88,7 @@ const Question = () => {
     newQuestion[curPage - 1].params = curParams; // update params
     newQuestion[curPage - 1].student = curStudent; // update params
     newQuestion[curPage - 1].solution = curSolution; // update params
+    newQuestion[curPage - 1].language = curLanguage; // update params
 
     return newQuestion;
   };
@@ -99,6 +101,7 @@ const Question = () => {
     setCurParams(curQuestions[value - 1].params);
     setCurStudent(curQuestions[value - 1].student);
     setCurSolution(curQuestions[value - 1].solution);
+    setCurLanguage(curQuestions[value - 1].language);
   };
 
   const handleAddQuestion = () => {

@@ -11,16 +11,28 @@ const createAnswer = asyncHandler(async (req, res) => {
   const answers = await Promise.all(
     savedAnswers.map(async (answer) => {
       const { QuestionId, answerObj, mergeAnswer, language } = answer;
+      let score = 0;
 
-      await checkAnswers(StudentId, QuestionId, mergeAnswer, language);
+      const testResult = await checkAnswers(
+        StudentId,
+        QuestionId,
+        mergeAnswer,
+        language
+      );
 
-      // const res = await Answer.create({
-      //   answerObj: answerObj,
-      //   QuestionId: QuestionId,
-      //   StudentId: StudentId,
-      //   QuizId: QuizId,
-      // });
-      // return res;
+      if (testResult) {
+        score = 1;
+      }
+
+      const res = await Answer.create({
+        answerObj: answerObj,
+        score: score,
+        isCorrect: testResult,
+        QuestionId: QuestionId,
+        StudentId: StudentId,
+        QuizId: QuizId,
+      });
+      return res;
     })
   );
 
@@ -42,7 +54,7 @@ const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
 
   await createFile(filePath, mergeAnswer);
   const res = await runScript(command, filePath);
-  console.log("res", res);
+  return res;
 };
 
 const createFile = async (filePath, mergeAnswer) => {
@@ -53,6 +65,8 @@ const createFile = async (filePath, mergeAnswer) => {
   }
 };
 
+// ! what a step
+// https://stackoverflow.com/questions/69704190/node-child-process-spawn-is-not-returning-data-correctly-when-using-with-funct
 const runScript = (command, filePath) => {
   return new Promise((resolve, reject) => {
     let testResult;
@@ -61,6 +75,7 @@ const runScript = (command, filePath) => {
     const child = spawn(command, [filePath]);
     child.stdout.on("data", (data) => {
       testResult = data.toString().slice(0, 1);
+      console.log("testResult", testResult);
       if (testResult === "T") {
         res = true;
       } else if (testResult === "F") {

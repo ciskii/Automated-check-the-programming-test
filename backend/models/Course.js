@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     Course.hasMany(models.Quiz, {
       onDelete: "CASCADE",
     });
+
     Course.belongsToMany(models.Student, { through: models.Enrollment });
   };
 

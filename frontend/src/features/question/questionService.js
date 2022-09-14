@@ -3,6 +3,7 @@ const api = "http://localhost:5000/api/question/";
 
 const create = async (question, rejectWithValue) => {
   const { newQuestion, QuizId } = question;
+
   try {
     const res = await axios.post(
       api + "create/" + QuizId,

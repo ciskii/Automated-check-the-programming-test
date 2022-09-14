@@ -7,18 +7,29 @@ const createQuestion = asyncHandler(async (req, res) => {
 
   const newQuestions = await Promise.all(
     questions.map(async (question) => {
-      const { id, questionObj } = question;
+      const { id, questionObj, params, student, solution, language } = question;
       if (id === "new") {
         // create new one
         const res = await Question.create({
           questionObj: questionObj,
+          params: params,
+          student: student,
+          solution: solution,
+          language: language,
           QuizId: QuizId,
         });
         return res;
       } else {
         // update an exist one
         const res = await Question.update(
-          { questionObj: questionObj },
+          {
+            questionObj: questionObj,
+            params: params,
+            student: student,
+            solution: solution,
+            language: language,
+            QuizId: QuizId,
+          },
           { where: { id: id } }
         );
         return res;

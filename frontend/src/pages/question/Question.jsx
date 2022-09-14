@@ -171,6 +171,11 @@ const Question = () => {
       });
 
       newQuestion[curPage - 1].questionObj = codeCur;
+      newQuestion[curPage - 1].params = curParams;
+      newQuestion[curPage - 1].student = curStudent;
+      newQuestion[curPage - 1].solution = curSolution;
+      newQuestion[curPage - 1].language = curLanguage;
+
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then((res) => {
@@ -180,6 +185,10 @@ const Question = () => {
               setCurQuestions(res);
               setPage(res.length);
               setCodeCur(res[curPage - 1].questionObj);
+              setCurParams(res[curPage - 1].params);
+              setCurStudent(res[curPage - 1].student);
+              setCurSolution(res[curPage - 1].solution);
+              setCurLanguage(res[curPage - 1].language);
             });
         });
     } else {
@@ -187,6 +196,10 @@ const Question = () => {
         {
           id: "new",
           questionObj: codeCur,
+          params: curParams,
+          student: curStudent,
+          solution: curSolution,
+          language: curLanguage,
         },
       ];
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
@@ -198,6 +211,10 @@ const Question = () => {
               setCurQuestions(res);
               setPage(res.length);
               setCodeCur(res[curPage - 1].questionObj);
+              setCurParams(res[curPage - 1].params);
+              setCurStudent(res[curPage - 1].student);
+              setCurSolution(res[curPage - 1].solution);
+              setCurLanguage(res[curPage - 1].language);
             });
         });
     }

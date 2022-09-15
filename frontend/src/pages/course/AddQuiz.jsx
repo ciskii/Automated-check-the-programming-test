@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { create, getAllQuizzes, reset } from "features/quiz/quizSlice";
 
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -12,7 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
 const AddQuiz = (props) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const [input, setInput] = useState({
     quizName: "",
@@ -47,7 +47,8 @@ const AddQuiz = (props) => {
       .unwrap()
       .then(() => {
         dispatch(reset());
-        dispatch(getAllQuizzes(props.id));
+        setInput({ ...input, quizName: "" });
+        setIsValid({ ...isValid, quizName: false });
       });
   };
 
@@ -61,8 +62,13 @@ const AddQuiz = (props) => {
 
   return (
     <>
-      <Button variant='outlined' color='success' onClick={handleClickOpen}>
-        <AddCircleOutlineRoundedIcon sx={{ fontSize: 14, mb: 0.25 }} /> Quiz
+      <Button
+        variant='text'
+        color='success'
+        onClick={handleClickOpen}
+        startIcon={<AddIcon />}
+      >
+        Quiz
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new quiz</DialogTitle>

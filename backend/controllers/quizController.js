@@ -15,7 +15,6 @@ const getAllQuizzes = asyncHandler(async (req, res) => {
   const quizzes = await Quiz.findAll({
     where: { CourseId: parseInt(CourseId) },
   });
-  // console.log("quizzes", quizzes);
   if (quizzes.length !== 0) {
     res.json({ quizzes: quizzes });
   } else {

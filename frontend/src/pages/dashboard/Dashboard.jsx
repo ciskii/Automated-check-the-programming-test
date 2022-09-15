@@ -17,16 +17,12 @@ import "./dashboard.css";
 const Dashboard = () => {
   const [isPopUp, setIsPopUp] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  const { course, courses, isIdle, isCreateSuccess } = useSelector(
-    (state) => state.course
-  );
+  const { course, courses, isIdle } = useSelector((state) => state.course);
   const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
 
   const openQuizModal = useCallback(
     (row) => () => {
-      console.log("askfskdlf");
-      console.log("row", row);
       dispatch(
         setCourse({
           id: row.id,
@@ -34,9 +30,11 @@ const Dashboard = () => {
           name: row.name,
         })
       );
-      dispatch(getAllQuizzes(row.id))
-        .unwrap()
-        .then(() => setIsPopUp(true));
+      setIsPopUp(true);
+
+      // dispatch(getAllQuizzes(row.id))
+      //   .unwrap()
+      //   .then(() => setIsPopUp(true));
     },
     []
   );
@@ -62,7 +60,7 @@ const Dashboard = () => {
       {
         field: "year",
         headerName: "Year",
-        width: 100,
+        width: 80,
       },
       {
         field: "delete",
@@ -96,16 +94,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (isIdle) {
-      console.log("call useEffect idle");
       dispatch(getAllCourses())
         .unwrap()
         .then((res) => {
-          console.log("res", res);
           setRows(res);
         });
     }
   }, [courses]);
 
+  console.log("isPopUp", isPopUp);
   return (
     <div className='dashboard'>
       <div className='dashboard-container'>

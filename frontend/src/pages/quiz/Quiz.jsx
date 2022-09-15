@@ -32,35 +32,3 @@ const Quiz = (props) => {
 };
 
 export default Quiz;
-
-// const [curHover, setCurHover] = useState("");
-
-// const onMouseEnter = (quiz) => {
-//   setCurHover(quiz);
-// };
-
-// const onMouseLeave = () => {
-//   setCurHover("");
-// };
-
-{
-  /* <div
-        className='quiz'
-        onMouseEnter={() => onMouseEnter(quiz)}
-        onMouseLeave={() => onMouseLeave(quiz)}
-      >
-        {quiz === curHover ? (
-          <div className='quiz-card'>
-            
-              <div className='quiz-card-item '>
-                <p className='quiz-card-item-text'>Create Quiz</p>
-                <FiArrowRightCircle className='quiz-card-item-icon' />
-              </div>
-            </Link>
-          
-          </div>
-        ) : (
-          <div className='quiz-item'>{quiz.name}</div>
-        )}
-      </div> */
-}

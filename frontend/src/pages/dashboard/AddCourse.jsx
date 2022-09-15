@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   create,
@@ -27,6 +27,7 @@ const AddCourse = () => {
     courseName: "",
   });
   const [semester, setSemester] = useState(1);
+  const [year, setYear] = useState();
 
   const resetState = () => {
     setInput({ ...input, courseId: "", courseName: "" });
@@ -36,6 +37,9 @@ const AddCourse = () => {
 
   const semesterChange = (e) => {
     setSemester(e.target.value);
+  };
+  const yearChange = (e) => {
+    setYear(e.target.value);
   };
 
   const [isValid, setIsValid] = useState({
@@ -71,6 +75,7 @@ const AddCourse = () => {
           courseId: input.courseId,
           courseName: input.courseName,
           semester: semester,
+          year: year,
         })
       )
         .unwrap()
@@ -94,7 +99,7 @@ const AddCourse = () => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    resetState();
   };
 
   const teacherForm = () => {
@@ -120,6 +125,15 @@ const AddCourse = () => {
               label='Course Name'
               value={input.courseName}
               onChange={(e) => onChange(e.target.value, "courseName")}
+            />
+            <TextField
+              margin='normal'
+              name='year'
+              required
+              fullWidth
+              label='Year'
+              value={year}
+              onChange={yearChange}
             />
           </FormControl>
           <FormControl fullWidth style={{ marginTop: "16px" }}>
@@ -200,6 +214,12 @@ const AddCourse = () => {
       </Dialog>
     );
   };
+
+  useEffect(() => {
+    const date = new Date().getFullYear();
+    const newDate = parseInt((date + 543).toString().slice(2));
+    setYear(newDate);
+  }, []);
 
   return (
     <>

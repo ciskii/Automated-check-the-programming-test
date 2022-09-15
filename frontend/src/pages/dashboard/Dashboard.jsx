@@ -41,9 +41,13 @@ const Dashboard = () => {
     []
   );
 
-  const testCol = React.useMemo(
+  const col = React.useMemo(
     () => [
-      { field: "courseId", headerName: "Course ID", width: 100 },
+      {
+        field: "courseId",
+        headerName: "Course ID",
+        width: 100,
+      },
       {
         field: "name",
         headerName: "Course name",
@@ -53,7 +57,12 @@ const Dashboard = () => {
       {
         field: "semester",
         headerName: "Semester",
-        width: 160,
+        width: 100,
+      },
+      {
+        field: "year",
+        headerName: "Year",
+        width: 100,
       },
       {
         field: "delete",
@@ -91,6 +100,7 @@ const Dashboard = () => {
       dispatch(getAllCourses())
         .unwrap()
         .then((res) => {
+          console.log("res", res);
           setRows(res);
         });
     }
@@ -133,7 +143,7 @@ const Dashboard = () => {
           <AddCourse />
         </Stack>
 
-        <DataGrid rows={rows} columns={testCol} />
+        <DataGrid rows={rows} columns={col} />
 
         {/* <div className='dashboard-container-course'>
           {courses.map((item) => (

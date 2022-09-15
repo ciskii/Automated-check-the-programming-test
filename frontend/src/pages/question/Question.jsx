@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { debounce } from "lodash";
 
@@ -65,7 +65,7 @@ const Question = () => {
   const [curParams, setCurParams] = useState("");
   const [curStudent, setCurStudent] = useState("");
   const [curSolution, setCurSolution] = useState("");
-  const [curLanguage, setCurLanguage] = useState("");
+  const [curLanguage, setCurLanguage] = useState("javascript");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -320,14 +320,6 @@ const Question = () => {
     <div className='editor'>
       <div className='editor-title'>
         <Stack direction='row' spacing={1}>
-          {/* <Link to='/'>
-            <Tooltip title='Home'>
-              <IconButton aria-label='home'>
-                <HomeIcon />
-              </IconButton>
-            </Tooltip>
-          </Link> */}
-
           <Tooltip title='Home'>
             <IconButton aria-label='home' onClick={linkDashboard}>
               <HomeIcon />

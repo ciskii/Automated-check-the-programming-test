@@ -6,12 +6,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 
 import Course from "pages/course/Course";
 import StudentCourse from "pages/course/student/StudentCoures";
 import AddCourse from "./AddCourse";
-import { getAllCourses, setCourse } from "features/course/courseSlice";
-import { getAllQuizzes } from "features/quiz/quizSlice";
+import {
+  getAllCourses,
+  setCourse,
+  deleteCourse,
+} from "features/course/courseSlice";
 import "./dashboard.css";
 
 const Dashboard = () => {
@@ -19,9 +27,12 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const { course, courses, isIdle } = useSelector((state) => state.course);
   const [rows, setRows] = useState([]);
+  const [curRow, setCurRow] = useState();
+  const [delModal, setDelModal] = useState(false);
+
   const dispatch = useDispatch();
 
-  const openQuizModal = useCallback(
+  const onQuizModelOpen = useCallback(
     (row) => () => {
       dispatch(
         setCourse({
@@ -31,10 +42,43 @@ const Dashboard = () => {
         })
       );
       setIsPopUp(true);
+    },
+    []
+  );
 
-      // dispatch(getAllQuizzes(row.id))
-      //   .unwrap()
-      //   .then(() => setIsPopUp(true));
+  // const onDelete = useCallback(
+  //   (row) => () => {
+  //     dispatch(deleteCourse(row.id))
+  //       .unwrap()
+  //       .then(() => {
+  //         dispatch(getAllCourses())
+  //           .unwrap()
+  //           .then((res) => {
+  //             setRows(res);
+  //           });
+  //       });
+  //   },
+  //   []
+  // );
+
+  const onDelete = () => {
+    onDelModalClose();
+    dispatch(deleteCourse(curRow.id))
+      .unwrap()
+      .then(() => {
+        dispatch(getAllCourses())
+          .unwrap()
+          .then((res) => {
+            setRows(res);
+          });
+      });
+  };
+
+  const onDelModalOpen = useCallback(
+    (row) => () => {
+      setDelModal(true);
+      setCurRow(row);
+      console.log("row", row);
     },
     []
   );
@@ -71,7 +115,7 @@ const Dashboard = () => {
           <GridActionsCellItem
             icon={<DeleteIcon color='error' />}
             label='Delete course'
-            // onClick={openQuizModal(params)}
+            onClick={onDelModalOpen(params.row)}
           />,
         ],
       },
@@ -84,13 +128,17 @@ const Dashboard = () => {
           <GridActionsCellItem
             icon={<AssignmentIcon />}
             label='Quiz list'
-            onClick={openQuizModal(params.row)}
+            onClick={onQuizModelOpen(params.row)}
           />,
         ],
       },
     ],
-    [openQuizModal]
+    [onQuizModelOpen]
   );
+
+  const onDelModalClose = () => {
+    setDelModal(false);
+  };
 
   useEffect(() => {
     if (isIdle) {
@@ -128,7 +176,6 @@ const Dashboard = () => {
         ) : (
           <></>
         )}
-
         <Stack
           direction='row'
           justifyContent='space-between'
@@ -141,26 +188,22 @@ const Dashboard = () => {
 
         <DataGrid rows={rows} columns={col} />
 
-        {/* <div className='dashboard-container-course'>
-          {courses.map((item) => (
-            <div className='course' key={item.id}>
-              <Button
-                sx={{ display: "block" }}
-                fullWidth
-                variant='outlined'
-                onClick={() => onClick(item)}
-                color='info'
-                className='course'
-                key={item.id}
-              >
-                <Typography variant='h6'>{item.courseId}</Typography>
-                <Typography variant='caption' sx={{ color: "warning" }}>
-                  {item.name}
-                </Typography>
-              </Button>
-            </div>
-          ))}
-        </div> */}
+        <Dialog
+          open={delModal}
+          onClose={onDelModalClose}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>
+            Delete this question?
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={onDelModalClose}>Cancel</Button>
+            <Button onClick={onDelete} autoFocus color='error'>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

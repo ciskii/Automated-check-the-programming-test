@@ -25,6 +25,18 @@ export const create = createAsyncThunk(
   }
 );
 
+export const deleteCourse = createAsyncThunk(
+  "course/deleteCourse",
+  async (courseId, { rejectWithValue }) => {
+    const response = await courseService.deleteCourse(
+      courseId,
+      rejectWithValue
+    );
+
+    return response;
+  }
+);
+
 export const enrollCourse = createAsyncThunk(
   "course/enrollCourse",
   async (courseId, { rejectWithValue }) => {
@@ -57,6 +69,7 @@ const courseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(create.pending, (state) => {
         state.isLoading = true;
       })
@@ -68,17 +81,33 @@ const courseSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      .addCase(deleteCourse.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCourse.fulfilled, (state, action) => {
+        state.course = action.payload;
+        state.isSuccess = true;
+      })
+      .addCase(deleteCourse.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(enrollCourse.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(enrollCourse.fulfilled, (state, action) => {
-        state.course = action.payload;
         state.isSuccess = true;
       })
       .addCase(enrollCourse.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(getAllCourses.pending, (state) => {
         state.isIdle = false;
         state.isLoading = true;

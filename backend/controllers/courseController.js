@@ -113,7 +113,6 @@ const deleteCourse = (req, res) => {
   const { id } = req.params;
   Course.destroy({ where: { id: id } })
     .then((course) => {
-      console.log("course", course);
       res.json({ msg: `This course has been deleted.` });
     })
     .catch((err) => {

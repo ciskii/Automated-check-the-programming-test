@@ -20,6 +20,18 @@ const create = async (course, rejectWithValue) => {
   }
 };
 
+const deleteCourse = async (courseId, rejectWithValue) => {
+  try {
+    const res = await axios.delete(api + "delete/" + courseId, {
+      withCredentials: true,
+    });
+    console.log("res.data", res.data);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
 const enrollCourse = async (courseId, rejectWithValue) => {
   try {
     const res = await axios.post(
@@ -43,8 +55,10 @@ const getAllCourses = async (course, rejectWithValue) => {
     return rejectWithValue(err.response.data.message);
   }
 };
+
 const courseService = {
   create,
+  deleteCourse,
   getAllCourses,
   enrollCourse,
 };

@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const { Answer } = require("../models");
+const { Answer, Sentquiz } = require("../models");
 
-const path = require("node:path");
 const { spawn } = require("child_process");
 const fs = require("fs/promises");
 
@@ -32,14 +31,21 @@ const createAnswer = asyncHandler(async (req, res) => {
         StudentId: StudentId,
         QuizId: QuizId,
       });
+
       return res;
     })
   );
 
-  // if (answers) {
-  //   console.log("answers", answers);
-  //   res.json(answers);
-  // }
+  if (answers) {
+    const saveQuiz = await Sentquiz.create({
+      StudentId: StudentId,
+      QuizId: QuizId,
+    });
+    if (saveQuiz) {
+      console.log("answers", answers);
+      res.json(answers);
+    }
+  }
 });
 
 // ~~~~~~~~~~ check the answers ~~~~~~~~~~ //

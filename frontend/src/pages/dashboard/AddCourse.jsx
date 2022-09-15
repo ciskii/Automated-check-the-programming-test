@@ -7,7 +7,7 @@ import {
   reset,
 } from "features/course/courseSlice";
 
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import AddIcon from "@mui/icons-material/Add";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -15,7 +15,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-// import Enroll from "./Enroll";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
 
 const AddCourse = () => {
   const [open, setOpen] = useState(false);
@@ -23,6 +26,18 @@ const AddCourse = () => {
     courseId: "",
     courseName: "",
   });
+  const [semester, setSemester] = useState(1);
+
+  const resetState = () => {
+    setInput({ ...input, courseId: "", courseName: "" });
+    setSemester(1);
+    setOpen(false);
+  };
+
+  const semesterChange = (e) => {
+    setSemester(e.target.value);
+  };
+
   const [isValid, setIsValid] = useState({
     courseId: false,
     courseName: false,
@@ -50,18 +65,19 @@ const AddCourse = () => {
   };
 
   const onSubmit = (e) => {
-    e.preventDefault();
     if (user.role === "teacher") {
       dispatch(
         create({
           courseId: input.courseId,
           courseName: input.courseName,
+          semester: semester,
         })
       )
         .unwrap()
         .then(() => {
           dispatch(reset());
-          dispatch(getAllCourses());
+          resetState();
+          // dispatch(getAllCourses());
         });
     } else if (user.role === "student") {
       dispatch(enrollCourse(input.courseId))
@@ -86,12 +102,7 @@ const AddCourse = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new course</DialogTitle>
         <DialogContent>
-          <form
-            className='courseForm-form'
-            method='POST'
-            onSubmit={onSubmit}
-            id='course-submit'
-          >
+          <FormControl fullWidth>
             <TextField
               margin='normal'
               name='courseId'
@@ -110,7 +121,21 @@ const AddCourse = () => {
               value={input.courseName}
               onChange={(e) => onChange(e.target.value, "courseName")}
             />
-          </form>
+          </FormControl>
+          <FormControl fullWidth style={{ marginTop: "16px" }}>
+            <InputLabel id='semester-select-label'>Semester</InputLabel>
+            <Select
+              labelId='semester-select-label'
+              id='semester-select'
+              value={semester}
+              label='Semester'
+              onChange={semesterChange}
+            >
+              <MenuItem value={"1"}>1</MenuItem>
+              <MenuItem value={"2"}>2</MenuItem>
+              <MenuItem value={"3"}>3</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
@@ -118,7 +143,7 @@ const AddCourse = () => {
             <Button
               type='submit'
               form='course-submit'
-              onClick={handleClose}
+              onClick={onSubmit}
               variant='contained'
             >
               Submit
@@ -178,8 +203,13 @@ const AddCourse = () => {
 
   return (
     <>
-      <Button variant='outlined' color='success' onClick={handleClickOpen}>
-        <AddCircleOutlineRoundedIcon sx={{ fontSize: 14, mb: 0.25 }} /> Course
+      <Button
+        variant='outlined'
+        color='success'
+        onClick={handleClickOpen}
+        startIcon={<AddIcon />}
+      >
+        Create new course
       </Button>
       {user.role === "teacher" ? teacherForm() : studentForm()}
     </>

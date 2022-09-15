@@ -333,10 +333,10 @@ const Question = () => {
             >
               <div>Solution</div>
               <FormControl style={{ width: "150px" }} size='small'>
-                <InputLabel id='demo-simple-select-label'>Language</InputLabel>
+                <InputLabel id='language-select-label'>Language</InputLabel>
                 <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
+                  labelId='language-select-label'
+                  id='language-select'
                   value={curLanguage}
                   label='Language'
                   onChange={curLanguageChange}

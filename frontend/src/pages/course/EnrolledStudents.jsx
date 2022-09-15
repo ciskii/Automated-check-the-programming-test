@@ -63,7 +63,7 @@ const EnrolledStudents = () => {
   const [newRows, setNewRows] = useState([]);
 
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
-  const { questions } = useSelector((state) => state.question);
+  // const { questions } = useSelector((state) => state.question);
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
   const navigate = useNavigate();

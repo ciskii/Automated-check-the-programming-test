@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 
 import Course from "pages/course/Course";
 import StudentCourse from "pages/course/student/StudentCoures";
@@ -17,54 +14,8 @@ import "./dashboard.css";
 const Dashboard = () => {
   const [isPopUp, setIsPopUp] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  const { course, courses, isIdle, isCreateSuccess } = useSelector(
-    (state) => state.course
-  );
+  const { course, courses, isIdle } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-
-  const initialColumns = [
-    { field: "courseId", headerName: "Course ID", width: 100 },
-    {
-      field: "name",
-      headerName: "Course name",
-      width: 160,
-      flex: 1,
-    },
-    {
-      field: "semester",
-      headerName: "Semester",
-      width: 160,
-    },
-    {
-      field: "delete",
-      headerName: "Delete",
-      type: "actions",
-      width: 80,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteIcon color='error' />}
-          label='Delete course'
-          // onClick={linkAnswer(params.row)}
-        />,
-      ],
-    },
-    {
-      field: "quizList",
-      headerName: "Quiz list",
-      type: "actions",
-      width: 150,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<AssignmentIcon />}
-          label='Quiz list'
-          onClick={onClick(params.row)}
-        />,
-      ],
-    },
-  ];
-
-  const [columns, setColumns] = useState(initialColumns);
-  const [rows, setRows] = useState([]);
 
   const onClick = (item) => {
     dispatch(
@@ -79,28 +30,11 @@ const Dashboard = () => {
       .then(() => setIsPopUp(true));
   };
 
-  // const onRowClick = (params) => {
-  //   console.log("params", params);
-  // };
-
   useEffect(() => {
     if (isIdle) {
-      console.log("call useEffect idle");
-      dispatch(getAllCourses())
-        .unwrap()
-        .then((res) => {
-          setRows(res);
-        });
+      dispatch(getAllCourses());
     }
-    // if (isCreateSuccess) {
-    //   console.log("call useEffect isCreateSuccess");
-    //   dispatch(getAllCourses())
-    //     .unwrap()
-    //     .then((res) => {
-    //       setRows(res);
-    //     });
-    // }
-  }, [courses]);
+  }, [course]);
 
   return (
     <div className='dashboard'>
@@ -129,25 +63,11 @@ const Dashboard = () => {
           <></>
         )}
 
-        <Stack
-          direction='row'
-          justifyContent='space-between'
-          alignItems='center'
-          mb={2}
-        >
-          <Typography variant='h5'>Course List</Typography>
-          <AddCourse />
-        </Stack>
+        <Typography sx={{ pb: (2, 3) }} variant='h5'>
+          Course List
+        </Typography>
 
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          // rowMouseEnter={onRowClick}
-          // pageSize={5}
-          // rowsPerPageOptions={[5]}
-        />
-
-        {/* <div className='dashboard-container-course'>
+        <div className='dashboard-container-course'>
           {courses.map((item) => (
             <div className='course' key={item.id}>
               <Button
@@ -166,7 +86,9 @@ const Dashboard = () => {
               </Button>
             </div>
           ))}
-        </div> */}
+
+          <AddCourse />
+        </div>
       </div>
     </div>
   );

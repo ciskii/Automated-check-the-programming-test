@@ -9,6 +9,7 @@ const create = async (course, rejectWithValue) => {
       {
         courseId: course.courseId,
         courseName: course.courseName,
+        semester: course.semester,
       },
       { withCredentials: true }
     );

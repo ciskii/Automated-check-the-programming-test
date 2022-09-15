@@ -5,7 +5,7 @@ const { Course, Enrollment } = require("../models");
 // @route   POST /api/course/create
 // @access  Teacher
 const createCourse = asyncHandler(async (req, res) => {
-  const { courseId, courseName } = req.body;
+  const { courseId, courseName, semester } = req.body;
 
   const courses = await Course.findOne({
     where: { TeacherId: req.user.id, courseId: courseId },
@@ -15,6 +15,7 @@ const createCourse = asyncHandler(async (req, res) => {
     Course.create({
       courseId: courseId,
       name: courseName,
+      semester: semester,
       TeacherId: req.user.id,
     })
       .then((course) => {

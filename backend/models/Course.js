@@ -14,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    semester: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   });
 
   Course.associate = (models) => {

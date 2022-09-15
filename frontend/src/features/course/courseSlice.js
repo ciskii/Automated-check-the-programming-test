@@ -10,6 +10,7 @@ const initialState = {
   courses: [],
   isIdle: true,
   isSuccess: false,
+  isCreateSuccess: false,
   isError: false,
   isLoading: false,
   message: "",
@@ -61,7 +62,7 @@ const courseSlice = createSlice({
       })
       .addCase(create.fulfilled, (state, action) => {
         state.course = action.payload;
-        state.isSuccess = true;
+        state.isCreateSuccess = true;
       })
       .addCase(create.rejected, (state, action) => {
         state.isError = true;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
@@ -20,68 +20,70 @@ const Dashboard = () => {
   const { course, courses, isIdle, isCreateSuccess } = useSelector(
     (state) => state.course
   );
+  const [rows, setRows] = useState([]);
   const dispatch = useDispatch();
 
-  const initialColumns = [
-    { field: "courseId", headerName: "Course ID", width: 100 },
-    {
-      field: "name",
-      headerName: "Course name",
-      width: 160,
-      flex: 1,
+  const openQuizModal = useCallback(
+    (row) => () => {
+      console.log("askfskdlf");
+      console.log("row", row);
+      dispatch(
+        setCourse({
+          id: row.id,
+          courseId: row.courseId,
+          name: row.name,
+        })
+      );
+      dispatch(getAllQuizzes(row.id))
+        .unwrap()
+        .then(() => setIsPopUp(true));
     },
-    {
-      field: "semester",
-      headerName: "Semester",
-      width: 160,
-    },
-    {
-      field: "delete",
-      headerName: "Delete",
-      type: "actions",
-      width: 80,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteIcon color='error' />}
-          label='Delete course'
-          // onClick={linkAnswer(params.row)}
-        />,
-      ],
-    },
-    {
-      field: "quizList",
-      headerName: "Quiz list",
-      type: "actions",
-      width: 150,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<AssignmentIcon />}
-          label='Quiz list'
-          onClick={onClick(params.row)}
-        />,
-      ],
-    },
-  ];
+    []
+  );
 
-  const [columns, setColumns] = useState(initialColumns);
-  const [rows, setRows] = useState([]);
-
-  const onClick = (item) => {
-    dispatch(
-      setCourse({
-        id: item.id,
-        courseId: item.courseId,
-        name: item.name,
-      })
-    );
-    dispatch(getAllQuizzes(item.id))
-      .unwrap()
-      .then(() => setIsPopUp(true));
-  };
-
-  // const onRowClick = (params) => {
-  //   console.log("params", params);
-  // };
+  const testCol = React.useMemo(
+    () => [
+      { field: "courseId", headerName: "Course ID", width: 100 },
+      {
+        field: "name",
+        headerName: "Course name",
+        width: 160,
+        flex: 1,
+      },
+      {
+        field: "semester",
+        headerName: "Semester",
+        width: 160,
+      },
+      {
+        field: "delete",
+        headerName: "Delete",
+        type: "actions",
+        width: 80,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<DeleteIcon color='error' />}
+            label='Delete course'
+            // onClick={openQuizModal(params)}
+          />,
+        ],
+      },
+      {
+        field: "quizList",
+        headerName: "Quiz list",
+        type: "actions",
+        width: 150,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<AssignmentIcon />}
+            label='Quiz list'
+            onClick={openQuizModal(params.row)}
+          />,
+        ],
+      },
+    ],
+    [openQuizModal]
+  );
 
   useEffect(() => {
     if (isIdle) {
@@ -92,14 +94,6 @@ const Dashboard = () => {
           setRows(res);
         });
     }
-    // if (isCreateSuccess) {
-    //   console.log("call useEffect isCreateSuccess");
-    //   dispatch(getAllCourses())
-    //     .unwrap()
-    //     .then((res) => {
-    //       setRows(res);
-    //     });
-    // }
   }, [courses]);
 
   return (
@@ -139,13 +133,7 @@ const Dashboard = () => {
           <AddCourse />
         </Stack>
 
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          // rowMouseEnter={onRowClick}
-          // pageSize={5}
-          // rowsPerPageOptions={[5]}
-        />
+        <DataGrid rows={rows} columns={testCol} />
 
         {/* <div className='dashboard-container-course'>
           {courses.map((item) => (

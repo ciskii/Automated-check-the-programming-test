@@ -57,10 +57,23 @@ const deleteQuiz = (req, res) => {
     });
 };
 
+const toggleRelease = (req, res) => {
+  const { id, isRelease } = req.body;
+
+  Quiz.update({ isRelease: isRelease }, { where: { id: id } })
+    .then(() => {
+      res.json({ msg: "Toggled release status." });
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
 module.exports = {
   createQuiz,
   getAllQuizzes,
   getQuiz,
   updateQuiz,
   deleteQuiz,
+  toggleRelease,
 };

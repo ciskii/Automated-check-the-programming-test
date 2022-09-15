@@ -9,6 +9,7 @@ const {
   getQuiz,
   updateQuiz,
   deleteQuiz,
+  toggleRelease,
 } = require("../controllers/quizController");
 
 // @access Teacher, Student
@@ -25,5 +26,7 @@ router.put("/update/:id", isTeacher, updateQuiz);
 
 // @access Teacher
 router.delete("/delete/:id", isTeacher, deleteQuiz);
+
+router.put("/toggleRelease", isTeacher, toggleRelease);
 
 module.exports = router;

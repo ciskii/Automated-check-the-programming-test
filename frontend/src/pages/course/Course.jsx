@@ -21,7 +21,13 @@ import EnrolledStudents from "./EnrolledStudents";
 import AddQuiz from "./AddQuiz";
 import "./course.css";
 // import Quiz from "pages/quiz/Quiz";
-import { getAllQuizzes, deleteQuiz, reset } from "features/quiz/quizSlice";
+import {
+  getAllQuizzes,
+  deleteQuiz,
+  toggleRelease,
+  reset as quizReset,
+} from "features/quiz/quizSlice";
+import { reset as courseReset } from "features/course/courseSlice";
 
 const Course = (props) => {
   const [value, setValue] = useState("1");
@@ -40,6 +46,8 @@ const Course = (props) => {
   const linkQuiz = useCallback(
     (row) => () => {
       console.log("row", row);
+      quizReset();
+      courseReset();
       navigate(`/quiz-creator/${row.id}`);
     },
     []
@@ -74,6 +82,25 @@ const Course = (props) => {
       });
   };
 
+  const toggleReleaseQuiz = useCallback(
+    (row) => () => {
+      dispatch(toggleRelease({ id: row.id, isRelease: row.isRelease }))
+        .unwrap()
+        .then(() => {
+          dispatch(getAllQuizzes(props.id))
+            .unwrap()
+            .then((res) => {
+              if (res) {
+                setRows(res);
+              } else {
+                setRows([]);
+              }
+            });
+        });
+    },
+    []
+  );
+
   const col = React.useMemo(
     () => [
       {
@@ -103,15 +130,15 @@ const Course = (props) => {
         getActions: (params) => [
           params.row.isRelease ? (
             <GridActionsCellItem
-              icon={<SendIcon color='green' />}
+              icon={<SendIcon color='success' />}
               label='Release quiz'
-              // onClick={openQuizModal(params)}
+              onClick={toggleReleaseQuiz(params.row)}
             />
           ) : (
             <GridActionsCellItem
               icon={<CancelScheduleSendIcon color='error' />}
               label='Release quiz'
-              // onClick={openQuizModal(params)}
+              onClick={toggleReleaseQuiz(params.row)}
             />
           ),
         ],
@@ -134,7 +161,7 @@ const Course = (props) => {
   );
 
   const onClose = () => {
-    dispatch(reset());
+    dispatch(quizReset());
     props.onClose();
   };
 

@@ -12,16 +12,23 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 
 import EnrolledStudents from "./EnrolledStudents";
 import AddQuiz from "./AddQuiz";
 import "./course.css";
-import Quiz from "pages/quiz/Quiz";
-import { getAllQuizzes, reset } from "features/quiz/quizSlice";
+// import Quiz from "pages/quiz/Quiz";
+import { getAllQuizzes, deleteQuiz, reset } from "features/quiz/quizSlice";
 
 const Course = (props) => {
   const [value, setValue] = useState("1");
   const [rows, setRows] = useState([]);
+  const [curRow, setCurRow] = useState(); // get current selected row
+  const [delModal, setDelModal] = useState(false); // delete modal
+
   const { quizzes, isIdle } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,8 +43,36 @@ const Course = (props) => {
       navigate(`/quiz-creator/${row.id}`);
     },
     []
-    // [quizId]
   );
+
+  const onDelModalOpen = useCallback(
+    (row) => () => {
+      setDelModal(true);
+      setCurRow(row);
+    },
+    []
+  );
+
+  const onDelModalClose = () => {
+    setDelModal(false);
+  };
+
+  const onDelete = () => {
+    onDelModalClose();
+    dispatch(deleteQuiz(curRow.id))
+      .unwrap()
+      .then(() => {
+        dispatch(getAllQuizzes(props.id))
+          .unwrap()
+          .then((res) => {
+            if (res) {
+              setRows(res);
+            } else {
+              setRows([]);
+            }
+          });
+      });
+  };
 
   const col = React.useMemo(
     () => [
@@ -56,7 +91,7 @@ const Course = (props) => {
           <GridActionsCellItem
             icon={<DeleteIcon color='error' />}
             label='Delete course'
-            // onClick={openQuizModal(params)}
+            onClick={onDelModalOpen(params.row)}
           />,
         ],
       },
@@ -138,27 +173,27 @@ const Course = (props) => {
 
           <TabPanel value='1' sx={{ height: "100%" }}>
             <DataGrid rows={rows} columns={col} />
-            {/* <div className='list-container-quiz'> */}
-            {/* {quizzes ? (
-                  <>
-                    {quizzes.map((quiz, index) => (
-                      <Quiz quiz={quiz} key={index} />
-                    ))}
-                  </>
-                ) : (
-                  <></>
-                )} */}
-
-            {/* <AddQuiz id={props.id} /> */}
-            {/* </div> */}
           </TabPanel>
           <TabPanel value='2' sx={{ px: (0, 0), height: "100%" }}>
             {quizzes ? <EnrolledStudents /> : <p>There's no quiz yet.</p>}
           </TabPanel>
         </TabContext>
-
-        {/* </Box> */}
       </div>
+
+      <Dialog
+        open={delModal}
+        onClose={onDelModalClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>Delete this quiz?</DialogTitle>
+        <DialogActions>
+          <Button onClick={onDelModalClose}>Cancel</Button>
+          <Button onClick={onDelete} autoFocus color='error'>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

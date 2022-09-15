@@ -17,6 +17,17 @@ const create = async (quiz, rejectWithValue) => {
   }
 };
 
+const deleteQuiz = async (quizId, rejectWithValue) => {
+  try {
+    const res = await axios.delete(api + "delete/" + quizId, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
 const getAllQuizzes = async (CourseId, rejectWithValue) => {
   try {
     const res = await axios.get(api + "getAll/" + CourseId, {
@@ -29,6 +40,7 @@ const getAllQuizzes = async (CourseId, rejectWithValue) => {
 };
 const quizService = {
   create,
+  deleteQuiz,
   getAllQuizzes,
 };
 

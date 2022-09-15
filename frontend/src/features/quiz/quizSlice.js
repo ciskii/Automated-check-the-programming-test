@@ -20,6 +20,15 @@ export const create = createAsyncThunk(
   }
 );
 
+export const deleteQuiz = createAsyncThunk(
+  "quiz/deleteQuiz",
+  async (quiz, { rejectWithValue }) => {
+    const response = await quizService.deleteQuiz(quiz, rejectWithValue);
+
+    return response;
+  }
+);
+
 export const getAllQuizzes = createAsyncThunk(
   "quiz/getAllQuizzes",
   async (CourseId, { rejectWithValue }) => {
@@ -51,6 +60,20 @@ const quizSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      .addCase(deleteQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteQuiz.fulfilled, (state, action) => {
+        state.isSuccess = true;
+      })
+      .addCase(deleteQuiz.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(getAllQuizzes.pending, (state) => {
         state.isIdle = false;
         state.isLoading = true;

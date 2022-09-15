@@ -87,7 +87,6 @@ const courseSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteCourse.fulfilled, (state, action) => {
-        state.course = action.payload;
         state.isSuccess = true;
       })
       .addCase(deleteCourse.rejected, (state, action) => {

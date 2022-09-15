@@ -25,7 +25,6 @@ const deleteCourse = async (courseId, rejectWithValue) => {
     const res = await axios.delete(api + "delete/" + courseId, {
       withCredentials: true,
     });
-    console.log("res.data", res.data);
     return res.data;
   } catch (err) {
     return rejectWithValue(err.response.data.message);

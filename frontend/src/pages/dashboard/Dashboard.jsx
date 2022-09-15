@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 
@@ -24,12 +23,12 @@ import "./dashboard.css";
 
 const Dashboard = () => {
   const [isPopUp, setIsPopUp] = useState(false);
+  const [rows, setRows] = useState([]);
+  const [curRow, setCurRow] = useState(); // get current selected row
+  const [delModal, setDelModal] = useState(false); // delete modal
+
   const { user } = useSelector((state) => state.auth);
   const { course, courses, isIdle } = useSelector((state) => state.course);
-  const [rows, setRows] = useState([]);
-  const [curRow, setCurRow] = useState();
-  const [delModal, setDelModal] = useState(false);
-
   const dispatch = useDispatch();
 
   const onQuizModelOpen = useCallback(
@@ -46,20 +45,17 @@ const Dashboard = () => {
     []
   );
 
-  // const onDelete = useCallback(
-  //   (row) => () => {
-  //     dispatch(deleteCourse(row.id))
-  //       .unwrap()
-  //       .then(() => {
-  //         dispatch(getAllCourses())
-  //           .unwrap()
-  //           .then((res) => {
-  //             setRows(res);
-  //           });
-  //       });
-  //   },
-  //   []
-  // );
+  const onDelModalOpen = useCallback(
+    (row) => () => {
+      setDelModal(true);
+      setCurRow(row);
+    },
+    []
+  );
+
+  const onDelModalClose = () => {
+    setDelModal(false);
+  };
 
   const onDelete = () => {
     onDelModalClose();
@@ -69,19 +65,14 @@ const Dashboard = () => {
         dispatch(getAllCourses())
           .unwrap()
           .then((res) => {
-            setRows(res);
+            if (res) {
+              setRows(res);
+            } else {
+              setRows([]);
+            }
           });
       });
   };
-
-  const onDelModalOpen = useCallback(
-    (row) => () => {
-      setDelModal(true);
-      setCurRow(row);
-      console.log("row", row);
-    },
-    []
-  );
 
   const col = React.useMemo(
     () => [
@@ -136,10 +127,6 @@ const Dashboard = () => {
     [onQuizModelOpen]
   );
 
-  const onDelModalClose = () => {
-    setDelModal(false);
-  };
-
   useEffect(() => {
     if (isIdle) {
       dispatch(getAllCourses())
@@ -187,24 +174,22 @@ const Dashboard = () => {
         </Stack>
 
         <DataGrid rows={rows} columns={col} />
-
-        <Dialog
-          open={delModal}
-          onClose={onDelModalClose}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
-            Delete this question?
-          </DialogTitle>
-          <DialogActions>
-            <Button onClick={onDelModalClose}>Cancel</Button>
-            <Button onClick={onDelete} autoFocus color='error'>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
+
+      <Dialog
+        open={delModal}
+        onClose={onDelModalClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>Delete this course?</DialogTitle>
+        <DialogActions>
+          <Button onClick={onDelModalClose}>Cancel</Button>
+          <Button onClick={onDelete} autoFocus color='error'>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

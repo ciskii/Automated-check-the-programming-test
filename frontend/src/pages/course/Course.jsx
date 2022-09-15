@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,10 +24,20 @@ const Course = (props) => {
   const [rows, setRows] = useState([]);
   const { quizzes, isIdle } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleChange = (event, newValue) => {
+  const changeTab = (e, newValue) => {
     setValue(newValue);
   };
+
+  const linkQuiz = useCallback(
+    (row) => () => {
+      console.log("row", row);
+      navigate(`/quiz-creator/${row.id}`);
+    },
+    []
+    // [quizId]
+  );
 
   const col = React.useMemo(
     () => [
@@ -79,12 +90,12 @@ const Course = (props) => {
           <GridActionsCellItem
             icon={<AssignmentIcon />}
             label='Quiz list'
-            // onClick={openQuizModal(params.row)}
+            onClick={linkQuiz(params.row)}
           />,
         ],
       },
-    ]
-    // [openQuizModal]
+    ],
+    [linkQuiz]
   );
 
   const onClose = () => {
@@ -97,8 +108,9 @@ const Course = (props) => {
       dispatch(getAllQuizzes(props.id))
         .unwrap()
         .then((res) => {
-          console.log("res", res);
-          setRows(res);
+          if (res) {
+            setRows(res);
+          }
         });
     }
   }, [quizzes]);
@@ -117,7 +129,7 @@ const Course = (props) => {
               justifyContent: "space-between",
             }}
           >
-            <TabList onChange={handleChange} aria-label='lab API tabs example'>
+            <TabList onChange={changeTab} aria-label='lab API tabs example'>
               <Tab label='Quiz List' value='1' />
               <Tab label='Scores' value='2' />
             </TabList>

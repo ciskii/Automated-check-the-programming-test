@@ -7,10 +7,10 @@ import { debounce } from "lodash";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { cpp } from "@codemirror/lang-cpp";
-import { java } from "@codemirror/lang-java";
-import { php } from "@codemirror/lang-php";
-import { python } from "@codemirror/lang-python";
+// import { cpp } from "@codemirror/lang-cpp";
+// import { java } from "@codemirror/lang-java";
+// import { php } from "@codemirror/lang-php";
+// import { python } from "@codemirror/lang-python";
 import { javascript } from "@codemirror/lang-javascript";
 
 import { languages } from "@codemirror/language-data";
@@ -31,7 +31,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -47,6 +46,8 @@ import {
   getAllQuestions,
   reset,
 } from "features/question/questionSlice";
+import { reset as quizReset } from "features/quiz/quizSlice";
+import { reset as courseReset } from "features/course/courseSlice";
 // import { myTheme } from "utils/theme";
 import "github-markdown-css";
 import "./question.css";
@@ -59,15 +60,16 @@ const Question = () => {
 
   const [open, setOpen] = useState(false); // delete modal
 
-  const dispatch = useDispatch();
-  const params = useParams();
-
   const [solOpen, setSolOpen] = useState(false);
 
   const [curParams, setCurParams] = useState("");
   const [curStudent, setCurStudent] = useState("");
   const [curSolution, setCurSolution] = useState("");
   const [curLanguage, setCurLanguage] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const params = useParams();
 
   const curLanguageChange = (e) => {
     setCurLanguage(e.target.value);
@@ -273,6 +275,13 @@ const Question = () => {
     []
   );
 
+  const linkDashboard = () => {
+    dispatch(quizReset());
+    dispatch(courseReset());
+
+    navigate("/");
+  };
+
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       .unwrap()
@@ -311,13 +320,19 @@ const Question = () => {
     <div className='editor'>
       <div className='editor-title'>
         <Stack direction='row' spacing={1}>
-          <Link to='/'>
+          {/* <Link to='/'>
             <Tooltip title='Home'>
               <IconButton aria-label='home'>
                 <HomeIcon />
               </IconButton>
             </Tooltip>
-          </Link>
+          </Link> */}
+
+          <Tooltip title='Home'>
+            <IconButton aria-label='home' onClick={linkDashboard}>
+              <HomeIcon />
+            </IconButton>
+          </Tooltip>
 
           <Button variant='outlined' size='small' onClick={handleSolClickOpen}>
             Solution

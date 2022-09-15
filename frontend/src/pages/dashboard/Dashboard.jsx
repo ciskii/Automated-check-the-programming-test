@@ -102,7 +102,6 @@ const Dashboard = () => {
     }
   }, [courses]);
 
-  console.log("isPopUp", isPopUp);
   return (
     <div className='dashboard'>
       <div className='dashboard-container'>

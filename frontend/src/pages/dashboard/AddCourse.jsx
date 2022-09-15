@@ -19,6 +19,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Input from "@mui/material/Input";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const AddCourse = () => {
   const [open, setOpen] = useState(false);
@@ -109,16 +112,17 @@ const AddCourse = () => {
         <DialogContent>
           <FormControl fullWidth>
             <TextField
-              margin='normal'
+              margin='dense'
               name='courseId'
               required
               fullWidth
               label='Course ID'
               value={input.couresId}
               onChange={(e) => onChange(e.target.value, "courseId")}
+              helperText='Use 5-6 characters'
             />
             <TextField
-              margin='normal'
+              margin='dense'
               name='courseName'
               required
               fullWidth
@@ -127,18 +131,21 @@ const AddCourse = () => {
               onChange={(e) => onChange(e.target.value, "courseName")}
             />
             <TextField
-              margin='normal'
+              margin='dense'
               name='year'
               required
               fullWidth
               label='Year'
               value={year}
               onChange={yearChange}
+              helperText='Use only last 2 digits of the year'
             />
           </FormControl>
-          <FormControl fullWidth style={{ marginTop: "16px" }}>
+
+          <FormControl fullWidth sx={{ mt: "16px" }}>
             <InputLabel id='semester-select-label'>Semester</InputLabel>
             <Select
+              margin='dense'
               labelId='semester-select-label'
               id='semester-select'
               value={semester}

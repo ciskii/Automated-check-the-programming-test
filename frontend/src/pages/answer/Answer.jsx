@@ -43,6 +43,13 @@ const Answer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const resetAll = () => {
+    dispatch(quizReset());
+    dispatch(courseReset());
+    dispatch(answerReset());
+    dispatch(questionReset());
+  };
+
   const handleChangePage = (e, value) => {
     const newCodes = curCodes.map((item) => {
       return { ...item };
@@ -97,19 +104,11 @@ const Answer = () => {
     navigate("/");
   };
 
-  const resetAll = () => {
-    dispatch(quizReset());
-    dispatch(courseReset());
-    dispatch(answerReset());
-    dispatch(questionReset());
-  };
-
   useEffect(() => {
     if (!quiz.id) {
       resetAll();
-      navigate("/");
-    }
-    if (isIdle) {
+      navigate("/", { replace: true });
+    } else if (isIdle) {
       // dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
       dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
         .unwrap()

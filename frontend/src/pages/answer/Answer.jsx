@@ -60,10 +60,10 @@ const Answer = () => {
     setCurCode(curCodes[value - 1].answerObj);
     setCurPage(value);
     setCurQuestion(questions[value - 1].questionObj); // change question for new page
+    setCurLanguage(questions[value - 1].language);
   };
 
   const handleSave = async () => {
-    console.log("quiz", quiz);
     const savedAnswersObj = curCodes.map((item) => {
       return { ...item };
     });
@@ -84,13 +84,15 @@ const Answer = () => {
       savedAnswersObj: mergeAnswers,
       QuizId: quiz.id,
     };
-    console.table(savedAnswers);
-    dispatch(create(savedAnswers))
-      .unwrap()
-      .then((res) => {
-        resetAll();
-        navigate("/", { replace: true });
-      });
+
+    dispatch(create(savedAnswers));
+    resetAll();
+    navigate("/", { replace: true });
+    // .unwrap()
+    // .then((res) => {
+    //   resetAll();
+    //   navigate("/", { replace: true });
+    // });
   };
 
   // * try to understand useCallback and useMemo
@@ -126,6 +128,7 @@ const Answer = () => {
             setCurCodes(initialCodes);
             setCurCode(initialCodes[0].answerObj);
             setCurQuestion(res[0].questionObj);
+            setCurLanguage(res[0].language);
             setPage(res.length);
           }
         })
@@ -158,7 +161,7 @@ const Answer = () => {
           sx={{ flex: 1 }}
           spacing={10}
         >
-          <h4 className='editor-title-label'>{quiz.name}</h4>
+          <h4 className='editor-title-label'>{curLanguage}</h4>
           <IconButton
             color='primary'
             aria-label='Save a quiz'

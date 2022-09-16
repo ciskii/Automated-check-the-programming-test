@@ -4,7 +4,7 @@ const api = "http://localhost:5000/api/answer/";
 const create = async (savedAnswers, rejectWithValue) => {
   try {
     const res = await axios.post(
-      api + "create",
+      api + "create/",
       {
         StudentId: savedAnswers.id,
         savedAnswers: savedAnswers.savedAnswersObj, // array of saved answers
@@ -12,8 +12,10 @@ const create = async (savedAnswers, rejectWithValue) => {
       },
       { withCredentials: true }
     );
+    console.log("res.data", res.data);
     return res.data;
   } catch (err) {
+    console.log("err", err);
     return rejectWithValue(err.response.data.message);
   }
 };

@@ -21,7 +21,12 @@ import {
   getAllAnswers,
   reset,
 } from "features/answer/answerSlice";
-import { getAllQuestions } from "features/question/questionSlice";
+import {
+  getAllQuestions,
+  reset as questionReset,
+} from "features/question/questionSlice";
+import { reset as quizReset } from "features/quiz/quizSlice";
+import { reset as courseReset } from "features/course/courseSlice";
 import "github-markdown-css";
 import "./preview.css";
 import { scrollPastEnd } from "@codemirror/view";
@@ -92,6 +97,14 @@ const Preview = () => {
     setCurCodes(newScores);
   };
 
+  const linkDashboard = () => {
+    dispatch(quizReset());
+    dispatch(courseReset());
+    dispatch(questionReset());
+
+    navigate("/");
+  };
+
   useEffect(() => {
     dispatch(getAllQuestions(params.QuizId))
       .unwrap()
@@ -129,18 +142,15 @@ const Preview = () => {
       });
   }, []);
 
-  console.log(curCode);
   return (
     <div className='editor'>
       <div className='editor-title' style={{ justifyContent: "flex-start" }}>
         <Stack direction='row' spacing={1} sx={{ flex: "1" }}>
-          <Link to='/'>
-            <Tooltip title='Home'>
-              <IconButton aria-label='home'>
-                <HomeIcon />
-              </IconButton>
-            </Tooltip>
-          </Link>
+          <Tooltip title='Home'>
+            <IconButton aria-label='home' onClick={linkDashboard}>
+              <HomeIcon />
+            </IconButton>
+          </Tooltip>
           <h4 className='editor-title-label'>{quiz.name}</h4>
         </Stack>
         <Stack direction='row' spacing={1}>

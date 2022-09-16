@@ -24,15 +24,7 @@ const createAnswer = asyncHandler(async (req, res) => {
         score = 1;
       }
 
-      // console.log({
-      //   answerObj: answerObj,
-      //   score: score,
-      //   isCorrect: testResult,
-      //   QuestionId: QuestionId,
-      //   StudentId: StudentId,
-      //   QuizId: QuizId,
-      // });
-      const res = await Answer.create({
+      const savedAnswer = await Answer.create({
         answerObj: answerObj,
         score: score,
         isCorrect: testResult,
@@ -41,23 +33,20 @@ const createAnswer = asyncHandler(async (req, res) => {
         QuizId: QuizId,
       });
 
-      return res;
+      return savedAnswer;
     })
   );
 
+  // console.log("savedSentQuiz", savedSentQuiz);
+  // console.log("answers.length", answers.length);
   if (answers) {
-    const saveQuiz = await Sentquiz.create({
+    const savedSentQuiz = await Sentquiz.create({
       StudentId: StudentId,
       QuizId: QuizId,
     });
-    if (saveQuiz) {
-      res.json({ msg: "This quiz has been sent." });
-    } else {
-      throw new Error("This quiz is already sent.");
-    }
-  } else {
-    throw new Error("Cannot create answers.");
+    res.json(answers);
   }
+  // res.json({ savedAnswers, StudentId, QuizId });
 });
 
 // ~~~~~~~~~~ check the answers ~~~~~~~~~~ //
@@ -67,14 +56,30 @@ const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
   if (language === "javascript") {
     fileName = "node_" + StudentId + "_" + QuestionId + ".js";
     command = "node";
+  } else if (language === "python") {
+    fileName = "python_" + StudentId + "_" + QuestionId + ".py";
+    command = "python";
+  } else if (language === "php") {
+    fileName = "php_" + StudentId + "_" + QuestionId + ".php";
+    command = "php";
   }
-  const filePath = `${__dirname}/compileFiles/${fileName}`;
+  // } else if (language === "c") {
+  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
+  //   command = "node";
+  // } else if (language === "cpp") {
+  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
+  //   command = "node";
+  // }else if (language === "java") {
+  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
+  //   command = "node";
+  // }
+
+  const filePath = `${__dirname}/compileFiles/${language}/${fileName}`;
 
   await createFile(filePath, mergeAnswer);
   const res = await runScript(command, filePath);
   return res;
 };
-
 const createFile = async (filePath, mergeAnswer) => {
   try {
     await fs.writeFile(filePath, mergeAnswer);

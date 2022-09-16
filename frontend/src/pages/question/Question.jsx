@@ -158,10 +158,15 @@ const Question = () => {
         language: "",
       });
       newQuestion[curPage - 1].questionObj = codeCur;
+
       setCurQuestions(newQuestion);
       setPage(page + 1);
       setCurPage(page + 1);
       setCodeCur("");
+      setCurParams("");
+      setCurStudent("");
+      setCurSolution("");
+      setCurLanguage("");
     } else {
       const newQuestion = [
         {
@@ -178,13 +183,17 @@ const Question = () => {
           params: "",
           student: "",
           solution: "",
-          language: "javascript",
+          language: "",
         },
       ];
       setCurQuestions(newQuestion);
       setPage(page + 1);
       setCurPage(page + 1);
       setCodeCur("");
+      setCurParams("");
+      setCurStudent("");
+      setCurSolution("");
+      setCurLanguage("");
     }
   };
 

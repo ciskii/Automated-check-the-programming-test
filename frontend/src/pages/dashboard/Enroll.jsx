@@ -68,7 +68,7 @@ const Enroll = () => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add a new course</DialogTitle>
+      <DialogTitle>Enroll a new course</DialogTitle>
       <DialogContent>
         <form
           className='courseForm-form'

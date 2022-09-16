@@ -39,11 +39,8 @@ export const deleteCourse = createAsyncThunk(
 
 export const enrollCourse = createAsyncThunk(
   "course/enrollCourse",
-  async (courseId, { rejectWithValue }) => {
-    const response = await courseService.enrollCourse(
-      courseId,
-      rejectWithValue
-    );
+  async (course, { rejectWithValue }) => {
+    const response = await courseService.enrollCourse(course, rejectWithValue);
 
     return response;
   }

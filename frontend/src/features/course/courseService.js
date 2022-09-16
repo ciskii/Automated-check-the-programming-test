@@ -31,12 +31,16 @@ const deleteCourse = async (courseId, rejectWithValue) => {
   }
 };
 
-const enrollCourse = async (courseId, rejectWithValue) => {
+const enrollCourse = async (course, rejectWithValue) => {
+  const { courseId, semester, year } = course;
+
   try {
     const res = await axios.post(
       enrollmentApi + "enrollCourse",
       {
         courseId: courseId,
+        semester: semester,
+        year: year,
       },
       { withCredentials: true }
     );

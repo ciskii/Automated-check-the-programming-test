@@ -170,6 +170,8 @@ const Dashboard = () => {
           mb={2}
         >
           <Typography variant='h5'>Course List</Typography>
+
+          {/* // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // */}
           <AddCourse />
         </Stack>
 

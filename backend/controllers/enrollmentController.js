@@ -4,11 +4,13 @@ const { Enrollment, Course, Student } = require("../models");
 //  @access Student
 const enrollCourse = asyncHandler(async (req, res) => {
   const { id } = req.user; // Student ID
-  const { courseId } = req.body; // Course ID that student want to enroll
+  const { courseId, semester, year } = req.body; // Course ID that student want to enroll
 
-  const course = await Course.findOne({ where: { courseId: courseId } });
+  const course = await Course.findOne({
+    where: { courseId: courseId, semester: semester, year: year },
+  });
 
-  // console.log("course", course);
+  console.log("course", course);
   if (course) {
     const enrolled = await Enrollment.findOne({
       where: { StudentId: id, CourseId: course.id },

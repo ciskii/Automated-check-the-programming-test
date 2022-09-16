@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  create,
-  enrollCourse,
-  getAllCourses,
-  reset,
-} from "features/course/courseSlice";
 
 import AddIcon from "@mui/icons-material/Add";
-
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -20,6 +13,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 
+import {
+  create,
+  enrollCourse,
+  getAllCourses,
+  reset,
+} from "features/course/courseSlice";
 const AddCourse = () => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState({
@@ -53,7 +52,7 @@ const AddCourse = () => {
   const onChange = (value, inputField) => {
     if (inputField === "courseId") {
       setInput({ ...input, courseId: value });
-      if (value.length >= 5) {
+      if (value.length >= 5 && value.length <= 8) {
         setIsValid({ ...isValid, courseId: true });
       } else {
         setIsValid({ ...isValid, courseId: false });
@@ -85,11 +84,17 @@ const AddCourse = () => {
           // dispatch(getAllCourses());
         });
     } else if (user.role === "student") {
-      dispatch(enrollCourse(input.courseId))
+      dispatch(
+        enrollCourse({
+          courseId: input.courseId,
+          semester: semester,
+          year: year,
+        })
+      )
         .unwrap()
         .then(() => {
           dispatch(reset());
-          dispatch(getAllCourses());
+          resetState();
         });
     }
   };
@@ -102,7 +107,7 @@ const AddCourse = () => {
     resetState();
   };
 
-  const teacherForm = () => {
+  const addCourseForm = () => {
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new course</DialogTitle>
@@ -116,17 +121,22 @@ const AddCourse = () => {
               label='Course ID'
               value={input.couresId}
               onChange={(e) => onChange(e.target.value, "courseId")}
-              helperText='Use 5-6 characters'
+              helperText='Please use 5-8 characters and Course ID is case sensitive'
             />
-            <TextField
-              margin='dense'
-              name='courseName'
-              required
-              fullWidth
-              label='Course Name'
-              value={input.courseName}
-              onChange={(e) => onChange(e.target.value, "courseName")}
-            />
+            {user.role === "teacher" ? (
+              <TextField
+                margin='dense'
+                name='courseName'
+                required
+                fullWidth
+                label='Course Name'
+                value={input.courseName}
+                onChange={(e) => onChange(e.target.value, "courseName")}
+              />
+            ) : (
+              <></>
+            )}
+
             <TextField
               margin='dense'
               name='year'
@@ -135,7 +145,7 @@ const AddCourse = () => {
               label='Year'
               value={year}
               onChange={yearChange}
-              helperText='Use only last 2 digits of the year'
+              helperText='Please use only last 2 digits of the year'
             />
           </FormControl>
 
@@ -157,54 +167,14 @@ const AddCourse = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          {isValid.courseId && isValid.courseName ? (
+          {(user.role === "teacher" &&
+            isValid.courseId &&
+            isValid.courseName) ||
+          (user.role === "student" && isValid.courseId) ? (
             <Button
               type='submit'
               form='course-submit'
               onClick={onSubmit}
-              variant='contained'
-            >
-              Submit
-            </Button>
-          ) : (
-            <Button variant='contained' disabled>
-              Submit
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
-  const studentForm = () => {
-    return (
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add a new course</DialogTitle>
-        <DialogContent>
-          <form
-            className='courseForm-form'
-            method='POST'
-            onSubmit={onSubmit}
-            id='course-submit'
-          >
-            <TextField
-              margin='normal'
-              name='courseId'
-              required
-              fullWidth
-              label='Course ID'
-              value={input.couresId}
-              onChange={(e) => onChange(e.target.value, "courseId")}
-            />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          {isValid.courseId ? (
-            <Button
-              type='submit'
-              form='course-submit'
-              onClick={handleClose}
               variant='contained'
             >
               Submit
@@ -235,7 +205,14 @@ const AddCourse = () => {
       >
         Create new course
       </Button>
-      {user.role === "teacher" ? teacherForm() : studentForm()}
+
+      {console.log(
+        `result`,
+        (user.role === "teacher" && isValid.courseId && isValid.courseName) ||
+          (user.role === "student" && isValid.courseId)
+      )}
+      {addCourseForm()}
+      {/* {user.role === "teacher" ? teacherForm() : studentForm()} */}
     </>
   );
 };

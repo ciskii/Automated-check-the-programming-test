@@ -6,6 +6,7 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import SendIcon from "@mui/icons-material/Send";
+import CheckIcon from "@mui/icons-material/Check";
 import CancelScheduleSendIcon from "@mui/icons-material/CancelScheduleSend";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -184,11 +185,15 @@ const Course = (props) => {
         type: "actions",
         width: 100,
         getActions: (params) => [
-          <GridActionsCellItem
-            icon={<AssignmentIcon />}
-            label='Quiz list'
-            onClick={linkAnswer(params.row)}
-          />,
+          params.row.isSent ? (
+            <GridActionsCellItem icon={<CheckIcon />} label='Quiz list' />
+          ) : (
+            <GridActionsCellItem
+              icon={<AssignmentIcon />}
+              label='Quiz list'
+              onClick={linkAnswer(params.row)}
+            />
+          ),
         ],
       },
     ],
@@ -213,17 +218,32 @@ const Course = (props) => {
               const onlyRelease = res.filter((item) => item.isRelease);
               // ~~~~~~ check if quiz is sent or not ~~~~ //
               // ~~~~~~~~~ need array of quiz id ~~~~~~~~ //
-              const quizzesId = res.map((quiz) => quiz.id);
+              // console.log("onlyRelease", onlyRelease);
+              const idReleases = onlyRelease.map((item) => item.id);
+
               const sentQuizInfo = {
                 StudentId: user.id,
-                quizzesId: quizzesId,
+                idReleases: idReleases,
               };
+
               dispatch(isSentQuiz(sentQuizInfo))
                 .unwrap()
-                .then((isSentQuizRes) => {
-                  console.log("isSentQuizRes", isSentQuizRes);
+                .then((unsendIds) => {
+                  const releaseAndSent = onlyRelease.map((release) => {
+                    const newRow = { ...release };
+                    if (
+                      unsendIds.filter((unsendId) => release.id === unsendId)
+                        .length !== 0
+                    ) {
+                      // unsend quiz
+                      newRow["isSent"] = false;
+                    } else {
+                      newRow["isSent"] = true;
+                    }
+                    return newRow;
+                  });
+                  setRows(releaseAndSent);
                 });
-              setRows(onlyRelease);
             }
           }
         });

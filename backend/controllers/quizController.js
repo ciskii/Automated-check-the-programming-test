@@ -70,25 +70,23 @@ const toggleRelease = (req, res) => {
 };
 
 const isSentQuiz = asyncHandler(async (req, res) => {
-  const { StudentId, quizzesId } = req.body;
-
-  console.log("StudentId", StudentId);
-  console.log("quizzesId", quizzesId);
-
-  const isSent = await Promise.all(
-    quizzesId.map(async (QuizId) => {
-      const isSent = await Sentquiz.findOne({
+  const { StudentId, idReleases } = req.body;
+  const unsendIds = await Promise.all(
+    idReleases.map(async (QuizId) => {
+      const ids = await Sentquiz.findOne({
         where: { QuizId: QuizId, StudentId: StudentId },
       });
-      console.log("isSent", isSent);
+      if (!ids) {
+        return QuizId;
+      }
     })
   );
-
-  // if (isSent) {
-  //   res.json({ isSent: isSent });
-  // } else {
-  //   throw new Error("There is no answer yet.");
-  // }
+  const unsendIdsFilter = unsendIds.filter((item) => item);
+  if (unsendIdsFilter) {
+    res.json(unsendIdsFilter);
+  } else {
+    throw new Error("There is no answer yet.");
+  }
 });
 
 module.exports = {

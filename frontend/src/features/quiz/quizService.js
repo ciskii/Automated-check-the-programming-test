@@ -49,14 +49,13 @@ const toggleRelease = async (quiz, rejectWithValue) => {
 };
 
 const isSentQuiz = async (sentQuizInfo, rejectWithValue) => {
-  const { StudentId, quizzesId } = sentQuizInfo;
-
-  console.log("StudentId", StudentId);
-  console.log("quizzesId", quizzesId);
   try {
     const res = await axios.post(
       api + "isSentQuiz",
-      { sentQuizInfo },
+      {
+        StudentId: sentQuizInfo.StudentId,
+        idReleases: sentQuizInfo.idReleases,
+      },
       {
         withCredentials: true,
       }

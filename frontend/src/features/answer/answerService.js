@@ -2,21 +2,20 @@ const axios = require("axios");
 const api = "http://localhost:5000/api/answer/";
 
 const create = async (savedAnswers, rejectWithValue) => {
-  console.log("savedAnswers", savedAnswers);
-  // try {
-  //   const res = await axios.post(
-  //     api + "create",
-  //     {
-  //       StudentId: savedAnswers.id,
-  //       savedAnswers: savedAnswers.savedAnswersObj, // array of saved answers
-  //       QuizId: savedAnswers.QuizId,
-  //     },
-  //     { withCredentials: true }
-  //   );
-  //   return res.data;
-  // } catch (err) {
-  //   return rejectWithValue(err.response.data.message);
-  // }
+  try {
+    const res = await axios.post(
+      api + "create",
+      {
+        StudentId: savedAnswers.id,
+        savedAnswers: savedAnswers.savedAnswersObj, // array of saved answers
+        QuizId: savedAnswers.QuizId,
+      },
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
 };
 
 const getAllAnswers = async (ids, rejectWithValue) => {

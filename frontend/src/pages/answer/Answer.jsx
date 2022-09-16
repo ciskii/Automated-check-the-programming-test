@@ -84,12 +84,11 @@ const Answer = () => {
       savedAnswersObj: mergeAnswers,
       QuizId: quiz.id,
     };
-    // console.table(savedAnswers);
+    console.table(savedAnswers);
     dispatch(create(savedAnswers))
       .unwrap()
       .then((res) => {
-        dispatch(quizReset());
-        dispatch(courseReset());
+        resetAll();
         navigate("/", { replace: true });
       });
   };

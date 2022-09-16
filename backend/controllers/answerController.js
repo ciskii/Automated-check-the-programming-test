@@ -7,6 +7,7 @@ const fs = require("fs/promises");
 // ~~~~~~~~~~~~ Answer obj API ~~~~~~~~~~~ //
 const createAnswer = asyncHandler(async (req, res) => {
   const { savedAnswers, StudentId, QuizId } = req.body;
+
   const answers = await Promise.all(
     savedAnswers.map(async (answer) => {
       const { QuestionId, answerObj, mergeAnswer, language } = answer;
@@ -23,6 +24,14 @@ const createAnswer = asyncHandler(async (req, res) => {
         score = 1;
       }
 
+      // console.log({
+      //   answerObj: answerObj,
+      //   score: score,
+      //   isCorrect: testResult,
+      //   QuestionId: QuestionId,
+      //   StudentId: StudentId,
+      //   QuizId: QuizId,
+      // });
       const res = await Answer.create({
         answerObj: answerObj,
         score: score,
@@ -36,17 +45,19 @@ const createAnswer = asyncHandler(async (req, res) => {
     })
   );
 
-  console.log("QuizId", QuizId);
-  // if (answers) {
-  //   const saveQuiz = await Sentquiz.create({
-  //     StudentId: StudentId,
-  //     QuizId: QuizId,
-  //   });
-  //   if (saveQuiz) {
-  //     console.log("answers", answers);
-  //     res.json(answers);
-  //   }
-  // }
+  if (answers) {
+    const saveQuiz = await Sentquiz.create({
+      StudentId: StudentId,
+      QuizId: QuizId,
+    });
+    if (saveQuiz) {
+      res.json({ msg: "This quiz has been sent." });
+    } else {
+      throw new Error("This quiz is already sent.");
+    }
+  } else {
+    throw new Error("Cannot create answers.");
+  }
 });
 
 // ~~~~~~~~~~ check the answers ~~~~~~~~~~ //

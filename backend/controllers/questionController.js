@@ -37,7 +37,6 @@ const createQuestion = asyncHandler(async (req, res) => {
     })
   );
   if (newQuestions) {
-    console.log("newQuestions", newQuestions);
     res.json(newQuestions);
   }
 });
@@ -97,6 +96,7 @@ const updateQuestion = (req, res) => {
 
 const deleteQuestion = (req, res) => {
   const { id } = req.params;
+  console.log("id", id);
   Question.destroy({ where: { id: id } })
     .then(() => {
       res.json({ msg: `This question has been deleted.` });

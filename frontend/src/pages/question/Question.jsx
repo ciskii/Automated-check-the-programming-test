@@ -44,6 +44,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import {
   create,
   getAllQuestions,
+  deleteQuestion,
   reset,
 } from "features/question/questionSlice";
 import { reset as quizReset } from "features/quiz/quizSlice";
@@ -57,16 +58,15 @@ const Question = () => {
   const [page, setPage] = useState(1); // total page number
   const [curPage, setCurPage] = useState(1); // current selected page
   const [curQuestions, setCurQuestions] = useState([]); // current questions on client
-
-  const [open, setOpen] = useState(false); // delete modal
-
-  const [solOpen, setSolOpen] = useState(false);
-
   const [curParams, setCurParams] = useState("");
   const [curStudent, setCurStudent] = useState("");
   const [curSolution, setCurSolution] = useState("");
   const [curLanguage, setCurLanguage] = useState("javascript");
 
+  const [open, setOpen] = useState(false); // delete modal
+  const [solOpen, setSolOpen] = useState(false);
+
+  const { isIdle } = useSelector((state) => state.question);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
@@ -93,6 +93,43 @@ const Question = () => {
     newQuestion[curPage - 1].language = curLanguage; // update params
 
     return newQuestion;
+  };
+
+  const onDelete = () => {
+    handleClose();
+    if (curQuestions.length !== 0) {
+      const newQuestion = getNewQuestion();
+      // ~~~~~~~~~~~~ save current questions ~~~~~~~~~~~ //
+      dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
+        .unwrap()
+        .then(() => {
+          // ~~~~~~~~ get new saved questions~~~~~~~ //
+          dispatch(getAllQuestions(params.QuizId))
+            .unwrap()
+            .then((res) => {
+              // ~~~~~~~~~~~ delete selected question ~~~~~~~~~~~ //
+              dispatch(deleteQuestion(res[curPage - 1].id))
+                .unwrap()
+                .then(() => {
+                  //  get new questions after delete selected question  //
+                  dispatch(getAllQuestions(params.QuizId))
+                    .unwrap()
+                    .then((res) => {
+                      console.table(res);
+                      setCurQuestions(res);
+                      setPage(res.length);
+                      setCurPage(1);
+
+                      setCodeCur(res[0].questionObj);
+                      setCurParams(res[0].params);
+                      setCurStudent(res[0].student);
+                      setCurSolution(res[0].solution);
+                      setCurLanguage(res[0].language);
+                    });
+                });
+            });
+        });
+    }
   };
 
   const handleChange = (e, value) => {
@@ -141,7 +178,7 @@ const Question = () => {
           params: "",
           student: "",
           solution: "",
-          language: "",
+          language: "javascript",
         },
       ];
       setCurQuestions(newQuestion);
@@ -151,39 +188,13 @@ const Question = () => {
     }
   };
 
-  // todo
-  const delQ = () => {
-    // delQ -> delete a question
-    const newQuestion = [...curQuestions];
-    newQuestion.splice(curPage - 1, 1);
-    setCurPage(1);
-
-    if (page === 1) {
-      newQuestion[0] = "";
-      setCurQuestions(newQuestion);
-      setCodeCur("");
-    } else {
-      setCurQuestions(newQuestion);
-      setPage(page - 1);
-      setCodeCur(curQuestions[0]);
-    }
-  };
-
   const handleSave = async () => {
     if (curQuestions.length !== 0) {
-      const newQuestion = curQuestions.map((item) => {
-        return { ...item };
-      });
-
-      newQuestion[curPage - 1].questionObj = codeCur;
-      newQuestion[curPage - 1].params = curParams;
-      newQuestion[curPage - 1].student = curStudent;
-      newQuestion[curPage - 1].solution = curSolution;
-      newQuestion[curPage - 1].language = curLanguage;
+      const newQuestion = getNewQuestion();
 
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
-        .then((res) => {
+        .then(() => {
           dispatch(getAllQuestions(params.QuizId))
             .unwrap()
             .then((res) => {
@@ -283,33 +294,35 @@ const Question = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
-      .unwrap()
-      .then((res) => {
-        if (res.length !== 0) {
-          console.table(res);
+    if (isIdle) {
+      dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
+        .unwrap()
+        .then((res) => {
+          if (res.length !== 0) {
+            console.table(res);
 
-          setCurQuestions(res);
-          setPage(res.length);
+            setCurQuestions(res);
+            setPage(res.length);
 
-          setCodeCur(res[0].questionObj);
-          if (res[0].params.length !== 0) {
-            setCurParams(res[0].params);
+            setCodeCur(res[0].questionObj);
+            if (res[0].params.length !== 0) {
+              setCurParams(res[0].params);
+            }
+            if (res[0].student.length !== 0) {
+              setCurStudent(res[0].student);
+            }
+            if (res[0].solution.length !== 0) {
+              setCurSolution(res[0].solution);
+            }
+            if (res[0].language.length !== 0) {
+              setCurLanguage(res[0].language);
+            }
           }
-          if (res[0].student.length !== 0) {
-            setCurStudent(res[0].student);
-          }
-          if (res[0].solution.length !== 0) {
-            setCurSolution(res[0].solution);
-          }
-          if (res[0].language.length !== 0) {
-            setCurLanguage(res[0].language);
-          }
-        }
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
 
     return () => {
       dispatch(reset());
@@ -403,16 +416,6 @@ const Question = () => {
                 </TabContext>
               </Box>
             </DialogContent>
-            {/* <DialogActions>
-              <Button
-                onClick={(e) => {
-                  handleSolClose();
-                }}
-                autoFocus
-              >
-                Done
-              </Button>
-            </DialogActions> */}
           </Dialog>
         </Stack>
         {/* <h4 className='editor-title-label'>{quiz.name}</h4> */}
@@ -447,30 +450,6 @@ const Question = () => {
             </IconButton>
           </Tooltip>
         </Stack>
-
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
-            Delete this question?
-          </DialogTitle>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button
-              onClick={(e) => {
-                handleClose();
-                delQ();
-              }}
-              autoFocus
-              color='error'
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
       </div>
 
       <div className='editor-container'>
@@ -502,8 +481,37 @@ const Question = () => {
           onChange={handleChange}
         />
       </Stack>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>Delete this question?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onDelete} color='error'>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
 export default Question;
+
+// delQ -> delete a question
+// const newQuestion = [...curQuestions];
+// newQuestion.splice(curPage - 1, 1);
+// setCurPage(1);
+// if (page === 1) {
+//   newQuestion[0] = "";
+//   setCurQuestions(newQuestion);
+//   setCodeCur("");
+// } else {
+//   setCurQuestions(newQuestion);
+//   setPage(page - 1);
+//   setCodeCur(curQuestions[0]);
+// }

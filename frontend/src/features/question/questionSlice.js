@@ -19,6 +19,17 @@ export const create = createAsyncThunk(
     return response;
   }
 );
+export const deleteQuestion = createAsyncThunk(
+  "question/deleteQuestion",
+  async (questionId, { rejectWithValue }) => {
+    const response = await questionService.deleteQuestion(
+      questionId,
+      rejectWithValue
+    );
+
+    return response;
+  }
+);
 
 export const createOne = createAsyncThunk(
   "question/createOne",
@@ -63,6 +74,7 @@ const questionSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(createOne.pending, (state) => {
         state.isLoading = true;
       })
@@ -74,6 +86,7 @@ const questionSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
       .addCase(getAllQuestions.pending, (state) => {
         state.isIdle = false;
         state.isLoading = true;
@@ -83,6 +96,17 @@ const questionSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(getAllQuestions.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      .addCase(deleteQuestion.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteQuestion.fulfilled, (state, action) => {
+        state.isSuccess = true;
+      })
+      .addCase(deleteQuestion.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       });

@@ -45,6 +45,7 @@ const EnrolledStudents = () => {
       headerName: "Answers",
       type: "actions",
       width: 80,
+      flex: 1,
       getActions: (params) => [
         params.row.isAnswer ? (
           <GridActionsCellItem
@@ -201,12 +202,7 @@ const EnrolledStudents = () => {
             <TabPanel value={value} sx={{ width: "100%", py: (0, 0) }}>
               <div style={{ display: "flex", height: "100%" }}>
                 <div style={{ flexGrow: 1 }}>
-                  <DataGrid
-                    rows={newRows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                  />
+                  <DataGrid rows={newRows} columns={columns} />
                 </div>
               </div>
             </TabPanel>

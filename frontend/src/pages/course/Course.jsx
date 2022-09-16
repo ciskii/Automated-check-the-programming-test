@@ -31,6 +31,7 @@ import {
   reset as quizReset,
 } from "features/quiz/quizSlice";
 import { reset as courseReset } from "features/course/courseSlice";
+import StudentScores from "./student/StudentScores";
 
 const Course = (props) => {
   const [value, setValue] = useState("1");
@@ -117,7 +118,7 @@ const Course = (props) => {
       {
         field: "name",
         headerName: "Quiz name",
-        width: 160,
+        // width: 160,
         flex: 1,
       },
       {
@@ -156,13 +157,13 @@ const Course = (props) => {
       },
       {
         field: "quizList",
-        headerName: "Quiz list",
+        headerName: "Question editor",
         type: "actions",
-        width: 100,
+        width: 120,
         getActions: (params) => [
           <GridActionsCellItem
             icon={<AssignmentIcon />}
-            label='Quiz list'
+            label='Question editor'
             onClick={linkQuiz(params.row)}
           />,
         ],
@@ -181,16 +182,19 @@ const Course = (props) => {
       },
       {
         field: "quizList",
-        headerName: "Quiz list",
+        headerName: "Answer editor",
         type: "actions",
-        width: 100,
+        width: 120,
         getActions: (params) => [
           params.row.isSent ? (
-            <GridActionsCellItem icon={<CheckIcon />} label='Quiz list' />
+            <GridActionsCellItem
+              icon={<CheckIcon color='success' />}
+              label='Answer editor'
+            />
           ) : (
             <GridActionsCellItem
               icon={<AssignmentIcon />}
-              label='Quiz list'
+              label='Answer editor'
               onClick={linkAnswer(params.row)}
             />
           ),
@@ -279,7 +283,13 @@ const Course = (props) => {
             )}
           </TabPanel>
           <TabPanel value='2' sx={{ px: (0, 0), height: "100%" }}>
-            {quizzes ? <EnrolledStudents /> : <p>There's no quiz yet.</p>}
+            {user.role === "teacher" ? (
+              <>
+                {quizzes ? <EnrolledStudents /> : <p>There's no quiz yet.</p>}
+              </>
+            ) : (
+              <>{quizzes ? <StudentScores /> : <p>There's no quiz yet.</p>}</>
+            )}
           </TabPanel>
         </TabContext>
       </div>

@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MarkdownRenderer from "./MarkdownRenderer";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
 
 import Pagination from "@mui/material/Pagination";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +14,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
-import HelpIcon from "@mui/icons-material/Help";
 
 import { myTheme } from "utils/theme";
 import {
@@ -175,7 +175,7 @@ const Preview = () => {
 
         <CodeMirror
           value={curCode}
-          extensions={[markdown({ base: markdownLanguage })]}
+          extensions={[javascript()]}
           onChange={changeHandler}
           height='100%'
           theme={myTheme}

@@ -26,7 +26,7 @@ const StudentScores = () => {
     {
       field: "score",
       headerName: "Score",
-      width: 160,
+      flex: 1,
     },
   ];
 
@@ -79,8 +79,6 @@ const StudentScores = () => {
     };
   }, []);
 
-  console.log("rows", rows);
-  console.log("columns", columns);
   return (
     <>
       <Box sx={{ height: "100%", width: "100%", typography: "body1" }}>

@@ -13,12 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 
-import {
-  create,
-  enrollCourse,
-  getAllCourses,
-  reset,
-} from "features/course/courseSlice";
+import { create, enrollCourse, reset } from "features/course/courseSlice";
 const AddCourse = () => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState({
@@ -110,7 +105,13 @@ const AddCourse = () => {
   const addCourseForm = () => {
     return (
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add a new course</DialogTitle>
+        <DialogTitle>
+          {user.role === "teacher" ? (
+            <>Create a new course</>
+          ) : (
+            <>Enroll a new course</>
+          )}
+        </DialogTitle>
         <DialogContent>
           <FormControl fullWidth>
             <TextField
@@ -203,16 +204,14 @@ const AddCourse = () => {
         onClick={handleClickOpen}
         startIcon={<AddIcon />}
       >
-        Create new course
+        {user.role === "teacher" ? (
+          <>Create a new course</>
+        ) : (
+          <>Enroll a new course</>
+        )}
       </Button>
 
-      {console.log(
-        `result`,
-        (user.role === "teacher" && isValid.courseId && isValid.courseName) ||
-          (user.role === "student" && isValid.courseId)
-      )}
       {addCourseForm()}
-      {/* {user.role === "teacher" ? teacherForm() : studentForm()} */}
     </>
   );
 };

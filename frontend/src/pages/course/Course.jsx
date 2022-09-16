@@ -25,6 +25,7 @@ import {
   getAllQuizzes,
   deleteQuiz,
   toggleRelease,
+  setQuiz,
   reset as quizReset,
 } from "features/quiz/quizSlice";
 import { reset as courseReset } from "features/course/courseSlice";
@@ -35,6 +36,7 @@ const Course = (props) => {
   const [curRow, setCurRow] = useState(); // get current selected row
   const [delModal, setDelModal] = useState(false); // delete modal
 
+  const { user } = useSelector((state) => state.auth);
   const { quizzes, isIdle } = useSelector((state) => state.quiz);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,10 +47,17 @@ const Course = (props) => {
 
   const linkQuiz = useCallback(
     (row) => () => {
-      console.log("row", row);
       quizReset();
       courseReset();
       navigate(`/quiz-creator/${row.id}`);
+    },
+    []
+  );
+
+  const linkAnswer = useCallback(
+    (row) => () => {
+      dispatch(setQuiz(row));
+      navigate(`/quiz`);
     },
     []
   );
@@ -160,6 +169,31 @@ const Course = (props) => {
     [linkQuiz]
   );
 
+  const studentCol = React.useMemo(
+    () => [
+      {
+        field: "name",
+        headerName: "Quiz name",
+        width: 160,
+        flex: 1,
+      },
+      {
+        field: "quizList",
+        headerName: "Quiz list",
+        type: "actions",
+        width: 100,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<AssignmentIcon />}
+            label='Quiz list'
+            onClick={linkAnswer(params.row)}
+          />,
+        ],
+      },
+    ],
+    [linkAnswer]
+  );
+
   const onClose = () => {
     dispatch(quizReset());
     props.onClose();
@@ -171,7 +205,12 @@ const Course = (props) => {
         .unwrap()
         .then((res) => {
           if (res) {
-            setRows(res);
+            if (user.role === "teacher") {
+              setRows(res);
+            } else {
+              const onlyRelease = res.filter((item) => item.isRelease);
+              setRows(onlyRelease);
+            }
           }
         });
     }
@@ -195,11 +234,15 @@ const Course = (props) => {
               <Tab label='Quiz List' value='1' />
               <Tab label='Scores' value='2' />
             </TabList>
-            <AddQuiz id={props.id} />
+            {user.role === "teacher" ? <AddQuiz id={props.id} /> : <></>}
           </Box>
 
           <TabPanel value='1' sx={{ height: "100%" }}>
-            <DataGrid rows={rows} columns={col} />
+            {user.role === "teacher" ? (
+              <DataGrid rows={rows} columns={col} />
+            ) : (
+              <DataGrid rows={rows} columns={studentCol} />
+            )}
           </TabPanel>
           <TabPanel value='2' sx={{ px: (0, 0), height: "100%" }}>
             {quizzes ? <EnrolledStudents /> : <p>There's no quiz yet.</p>}

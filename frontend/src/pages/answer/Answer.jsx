@@ -13,12 +13,9 @@ import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import Tooltip from "@mui/material/Tooltip";
-// import Box from "@mui/material/Box";
-// import InputLabel from "@mui/material/InputLabel";
-// import MenuItem from "@mui/material/MenuItem";
-// import FormControl from "@mui/material/FormControl";
-// import Select from "@mui/material/Select";
 
+import { reset as quizReset } from "features/quiz/quizSlice";
+import { reset as courseReset } from "features/course/courseSlice";
 import { create, reset } from "features/answer/answerSlice";
 import { getAllQuestions } from "features/question/questionSlice";
 import { myTheme } from "utils/theme";
@@ -114,6 +111,11 @@ const Answer = () => {
       .catch((err) => {
         console.log("err", err);
       });
+
+    return () => {
+      dispatch(quizReset());
+      dispatch(courseReset());
+    };
   }, []);
 
   return (

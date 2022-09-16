@@ -124,6 +124,46 @@ const Dashboard = () => {
         ],
       },
     ],
+    [onQuizModelOpen, onDelModalOpen]
+  );
+
+  const studentCol = React.useMemo(
+    () => [
+      {
+        field: "courseId",
+        headerName: "Course ID",
+        width: 100,
+      },
+      {
+        field: "name",
+        headerName: "Course name",
+        width: 160,
+        flex: 1,
+      },
+      {
+        field: "semester",
+        headerName: "Semester",
+        width: 100,
+      },
+      {
+        field: "year",
+        headerName: "Year",
+        width: 80,
+      },
+      {
+        field: "quizList",
+        headerName: "Quiz list",
+        type: "actions",
+        width: 150,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<AssignmentIcon />}
+            label='Quiz list'
+            onClick={onQuizModelOpen(params.row)}
+          />,
+        ],
+      },
+    ],
     [onQuizModelOpen]
   );
 
@@ -141,26 +181,33 @@ const Dashboard = () => {
     <div className='dashboard'>
       <div className='dashboard-container'>
         {isPopUp ? (
-          <>
-            {user.role === "teacher" ? (
-              <Course
-                isPopUp={isPopUp}
-                onClose={() => setIsPopUp(false)}
-                id={course.id}
-                courseId={course.courseId}
-                courseName={course.name}
-              />
-            ) : (
-              <StudentCourse
-                isPopUp={isPopUp}
-                onClose={() => setIsPopUp(false)}
-                id={course.id}
-                courseId={course.courseId}
-                courseName={course.name}
-              />
-            )}
-          </>
+          <Course
+            isPopUp={isPopUp}
+            onClose={() => setIsPopUp(false)}
+            id={course.id}
+            courseId={course.courseId}
+            courseName={course.name}
+          />
         ) : (
+          // <>
+          //   {user.role === "teacher" ? (
+          //     <Course
+          //       isPopUp={isPopUp}
+          //       onClose={() => setIsPopUp(false)}
+          //       id={course.id}
+          //       courseId={course.courseId}
+          //       courseName={course.name}
+          //     />
+          //   ) : (
+          //     <StudentCourse
+          //       isPopUp={isPopUp}
+          //       onClose={() => setIsPopUp(false)}
+          //       id={course.id}
+          //       courseId={course.courseId}
+          //       courseName={course.name}
+          //     />
+          //   )}
+          // </>
           <></>
         )}
         <Stack
@@ -175,7 +222,11 @@ const Dashboard = () => {
           <AddCourse />
         </Stack>
 
-        <DataGrid rows={rows} columns={col} />
+        {user.role === "teacher" ? (
+          <DataGrid rows={rows} columns={col} />
+        ) : (
+          <DataGrid rows={rows} columns={studentCol} />
+        )}
       </div>
 
       <Dialog

@@ -15,7 +15,7 @@ import "./navbar.css";
 const Navbar = () => {
   const [isDropDown, setIsDropDown] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [bg, setBg] = useState("#ff5722");
+  // const [bg, setBg] = useState("");
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -39,14 +39,31 @@ const Navbar = () => {
       });
   };
 
-  useEffect(() => {
-    if (user.role === "student") {
-      setBg("#1976d2");
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log("hi");
+  //   console.log("user.role", user.role);
+  //   setBg("#1976d2");
+  //   if (user.role === "student") {
+  //     setBg("#1976d2");
+  //   } else if (user.role === "teacher") {
+  //     setBg("#ff5722");
+  //   }
+  // }, []);
+
+  // const getBg = () => {
+  //   if (user.role === "teacher") {
+  //     return {
+  //       backgroundColor: "#ff5722",
+  //     };
+  //   } else if (user.role === "student") {
+  //     return {
+  //       backgroundColor: "#1976d2",
+  //     };
+  //   }
+  // };
 
   return (
-    <div className='nav' style={{ backgroundColor: bg }}>
+    <div className='nav'>
       <Link to='/' className='nav-home'>
         Automated Markdown Quiz
       </Link>
@@ -74,7 +91,7 @@ const Navbar = () => {
           <p className='nav-dd-ctn-name'>
             {user.firstName} {user.lastName}
           </p>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
+          {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
           <MenuItem onClick={handleLogout}>Log out</MenuItem>
         </Menu>
       ) : (

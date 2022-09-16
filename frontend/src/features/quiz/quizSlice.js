@@ -38,6 +38,18 @@ export const toggleRelease = createAsyncThunk(
   }
 );
 
+export const isSentQuiz = createAsyncThunk(
+  "quiz/isSentQuiz",
+  async (sentQuizInfo, { rejectWithValue }) => {
+    const response = await quizService.isSentQuiz(
+      sentQuizInfo,
+      rejectWithValue
+    );
+
+    return response;
+  }
+);
+
 export const getAllQuizzes = createAsyncThunk(
   "quiz/getAllQuizzes",
   async (CourseId, { rejectWithValue }) => {
@@ -90,6 +102,18 @@ const quizSlice = createSlice({
         state.isSuccess = true;
       })
       .addCase(toggleRelease.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      .addCase(isSentQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(isSentQuiz.fulfilled, (state, action) => {
+        state.isSuccess = true;
+      })
+      .addCase(isSentQuiz.rejected, (state, action) => {
         state.isError = true;
         state.message = action.payload;
       })

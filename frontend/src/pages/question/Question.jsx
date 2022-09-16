@@ -289,6 +289,7 @@ const Question = () => {
   const linkDashboard = () => {
     dispatch(quizReset());
     dispatch(courseReset());
+    dispatch(reset());
 
     navigate("/");
   };
@@ -324,9 +325,9 @@ const Question = () => {
         });
     }
 
-    return () => {
-      dispatch(reset());
-    };
+    // return () => {
+    //   dispatch(reset());
+    // };
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { Quiz } = require("../models");
+const { Quiz, Sentquiz } = require("../models");
 
 const createQuiz = (req, res) => {
   const { CourseId, name } = req.body;
@@ -69,6 +69,28 @@ const toggleRelease = (req, res) => {
     });
 };
 
+const isSentQuiz = asyncHandler(async (req, res) => {
+  const { StudentId, quizzesId } = req.body;
+
+  console.log("StudentId", StudentId);
+  console.log("quizzesId", quizzesId);
+
+  const isSent = await Promise.all(
+    quizzesId.map(async (QuizId) => {
+      const isSent = await Sentquiz.findOne({
+        where: { QuizId: QuizId, StudentId: StudentId },
+      });
+      console.log("isSent", isSent);
+    })
+  );
+
+  // if (isSent) {
+  //   res.json({ isSent: isSent });
+  // } else {
+  //   throw new Error("There is no answer yet.");
+  // }
+});
+
 module.exports = {
   createQuiz,
   getAllQuizzes,
@@ -76,4 +98,5 @@ module.exports = {
   updateQuiz,
   deleteQuiz,
   toggleRelease,
+  isSentQuiz,
 };

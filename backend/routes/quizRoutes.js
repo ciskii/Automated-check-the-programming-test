@@ -10,6 +10,7 @@ const {
   updateQuiz,
   deleteQuiz,
   toggleRelease,
+  isSentQuiz,
 } = require("../controllers/quizController");
 
 // @access Teacher, Student
@@ -28,5 +29,8 @@ router.put("/update/:id", isTeacher, updateQuiz);
 router.delete("/delete/:id", isTeacher, deleteQuiz);
 
 router.put("/toggleRelease", isTeacher, toggleRelease);
+
+// ------------ Check if quiz is sent or not ------------
+router.post("/isSentQuiz", isAuth, isSentQuiz);
 
 module.exports = router;

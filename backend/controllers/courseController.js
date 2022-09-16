@@ -49,7 +49,6 @@ const getAllCourses = asyncHandler(async (req, res) => {
       // get enrolled courses info
       const courses = await Promise.all(
         enrolledCourses.map(async (course) => {
-          console.log("course.CourseId", course.CourseId);
           const res = await Course.findOne({
             where: { id: course.CourseId },
           });
@@ -57,7 +56,6 @@ const getAllCourses = asyncHandler(async (req, res) => {
         })
       );
 
-      console.log("courses", courses);
       res.json({ courses: courses });
     } else {
       throw new Error("There is no course yet.");

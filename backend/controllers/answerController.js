@@ -36,16 +36,17 @@ const createAnswer = asyncHandler(async (req, res) => {
     })
   );
 
-  if (answers) {
-    const saveQuiz = await Sentquiz.create({
-      StudentId: StudentId,
-      QuizId: QuizId,
-    });
-    if (saveQuiz) {
-      console.log("answers", answers);
-      res.json(answers);
-    }
-  }
+  console.log("QuizId", QuizId);
+  // if (answers) {
+  //   const saveQuiz = await Sentquiz.create({
+  //     StudentId: StudentId,
+  //     QuizId: QuizId,
+  //   });
+  //   if (saveQuiz) {
+  //     console.log("answers", answers);
+  //     res.json(answers);
+  //   }
+  // }
 });
 
 // ~~~~~~~~~~ check the answers ~~~~~~~~~~ //
@@ -72,6 +73,7 @@ const createFile = async (filePath, mergeAnswer) => {
 };
 
 // ! what a step
+// * make function promise if they can't return anything
 // https://stackoverflow.com/questions/69704190/node-child-process-spawn-is-not-returning-data-correctly-when-using-with-funct
 const runScript = (command, filePath) => {
   return new Promise((resolve, reject) => {

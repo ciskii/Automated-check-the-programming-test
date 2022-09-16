@@ -26,6 +26,7 @@ import {
   deleteQuiz,
   toggleRelease,
   setQuiz,
+  isSentQuiz,
   reset as quizReset,
 } from "features/quiz/quizSlice";
 import { reset as courseReset } from "features/course/courseSlice";
@@ -208,7 +209,20 @@ const Course = (props) => {
             if (user.role === "teacher") {
               setRows(res);
             } else {
+              // ~~~~~~ get only release quizzes ~~~~~~ //
               const onlyRelease = res.filter((item) => item.isRelease);
+              // ~~~~~~ check if quiz is sent or not ~~~~ //
+              // ~~~~~~~~~ need array of quiz id ~~~~~~~~ //
+              const quizzesId = res.map((quiz) => quiz.id);
+              const sentQuizInfo = {
+                StudentId: user.id,
+                quizzesId: quizzesId,
+              };
+              dispatch(isSentQuiz(sentQuizInfo))
+                .unwrap()
+                .then((isSentQuizRes) => {
+                  console.log("isSentQuizRes", isSentQuizRes);
+                });
               setRows(onlyRelease);
             }
           }

@@ -48,6 +48,25 @@ const toggleRelease = async (quiz, rejectWithValue) => {
   }
 };
 
+const isSentQuiz = async (sentQuizInfo, rejectWithValue) => {
+  const { StudentId, quizzesId } = sentQuizInfo;
+
+  console.log("StudentId", StudentId);
+  console.log("quizzesId", quizzesId);
+  try {
+    const res = await axios.post(
+      api + "isSentQuiz",
+      { sentQuizInfo },
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data.message);
+  }
+};
+
 const getAllQuizzes = async (CourseId, rejectWithValue) => {
   try {
     const res = await axios.get(api + "getAll/" + CourseId, {
@@ -63,6 +82,7 @@ const quizService = {
   deleteQuiz,
   toggleRelease,
   getAllQuizzes,
+  isSentQuiz,
 };
 
 export default quizService;

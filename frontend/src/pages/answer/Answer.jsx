@@ -16,8 +16,11 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { reset as quizReset } from "features/quiz/quizSlice";
 import { reset as courseReset } from "features/course/courseSlice";
-import { create, reset } from "features/answer/answerSlice";
-import { getAllQuestions } from "features/question/questionSlice";
+import { create, reset as answerReset } from "features/answer/answerSlice";
+import {
+  getAllQuestions,
+  reset as questionReset,
+} from "features/question/questionSlice";
 import { myTheme } from "utils/theme";
 import "github-markdown-css";
 import "./answer.css";
@@ -53,6 +56,7 @@ const Answer = () => {
   };
 
   const handleSave = async () => {
+    console.log("quiz", quiz);
     const savedAnswersObj = curCodes.map((item) => {
       return { ...item };
     });
@@ -77,6 +81,8 @@ const Answer = () => {
     dispatch(create(savedAnswers))
       .unwrap()
       .then((res) => {
+        dispatch(quizReset());
+        dispatch(courseReset());
         navigate("/", { replace: true });
       });
   };
@@ -86,49 +92,65 @@ const Answer = () => {
     setCurCode(value);
   }, []);
 
-  useEffect(() => {
-    // dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
-    dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
-      .unwrap()
-      .then((res) => {
-        if (res.length !== 0) {
-          // console.table(res);
-          const initialCodes = res.map((item) => {
-            return {
-              QuestionId: item.id, // question id
-              params: item.params,
-              solution: item.solution,
-              answerObj: item.student,
-              language: item.language,
-            };
-          }); // create default code for each question
-          setCurCodes(initialCodes);
-          setCurCode(initialCodes[0].answerObj);
-          setCurQuestion(res[0].questionObj);
-          setPage(res.length);
-        }
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+  const linkDashboard = () => {
+    resetAll();
+    navigate("/");
+  };
 
-    return () => {
-      dispatch(quizReset());
-      dispatch(courseReset());
-    };
+  const resetAll = () => {
+    dispatch(quizReset());
+    dispatch(courseReset());
+    dispatch(answerReset());
+    dispatch(questionReset());
+  };
+
+  useEffect(() => {
+    if (!quiz.id) {
+      resetAll();
+      navigate("/");
+    }
+    if (isIdle) {
+      // dispatch(getAllQuestions(params.QuizId)) // params.id -> QuizId
+      dispatch(getAllQuestions(quiz.id)) // use quiz.id instead to prevent student to access quiz directly through the params
+        .unwrap()
+        .then((res) => {
+          if (res.length !== 0) {
+            // console.table(res);
+            const initialCodes = res.map((item) => {
+              return {
+                QuestionId: item.id, // question id
+                params: item.params,
+                solution: item.solution,
+                answerObj: item.student,
+                language: item.language,
+              };
+            }); // create default code for each question
+            setCurCodes(initialCodes);
+            setCurCode(initialCodes[0].answerObj);
+            setCurQuestion(res[0].questionObj);
+            setPage(res.length);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
+
+    // return () => {
+    //   dispatch(quizReset());
+    //   dispatch(courseReset());
+    // };
   }, []);
 
   return (
     <div className='editor'>
       <div className='editor-title'>
         <Stack direction='row' sx={{ flex: 1 }} spacing={1}>
-          <Link to='/'>
-            <Tooltip title='Home'>
-              <IconButton aria-label='home'>
-                <HomeIcon />
-              </IconButton>
-            </Tooltip>
-          </Link>
+          <Tooltip title='Home'>
+            <IconButton aria-label='home' onClick={linkDashboard}>
+              <HomeIcon />
+            </IconButton>
+          </Tooltip>
           <h4 className='editor-title-label'>{quiz.name}</h4>
         </Stack>
 

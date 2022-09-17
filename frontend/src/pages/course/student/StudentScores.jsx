@@ -65,12 +65,14 @@ const StudentScores = () => {
       dispatch(getQuizScores({ QuizId: quizId, StudentId: user.id }))
         .unwrap()
         .then((scores) => {
+          console.log("scores", scores);
           const newScores = scores.map((item, index) => {
             return {
               id: index + 1,
               score: item.score,
             };
           });
+          console.log("newScores", newScores);
           setRows(newScores);
         });
     }

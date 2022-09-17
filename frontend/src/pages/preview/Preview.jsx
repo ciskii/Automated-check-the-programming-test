@@ -19,7 +19,7 @@ import { myTheme } from "utils/theme";
 import {
   provideScore,
   getAllAnswers,
-  reset,
+  reset as answerReset,
 } from "features/answer/answerSlice";
 import {
   getAllQuestions,
@@ -29,7 +29,6 @@ import { reset as quizReset } from "features/quiz/quizSlice";
 import { reset as courseReset } from "features/course/courseSlice";
 import "github-markdown-css";
 import "./preview.css";
-import { scrollPastEnd } from "@codemirror/view";
 
 const Preview = () => {
   const [curCode, setCurCode] = useState(""); // current code at selected page
@@ -67,19 +66,13 @@ const Preview = () => {
 
     dispatch(provideScore(savedAnswers))
       .unwrap()
-      .then((res) => navigate("/", { replace: true }));
-
-    // dispatch(create(savedAnswers))
-    //   .unwrap()
-    //   .then((res) => {
-    //     dispatch(getAllQuestions(params.QuizId))
-    //       .unwrap()
-    //       .then((res) => {
-    //         setCurQuestions(res);
-    //         setPage(res.length);
-    //         setCurCode(res[curPage - 1].questionObj);
-    //       });
-    //   });
+      .then((res) => {
+        dispatch(quizReset());
+        dispatch(courseReset());
+        dispatch(questionReset());
+        dispatch(answerReset());
+        navigate("/", { replace: true });
+      });
   };
 
   // * try to understand useCallback and useMemo

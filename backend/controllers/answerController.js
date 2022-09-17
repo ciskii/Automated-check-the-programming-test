@@ -37,13 +37,16 @@ const createAnswer = asyncHandler(async (req, res) => {
     })
   );
 
+  console.log("StudentId", StudentId);
+  console.log("QuizId", QuizId);
   if (answers) {
-    await Sentquiz.create({
+    const sentQuizRes = await Sentquiz.create({
       StudentId: StudentId,
       QuizId: QuizId,
     });
-    res.json(answers);
+    res.json({ savedAnswers, StudentId, QuizId });
   }
+
   // res.json({ savedAnswers, StudentId, QuizId });
 });
 
@@ -129,6 +132,7 @@ const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
 
 const createFile = async (filePath, mergeAnswer) => {
   try {
+    // console.log("mergeAnswer", mergeAnswer);
     await fs.writeFile(filePath, mergeAnswer);
   } catch (err) {
     console.log(err);
@@ -142,6 +146,8 @@ const runScript = (command, filePath) => {
   return new Promise((resolve, reject) => {
     let testResult;
     let res;
+
+    // console.log("command", command);
 
     const child = spawn(command, [filePath]);
     child.stdout.on("data", (data) => {
@@ -268,6 +274,7 @@ const getQuizScores = asyncHandler(async (req, res) => {
   });
 
   if (answers) {
+    console.log("answers", answers);
     res.json(answers);
   } else {
     throw new Error("There is no answer yet.");

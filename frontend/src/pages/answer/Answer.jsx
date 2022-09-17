@@ -63,7 +63,7 @@ const Answer = () => {
     setCurLanguage(questions[value - 1].language);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const savedAnswersObj = curCodes.map((item) => {
       return { ...item };
     });
@@ -84,15 +84,11 @@ const Answer = () => {
       savedAnswersObj: mergeAnswers,
       QuizId: quiz.id,
     };
+    console.log("savedAnswers", savedAnswers);
 
     dispatch(create(savedAnswers));
     resetAll();
     navigate("/", { replace: true });
-    // .unwrap()
-    // .then((res) => {
-    //   resetAll();
-    //   navigate("/", { replace: true });
-    // });
   };
 
   // * try to understand useCallback and useMemo

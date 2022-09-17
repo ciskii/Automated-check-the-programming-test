@@ -1,0 +1,184 @@
+Date : 2022-09-17 22:36:29
+Directory : d:\Coding\cn404\cn404_code
+Total : 109 files,  45922 codes, 423 comments, 971 blanks, all 47316 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          6 |     39,289 |          0 |          6 |     39,295 |
+| JavaScript React   |         24 |      3,137 |        108 |        344 |      3,589 |
+| JavaScript         |         52 |      2,712 |        236 |        436 |      3,384 |
+| CSS                |         13 |        588 |         42 |        127 |        757 |
+| Markdown           |          1 |         79 |          0 |         31 |        110 |
+| HTML               |          1 |         26 |         29 |          1 |         56 |
+| PHP                |          2 |         22 |          0 |          5 |         27 |
+| Diff               |          1 |         21 |          0 |          2 |         23 |
+| Python             |          3 |         15 |          8 |          6 |         29 |
+| C++                |          2 |         12 |          0 |          4 |         16 |
+| C                  |          2 |         10 |          0 |          8 |         18 |
+| JSON with Comments |          1 |          6 |          0 |          1 |          7 |
+| Java               |          1 |          5 |          0 |          0 |          5 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                 | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                    |        109 |     45,922 |        423 |        971 |     47,316 |
+| backend                                                                              |         40 |      1,593 |        183 |        299 |      2,075 |
+| backend\config                                                                       |          3 |         98 |          8 |         16 |        122 |
+| backend\controllers                                                                  |         11 |        701 |        121 |        118 |        940 |
+| backend\controllers\compileFiles                                                     |          5 |         55 |          7 |         17 |         79 |
+| backend\controllers\compileFiles\c                                                   |          1 |          5 |          0 |          5 |         10 |
+| backend\controllers\compileFiles\cpp                                                 |          1 |          6 |          0 |          3 |          9 |
+| backend\controllers\compileFiles\javascript                                          |          1 |         26 |          3 |          4 |         33 |
+| backend\controllers\compileFiles\php                                                 |          1 |         11 |          0 |          2 |         13 |
+| backend\controllers\compileFiles\python                                              |          1 |          7 |          4 |          3 |         14 |
+| backend\middleware                                                                   |          2 |         49 |          0 |          9 |         58 |
+| backend\models                                                                       |          9 |        275 |          0 |         30 |        305 |
+| backend\routes                                                                       |          6 |        134 |         14 |         46 |        194 |
+| backend\utils                                                                        |          5 |        105 |         12 |         32 |        149 |
+| backend\utils\python                                                                 |          5 |        105 |         12 |         32 |        149 |
+| frontend                                                                             |         59 |     39,024 |        196 |        643 |     39,863 |
+| frontend\public                                                                      |          2 |         51 |         29 |          2 |         82 |
+| frontend\src                                                                         |         52 |      4,828 |        167 |        604 |      5,599 |
+| frontend\src\app                                                                     |          1 |         17 |          0 |          2 |         19 |
+| frontend\src\components                                                              |          3 |        247 |         26 |         37 |        310 |
+| frontend\src\features                                                                |         12 |      1,018 |         15 |        124 |      1,157 |
+| frontend\src\features\answer                                                         |          2 |        200 |          4 |         25 |        229 |
+| frontend\src\features\auth                                                           |          2 |        185 |          0 |         18 |        203 |
+| frontend\src\features\course                                                         |          2 |        167 |          4 |         23 |        194 |
+| frontend\src\features\enrollment                                                     |          2 |        104 |          0 |         13 |        117 |
+| frontend\src\features\question                                                       |          2 |        165 |          3 |         19 |        187 |
+| frontend\src\features\quiz                                                           |          2 |        197 |          4 |         26 |        227 |
+| frontend\src\pages                                                                   |         32 |      3,345 |        119 |        420 |      3,884 |
+| frontend\src\pages\answer                                                            |          3 |        251 |         18 |         41 |        310 |
+| frontend\src\pages\course                                                            |          8 |        887 |         19 |        107 |      1,013 |
+| frontend\src\pages\course\student                                                    |          3 |        177 |          1 |         25 |        203 |
+| frontend\src\pages\dashboard                                                         |          5 |        634 |         32 |         68 |        734 |
+| frontend\src\pages\login                                                             |          4 |        370 |          1 |         34 |        405 |
+| frontend\src\pages\preview                                                           |          3 |        222 |          2 |         28 |        252 |
+| frontend\src\pages\question                                                          |          4 |        702 |         35 |         82 |        819 |
+| frontend\src\pages\quiz                                                              |          5 |        279 |         12 |         60 |        351 |
+| frontend\src\pages\quiz\student                                                      |          2 |        110 |          6 |         25 |        141 |
+| frontend\src\utils                                                                   |          1 |         52 |          2 |          2 |         56 |
+| patches                                                                              |          1 |         21 |          0 |          2 |         23 |
+| test                                                                                 |          7 |         99 |         44 |         25 |        168 |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                             | language           | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| d:\Coding\cn404\cn404_code\backend\config\config.json                                | JSON               |         24 |          0 |          1 |         25 |
+| d:\Coding\cn404\cn404_code\backend\config\database.js                                | JavaScript         |          8 |          4 |          4 |         16 |
+| d:\Coding\cn404\cn404_code\backend\config\passport.js                                | JavaScript         |         66 |          4 |         11 |         81 |
+| d:\Coding\cn404\cn404_code\backend\controllers\answerController.js                   | JavaScript         |        211 |         65 |         41 |        317 |
+| d:\Coding\cn404\cn404_code\backend\controllers\compileFiles\c\c_3_523.c              | C                  |          5 |          0 |          5 |         10 |
+| d:\Coding\cn404\cn404_code\backend\controllers\compileFiles\cpp\cpp_3_524.cpp        | C++                |          6 |          0 |          3 |          9 |
+| d:\Coding\cn404\cn404_code\backend\controllers\compileFiles\javascript\node_1_485.js | JavaScript         |         26 |          3 |          4 |         33 |
+| d:\Coding\cn404\cn404_code\backend\controllers\compileFiles\php\php_1_518.php        | PHP                |         11 |          0 |          2 |         13 |
+| d:\Coding\cn404\cn404_code\backend\controllers\compileFiles\python\python_1_486.py   | Python             |          7 |          4 |          3 |         14 |
+| d:\Coding\cn404\cn404_code\backend\controllers\courseController.js                   | JavaScript         |         96 |         20 |         12 |        128 |
+| d:\Coding\cn404\cn404_code\backend\controllers\enrollmentController.js               | JavaScript         |         67 |          3 |          8 |         78 |
+| d:\Coding\cn404\cn404_code\backend\controllers\questionController.js                 | JavaScript         |         96 |          9 |         12 |        117 |
+| d:\Coding\cn404\cn404_code\backend\controllers\quizController.js                     | JavaScript         |         89 |          1 |         11 |        101 |
+| d:\Coding\cn404\cn404_code\backend\controllers\userController.js                     | JavaScript         |         87 |         16 |         17 |        120 |
+| d:\Coding\cn404\cn404_code\backend\middleware\authMiddleware.js                      | JavaScript         |         32 |          0 |          4 |         36 |
+| d:\Coding\cn404\cn404_code\backend\middleware\errorMiddleware.js                     | JavaScript         |         17 |          0 |          5 |         22 |
+| d:\Coding\cn404\cn404_code\backend\models\Answer.js                                  | JavaScript         |         22 |          0 |          3 |         25 |
+| d:\Coding\cn404\cn404_code\backend\models\Course.js                                  | JavaScript         |         40 |          0 |          4 |         44 |
+| d:\Coding\cn404\cn404_code\backend\models\Enrollment.js                              | JavaScript         |         19 |          0 |          2 |         21 |
+| d:\Coding\cn404\cn404_code\backend\models\Question.js                                | JavaScript         |         31 |          0 |          3 |         34 |
+| d:\Coding\cn404\cn404_code\backend\models\Quiz.js                                    | JavaScript         |         29 |          0 |          3 |         32 |
+| d:\Coding\cn404\cn404_code\backend\models\Sentquiz.js                                | JavaScript         |         19 |          0 |          2 |         21 |
+| d:\Coding\cn404\cn404_code\backend\models\Student.js                                 | JavaScript         |         43 |          0 |          3 |         46 |
+| d:\Coding\cn404\cn404_code\backend\models\Teacher.js                                 | JavaScript         |         41 |          0 |          3 |         44 |
+| d:\Coding\cn404\cn404_code\backend\models\index.js                                   | JavaScript         |         31 |          0 |          7 |         38 |
+| d:\Coding\cn404\cn404_code\backend\routes\answerRoutes.js                            | JavaScript         |         30 |          3 |          8 |         41 |
+| d:\Coding\cn404\cn404_code\backend\routes\courseRoutes.js                            | JavaScript         |         20 |          0 |          5 |         25 |
+| d:\Coding\cn404\cn404_code\backend\routes\enrollmentRoutes.js                        | JavaScript         |         16 |          0 |          5 |         21 |
+| d:\Coding\cn404\cn404_code\backend\routes\questionRoutes.js                          | JavaScript         |         18 |          5 |         10 |         33 |
+| d:\Coding\cn404\cn404_code\backend\routes\quizRoutes.js                              | JavaScript         |         20 |          6 |         11 |         37 |
+| d:\Coding\cn404\cn404_code\backend\routes\userRoutes.js                              | JavaScript         |         30 |          0 |          7 |         37 |
+| d:\Coding\cn404\cn404_code\backend\server-mongo.js                                   | JavaScript         |         78 |          2 |         18 |         98 |
+| d:\Coding\cn404\cn404_code\backend\server.js                                         | JavaScript         |         63 |          7 |         12 |         82 |
+| d:\Coding\cn404\cn404_code\backend\test.js                                           | JavaScript         |         73 |          9 |         14 |         96 |
+| d:\Coding\cn404\cn404_code\backend\test1.js                                          | JavaScript         |         17 |         10 |          4 |         31 |
+| d:\Coding\cn404\cn404_code\backend\utils\python\hello.js                             | JavaScript         |         26 |          3 |          8 |         37 |
+| d:\Coding\cn404\cn404_code\backend\utils\python\hello1.js                            | JavaScript         |         26 |          3 |          8 |         37 |
+| d:\Coding\cn404\cn404_code\backend\utils\python\hello2.js                            | JavaScript         |         26 |          3 |          8 |         37 |
+| d:\Coding\cn404\cn404_code\backend\utils\python\hello3.js                            | JavaScript         |         26 |          3 |          8 |         37 |
+| d:\Coding\cn404\cn404_code\backend\utils\python\test.py                              | Python             |          1 |          0 |          0 |          1 |
+| d:\Coding\cn404\cn404_code\frontend\README.md                                        | Markdown           |         79 |          0 |         31 |        110 |
+| d:\Coding\cn404\cn404_code\frontend\jsconfig.json                                    | JSON with Comments |          6 |          0 |          1 |          7 |
+| d:\Coding\cn404\cn404_code\frontend\package-lock.json                                | JSON               |     33,979 |          0 |          1 |     33,980 |
+| d:\Coding\cn404\cn404_code\frontend\package.json                                     | JSON               |         76 |          0 |          1 |         77 |
+| d:\Coding\cn404\cn404_code\frontend\public\index.html                                | HTML               |         26 |         29 |          1 |         56 |
+| d:\Coding\cn404\cn404_code\frontend\public\manifest.json                             | JSON               |         25 |          0 |          1 |         26 |
+| d:\Coding\cn404\cn404_code\frontend\src\App.jsx                                      | JavaScript React   |        114 |          2 |          9 |        125 |
+| d:\Coding\cn404\cn404_code\frontend\src\app.css                                      | CSS                |         19 |          3 |          5 |         27 |
+| d:\Coding\cn404\cn404_code\frontend\src\app\store.js                                 | JavaScript         |         17 |          0 |          2 |         19 |
+| d:\Coding\cn404\cn404_code\frontend\src\components\AddTeacher.jsx                    | JavaScript React   |         98 |          0 |         12 |        110 |
+| d:\Coding\cn404\cn404_code\frontend\src\components\Navbar.jsx                        | JavaScript React   |         84 |         23 |         12 |        119 |
+| d:\Coding\cn404\cn404_code\frontend\src\components\navbar.css                        | CSS                |         65 |          3 |         13 |         81 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\answer\answerService.js             | JavaScript         |         82 |          4 |         11 |         97 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\answer\answerSlice.js               | JavaScript         |        118 |          0 |         14 |        132 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\auth\authService.js                 | JavaScript         |         76 |          0 |          8 |         84 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\auth\authSlice.js                   | JavaScript         |        109 |          0 |         10 |        119 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\course\courseService.js             | JavaScript         |         62 |          0 |          8 |         70 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\course\courseSlice.js               | JavaScript         |        105 |          4 |         15 |        124 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\enrollment\enrollmentService.js     | JavaScript         |         35 |          0 |          5 |         40 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\enrollment\enrollmentSlice.js       | JavaScript         |         69 |          0 |          8 |         77 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\question\questionService.js         | JavaScript         |         61 |          0 |          8 |         69 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\question\questionSlice.js           | JavaScript         |        104 |          3 |         11 |        118 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\quiz\quizService.js                 | JavaScript         |         80 |          0 |          8 |         88 |
+| d:\Coding\cn404\cn404_code\frontend\src\features\quiz\quizSlice.js                   | JavaScript         |        117 |          4 |         18 |        139 |
+| d:\Coding\cn404\cn404_code\frontend\src\index.js                                     | JavaScript         |         16 |          0 |          5 |         21 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\answer\Answer.jsx                      | JavaScript React   |        166 |         15 |         25 |        206 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\answer\MarkdownRenderer.jsx            | JavaScript React   |         40 |          0 |          4 |         44 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\answer\answer.css                      | CSS                |         45 |          3 |         12 |         60 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\AddQuiz.jsx                     | JavaScript React   |        104 |          0 |         12 |        116 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\Course.jsx                      | JavaScript React   |        286 |          7 |         23 |        316 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\EnrolledStudents.jsx            | JavaScript React   |        190 |          5 |         22 |        217 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\course.css                      | CSS                |        124 |          6 |         23 |        153 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\enrolled.css                    | CSS                |          6 |          0 |          2 |          8 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\student\StudentCoures.jsx       | JavaScript React   |         62 |          0 |          9 |         71 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\student\StudentScores.jsx       | JavaScript React   |        115 |          1 |         15 |        131 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\course\student\studentCourse.css       | CSS                |          0 |          0 |          1 |          1 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\dashboard\AddCourse.jsx                | JavaScript React   |        201 |          1 |         18 |        220 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\dashboard\Dashboard.jsx                | JavaScript React   |        214 |         20 |         17 |        251 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\dashboard\Enroll.jsx                   | JavaScript React   |        101 |          0 |         11 |        112 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\dashboard\dashboard.css                | CSS                |         31 |         11 |         11 |         53 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\dashboard\temp-dashboard.jsx           | JavaScript React   |         87 |          0 |         11 |         98 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\login\Login.jsx                        | JavaScript React   |         96 |          1 |         10 |        107 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\login\Signup.jsx                       | JavaScript React   |        206 |          0 |         12 |        218 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\login\login.css                        | CSS                |         34 |          0 |          6 |         40 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\login\signup.css                       | CSS                |         34 |          0 |          6 |         40 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\preview\MarkdownRenderer.jsx           | JavaScript React   |         40 |          0 |          4 |         44 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\preview\Preview.jsx                    | JavaScript React   |        182 |          2 |         23 |        207 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\preview\preview.css                    | CSS                |          0 |          0 |          1 |          1 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\question\MarkdownRenderer.jsx          | JavaScript React   |         39 |          0 |          4 |         43 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\question\Question.jsx                  | JavaScript React   |        469 |         29 |         48 |        546 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\question\Utils.jsx                     | JavaScript React   |        140 |          2 |         17 |        159 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\question\question.css                  | CSS                |         54 |          4 |         13 |         71 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\quiz\Quiz.jsx                          | JavaScript React   |         27 |          0 |          8 |         35 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\quiz\StudentQuiz.jsx                   | JavaScript React   |         54 |          0 |         10 |         64 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\quiz\quiz.css                          | CSS                |         88 |          6 |         17 |        111 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\quiz\student\StudentQuiz.jsx           | JavaScript React   |         22 |          0 |          8 |         30 |
+| d:\Coding\cn404\cn404_code\frontend\src\pages\quiz\student\studentQuiz.css           | CSS                |         88 |          6 |         17 |        111 |
+| d:\Coding\cn404\cn404_code\frontend\src\utils\theme.js                               | JavaScript         |         52 |          2 |          2 |         56 |
+| d:\Coding\cn404\cn404_code\frontend\utils.js                                         | JavaScript         |          5 |          0 |          3 |          8 |
+| d:\Coding\cn404\cn404_code\package-lock.json                                         | JSON               |      5,144 |          0 |          1 |      5,145 |
+| d:\Coding\cn404\cn404_code\package.json                                              | JSON               |         41 |          0 |          1 |         42 |
+| d:\Coding\cn404\cn404_code\patches\passport+0.6.0.patch                              | Diff               |         21 |          0 |          2 |         23 |
+| d:\Coding\cn404\cn404_code\test\TestJava.java                                        | Java               |          5 |          0 |          0 |          5 |
+| d:\Coding\cn404\cn404_code\test\js_answer.js                                         | JavaScript         |         26 |          3 |          6 |         35 |
+| d:\Coding\cn404\cn404_code\test\test_c.c                                             | C                  |          5 |          0 |          3 |          8 |
+| d:\Coding\cn404\cn404_code\test\test_cpp.cpp                                         | C++                |          6 |          0 |          1 |          7 |
+| d:\Coding\cn404\cn404_code\test\test_js.js                                           | JavaScript         |         39 |         37 |          9 |         85 |
+| d:\Coding\cn404\cn404_code\test\test_php.php                                         | PHP                |         11 |          0 |          3 |         14 |
+| d:\Coding\cn404\cn404_code\test\test_py.py                                           | Python             |          7 |          4 |          3 |         14 |
+| Total                                                                                |                    |     45,922 |        423 |        971 |     47,316 |
++--------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

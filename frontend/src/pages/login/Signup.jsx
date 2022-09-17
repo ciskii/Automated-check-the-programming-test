@@ -160,6 +160,7 @@ const Signup = () => {
           margin='normal'
           label='Password'
           type='password'
+          helperText='Please use at least 8 characters'
           value={input.password}
           onChange={(e) => onChange(e.target.value, "password")}
         />

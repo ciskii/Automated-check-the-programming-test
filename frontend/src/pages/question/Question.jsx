@@ -388,7 +388,7 @@ const Question = () => {
                   label='Language'
                   onChange={curLanguageChange}
                 >
-                  <MenuItem value={"javascript"}>Node.js</MenuItem>
+                  <MenuItem value={"javascript"}>JavaScript</MenuItem>
                   <MenuItem value={"php"}>PHP</MenuItem>
                   <MenuItem value={"python"}>Python</MenuItem>
                 </Select>
@@ -404,7 +404,7 @@ const Question = () => {
                       aria-label='lab API tabs example'
                     >
                       <Tab label='Params' value='1' />
-                      <Tab label='Student function' value='2' />
+                      <Tab label='Student answer' value='2' />
                       <Tab label='Solution ' value='3' />
                     </TabList>
                   </Box>

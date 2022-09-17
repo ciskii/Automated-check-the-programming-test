@@ -22,6 +22,8 @@ const createAnswer = asyncHandler(async (req, res) => {
 
       if (testResult) {
         score = 1;
+      } else {
+        score = 0;
       }
 
       const savedAnswer = await Answer.create({
@@ -37,8 +39,6 @@ const createAnswer = asyncHandler(async (req, res) => {
     })
   );
 
-  console.log("StudentId", StudentId);
-  console.log("QuizId", QuizId);
   if (answers) {
     const sentQuizRes = await Sentquiz.create({
       StudentId: StudentId,
@@ -132,7 +132,6 @@ const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
 
 const createFile = async (filePath, mergeAnswer) => {
   try {
-    // console.log("mergeAnswer", mergeAnswer);
     await fs.writeFile(filePath, mergeAnswer);
   } catch (err) {
     console.log(err);

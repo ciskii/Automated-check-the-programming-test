@@ -105,6 +105,7 @@ const Question = () => {
     newQuestion[curPage - 1].solution = curSolution; // update params
     newQuestion[curPage - 1].language = curLanguage; // update params
 
+    // console.log("getnewQuestion - newQuestion", newQuestion);
     return newQuestion;
   };
 
@@ -128,17 +129,40 @@ const Question = () => {
                   dispatch(getAllQuestions(params.QuizId))
                     .unwrap()
                     .then((res) => {
-                      console.table(res);
-                      setCurQuestions(res);
-                      setPage(res.length);
-                      setCurPage(1);
+                      const newQuestionNumbers = res.map((item) => {
+                        return { ...item };
+                      });
+                      for (
+                        let index = 0;
+                        index < newQuestionNumbers.length;
+                        index++
+                      ) {
+                        if (
+                          newQuestionNumbers[index].questionNumber !==
+                          index + 1
+                        ) {
+                          newQuestionNumbers[index].questionNumber = index + 1;
+                        }
+                      }
 
-                      setCodeCur(res[0].questionObj);
-                      setCurParams(res[0].params);
-                      setCurStudent(res[0].student);
-                      setCurSolution(res[0].solution);
-                      setCurLanguage(res[0].language);
-                      languageFuncChangeHandler(res[0].language);
+                      dispatch(
+                        create({
+                          newQuestion: newQuestionNumbers,
+                          QuizId: params.QuizId,
+                        })
+                      )
+                        .unwrap()
+                        .then((res) => {
+                          setCurQuestions(res);
+                          setPage(res.length);
+                          setCurPage(1);
+                          setCodeCur(res[0].questionObj);
+                          setCurParams(res[0].params);
+                          setCurStudent(res[0].student);
+                          setCurSolution(res[0].solution);
+                          setCurLanguage(res[0].language);
+                          languageFuncChangeHandler(res[0].language);
+                        });
                     });
                 });
             });
@@ -170,6 +194,7 @@ const Question = () => {
         student: "",
         solution: "",
         language: "",
+        questionNumber: page + 1,
       });
       newQuestion[curPage - 1].questionObj = codeCur;
 
@@ -191,6 +216,7 @@ const Question = () => {
           student: curStudent,
           solution: curSolution,
           language: curLanguage,
+          questionNumber: page,
         }, // there are 2 object because the one and the new one
         {
           id: "new",
@@ -199,8 +225,10 @@ const Question = () => {
           student: "",
           solution: "",
           language: "",
+          questionNumber: page + 1,
         },
       ];
+      console.log("newQuestion", newQuestion);
       setCurQuestions(newQuestion);
       setPage(page + 1);
       setCurPage(page + 1);
@@ -216,7 +244,7 @@ const Question = () => {
   const handleSave = async () => {
     if (curQuestions.length !== 0) {
       const newQuestion = getNewQuestion();
-
+      console.log("newQuestion", newQuestion);
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then(() => {
@@ -241,8 +269,10 @@ const Question = () => {
           student: curStudent,
           solution: curSolution,
           language: curLanguage,
+          questionNumber: page,
         },
       ];
+      console.log("newQuestion", newQuestion);
       dispatch(create({ newQuestion: newQuestion, QuizId: params.QuizId }))
         .unwrap()
         .then((res) => {
@@ -378,7 +408,6 @@ const Question = () => {
               }}
             >
               <div>Solution</div>
-              {console.log("curLanguage", curLanguage)}
               <FormControl style={{ width: "150px" }} size='small'>
                 <InputLabel id='language-select-label'>Language</InputLabel>
                 <Select

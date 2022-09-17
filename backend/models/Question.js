@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       defaultValue: "",
     },
+    questionNumber: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
   });
 
   Question.associate = (models) => {

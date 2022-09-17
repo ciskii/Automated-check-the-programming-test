@@ -74,6 +74,7 @@ const Question = () => {
 
   const curLanguageChange = (e) => {
     const newLanguage = e.target.value;
+    setCurLanguage(newLanguage);
     languageFuncChangeHandler(newLanguage);
   };
 
@@ -85,7 +86,6 @@ const Question = () => {
     } else if (newLanguage === "python") {
       setcurLanguageFunc(() => python());
     }
-    setCurLanguage(newLanguage);
   };
 
   const [tabIndex, setTabIndex] = useState("1");
@@ -378,6 +378,7 @@ const Question = () => {
               }}
             >
               <div>Solution</div>
+              {console.log("curLanguage", curLanguage)}
               <FormControl style={{ width: "150px" }} size='small'>
                 <InputLabel id='language-select-label'>Language</InputLabel>
                 <Select

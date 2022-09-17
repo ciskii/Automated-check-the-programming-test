@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { Answer, Sentquiz } = require("../models");
 
-const { spawn } = require("child_process");
+const { spawn, spawnSync, execFile, exec } = require("child_process");
 const fs = require("fs/promises");
 
 // ~~~~~~~~~~~~ Answer obj API ~~~~~~~~~~~ //
@@ -37,10 +37,8 @@ const createAnswer = asyncHandler(async (req, res) => {
     })
   );
 
-  // console.log("savedSentQuiz", savedSentQuiz);
-  // console.log("answers.length", answers.length);
   if (answers) {
-    const savedSentQuiz = await Sentquiz.create({
+    await Sentquiz.create({
       StudentId: StudentId,
       QuizId: QuizId,
     });
@@ -63,23 +61,72 @@ const checkAnswers = async (StudentId, QuestionId, mergeAnswer, language) => {
     fileName = "php_" + StudentId + "_" + QuestionId + ".php";
     command = "php";
   }
-  // } else if (language === "c") {
-  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
-  //   command = "node";
-  // } else if (language === "cpp") {
-  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
-  //   command = "node";
-  // }else if (language === "java") {
-  //   fileName = "node_" + StudentId + "_" + QuestionId + ".js";
-  //   command = "node";
-  // }
 
   const filePath = `${__dirname}/compileFiles/${language}/${fileName}`;
-
   await createFile(filePath, mergeAnswer);
+
   const res = await runScript(command, filePath);
   return res;
+
+  // let fileExtension = "";
+  // else if (language === "c") {
+  //   fileName = "c_" + StudentId + "_" + QuestionId + ".c";
+  //   fileExtension = "c_" + StudentId + "_" + QuestionId;
+  //   command = "gcc";
+  // } else if (language === "cpp") {
+  //   fileName = "cpp_" + StudentId + "_" + QuestionId + ".cpp";
+  //   fileExtension = "cpp_" + StudentId + "_" + QuestionId;
+  //   command = "g++";
+  // }
+
+  // if (language === "cpp" || language === "c") {
+  //   const fileExtensionPath = `${__dirname}/compileFiles/${language}/${fileExtension}`;
+  //   const filePathC = `${__dirname}/compileFiles/${language}/${fileName}`;
+  //   const compilePath =
+  //     command + " " + filePathC + " " + "-o" + " " + fileExtensionPath;
+  //   const child = spawnSync(compilePath);
+
+  // } else {
+
+  // }
 };
+
+// const compileC = (command, filePathC, fileExtensionPath) => {
+//   child.on("close", (code) => {
+//     if (code !== 0) {
+//     }
+//     // fs.unlink(filePath);
+//   });
+// };
+
+// const runScriptC = (fileExtensionPath) => {
+//   return new Promise((resolve, reject) => {
+//     let testResult;
+//     let res;
+
+//     const child = spawn(fileExtensionPath);
+//     child.stdout.on("data", (data) => {
+//       testResult = data.toString().slice(0, 1);
+//       // console.log("testResult", testResult);
+//       if (testResult === "T") {
+//         res = true;
+//       } else if (testResult === "F") {
+//         res = false;
+//       }
+//     });
+//     child.stderr.on("data", (data) => {
+//       console.error(`stderr: ${data}`);
+//     });
+//     child.on("close", (code) => {
+//       if (code !== 0) {
+//         return reject(`Program died with ${code}`);
+//       }
+//       // fs.unlink(filePath);
+//       resolve(res);
+//     });
+//   });
+// };
+
 const createFile = async (filePath, mergeAnswer) => {
   try {
     await fs.writeFile(filePath, mergeAnswer);

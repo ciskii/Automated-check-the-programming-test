@@ -86,8 +86,8 @@ const Answer = () => {
     };
 
     dispatch(create(savedAnswers));
-    resetAll();
-    navigate("/", { replace: true });
+    // resetAll();
+    // navigate("/", { replace: true });
     // .unwrap()
     // .then((res) => {
     //   resetAll();

@@ -371,8 +371,8 @@ const Question = () => {
                   label='Language'
                   onChange={curLanguageChange}
                 >
-                  <MenuItem value={"cpp"}>C++</MenuItem>
-                  <MenuItem value={"java"}>Java</MenuItem>
+                  {/* <MenuItem value={"c"}>C</MenuItem>
+                  <MenuItem value={"cpp"}>C++</MenuItem> */}
                   <MenuItem value={"javascript"}>Node.js</MenuItem>
                   <MenuItem value={"php"}>PHP</MenuItem>
                   <MenuItem value={"python"}>Python</MenuItem>

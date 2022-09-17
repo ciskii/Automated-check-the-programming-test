@@ -9,8 +9,8 @@ import MarkdownRenderer from "./MarkdownRenderer";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 // import { cpp } from "@codemirror/lang-cpp";
 // import { java } from "@codemirror/lang-java";
-// import { php } from "@codemirror/lang-php";
-// import { python } from "@codemirror/lang-python";
+import { php } from "@codemirror/lang-php";
+import { python } from "@codemirror/lang-python";
 import { javascript } from "@codemirror/lang-javascript";
 
 import { languages } from "@codemirror/language-data";
@@ -61,7 +61,8 @@ const Question = () => {
   const [curParams, setCurParams] = useState("");
   const [curStudent, setCurStudent] = useState("");
   const [curSolution, setCurSolution] = useState("");
-  const [curLanguage, setCurLanguage] = useState("javascript");
+  const [curLanguage, setCurLanguage] = useState("");
+  const [curLanguageFunc, setcurLanguageFunc] = useState(() => javascript());
 
   const [open, setOpen] = useState(false); // delete modal
   const [solOpen, setSolOpen] = useState(false);
@@ -72,7 +73,19 @@ const Question = () => {
   const params = useParams();
 
   const curLanguageChange = (e) => {
-    setCurLanguage(e.target.value);
+    const newLanguage = e.target.value;
+    languageFuncChangeHandler(newLanguage);
+  };
+
+  const languageFuncChangeHandler = (newLanguage) => {
+    if (newLanguage === "javascript") {
+      setcurLanguageFunc(() => javascript());
+    } else if (newLanguage === "php") {
+      setcurLanguageFunc(() => php());
+    } else if (newLanguage === "python") {
+      setcurLanguageFunc(() => python());
+    }
+    setCurLanguage(newLanguage);
   };
 
   const [tabIndex, setTabIndex] = useState("1");
@@ -125,6 +138,7 @@ const Question = () => {
                       setCurStudent(res[0].student);
                       setCurSolution(res[0].solution);
                       setCurLanguage(res[0].language);
+                      languageFuncChangeHandler(res[0].language);
                     });
                 });
             });
@@ -135,12 +149,12 @@ const Question = () => {
   const handleChange = (e, value) => {
     setCurQuestions(getNewQuestion());
     setCurPage(value);
-
     setCodeCur(curQuestions[value - 1].questionObj);
     setCurParams(curQuestions[value - 1].params);
     setCurStudent(curQuestions[value - 1].student);
     setCurSolution(curQuestions[value - 1].solution);
     setCurLanguage(curQuestions[value - 1].language);
+    languageFuncChangeHandler(curQuestions[value - 1].language);
   };
 
   const handleAddQuestion = () => {
@@ -167,6 +181,7 @@ const Question = () => {
       setCurStudent("");
       setCurSolution("");
       setCurLanguage("");
+      languageFuncChangeHandler("javascript");
     } else {
       const newQuestion = [
         {
@@ -194,6 +209,7 @@ const Question = () => {
       setCurStudent("");
       setCurSolution("");
       setCurLanguage("");
+      languageFuncChangeHandler("javascript");
     }
   };
 
@@ -309,11 +325,11 @@ const Question = () => {
         .unwrap()
         .then((res) => {
           if (res.length !== 0) {
-            console.table(res);
-
             setCurQuestions(res);
             setPage(res.length);
-
+            if (res[0].language.length !== 0) {
+              languageFuncChangeHandler(res[0].language);
+            }
             setCodeCur(res[0].questionObj);
             if (res[0].params.length !== 0) {
               setCurParams(res[0].params);
@@ -371,8 +387,6 @@ const Question = () => {
                   label='Language'
                   onChange={curLanguageChange}
                 >
-                  {/* <MenuItem value={"c"}>C</MenuItem>
-                  <MenuItem value={"cpp"}>C++</MenuItem> */}
                   <MenuItem value={"javascript"}>Node.js</MenuItem>
                   <MenuItem value={"php"}>PHP</MenuItem>
                   <MenuItem value={"python"}>Python</MenuItem>
@@ -396,30 +410,33 @@ const Question = () => {
                   <TabPanel value='1'>
                     <CodeMirror
                       value={curParams}
-                      extensions={[javascript()]}
+                      extensions={[curLanguageFunc]}
                       onChange={debounceParams}
                       className='solution-editor'
-                      theme={githubLight}
+                      theme='light'
+                      // theme={githubLight}
                       autoFocus={true}
                     />
                   </TabPanel>
                   <TabPanel value='2'>
                     <CodeMirror
                       value={curStudent}
-                      extensions={[javascript()]}
+                      extensions={[curLanguageFunc]}
                       onChange={debounceStudent}
                       className='solution-editor'
-                      theme={githubLight}
+                      theme='light'
+                      // theme={githubLight}
                       autoFocus={true}
                     />
                   </TabPanel>
                   <TabPanel value='3'>
                     <CodeMirror
                       value={curSolution}
-                      extensions={[javascript()]}
+                      extensions={[curLanguageFunc]}
                       onChange={debounceSolution}
                       className='solution-editor'
-                      theme={githubLight}
+                      theme='light'
+                      // theme={githubLight}
                       autoFocus={true}
                     />
                   </TabPanel>

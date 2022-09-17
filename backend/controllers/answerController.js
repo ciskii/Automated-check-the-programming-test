@@ -10,7 +10,8 @@ const createAnswer = asyncHandler(async (req, res) => {
 
   const answers = await Promise.all(
     savedAnswers.map(async (answer) => {
-      const { QuestionId, answerObj, mergeAnswer, language } = answer;
+      const { QuestionId, answerObj, mergeAnswer, language, questionNumber } =
+        answer;
       let score = 0;
 
       const testResult = await checkAnswers(
@@ -33,6 +34,7 @@ const createAnswer = asyncHandler(async (req, res) => {
         QuestionId: QuestionId,
         StudentId: StudentId,
         QuizId: QuizId,
+        questionNumber: questionNumber,
       });
 
       return savedAnswer;

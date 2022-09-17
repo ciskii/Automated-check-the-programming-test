@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    questionNumber: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
   });
 
   Answer.associate = (models) => {

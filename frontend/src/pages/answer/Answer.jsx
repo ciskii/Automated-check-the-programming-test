@@ -79,12 +79,13 @@ const Answer = () => {
       return item;
     });
 
+    console.log("savedAnswersObj", savedAnswersObj);
+
     const savedAnswers = {
       id: user.id,
       savedAnswersObj: mergeAnswers,
       QuizId: quiz.id,
     };
-    console.log("savedAnswers", savedAnswers);
 
     dispatch(create(savedAnswers));
     resetAll();
@@ -119,6 +120,7 @@ const Answer = () => {
                 solution: item.solution,
                 answerObj: item.student,
                 language: item.language,
+                questionNumber: item.questionNumber,
               };
             }); // create default code for each question
             setCurCodes(initialCodes);

@@ -67,9 +67,12 @@ const StudentScores = () => {
       dispatch(getQuizScores({ QuizId: quizId, StudentId: user.id }))
         .unwrap()
         .then((scores) => {
+          console.log("scores", scores);
           const newScores = scores.map((item, index) => {
+            console.log("index+1", index + 1);
+            console.log("item.questionNumber", item.questionNumber);
             return {
-              id: index + 1,
+              id: item.questionNumber,
               score: item.score,
             };
           });

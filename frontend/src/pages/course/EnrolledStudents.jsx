@@ -105,7 +105,8 @@ const EnrolledStudents = () => {
     questions.forEach((item, index) => {
       const questionCol = {
         field: `Q${item.id}`,
-        headerName: `${index + 1}`,
+        headerName: `${item.questionNumber}`,
+        // headerName: `${index + 1}`,
         headerClassName: "score-header",
         width: 70,
       };
@@ -130,6 +131,7 @@ const EnrolledStudents = () => {
 
       let sum = 0;
 
+      console.log("studentScores", studentScores);
       questions.forEach((item, index) => {
         if (studentScores[index]) {
           newRow[`Q${studentScores[index].QuestionId}`] =

@@ -87,12 +87,13 @@ const Answer = () => {
       QuizId: quiz.id,
     };
 
-    dispatch(create(savedAnswers))
-      .unwrap()
-      .then(() => {
-        resetAll();
-        navigate("/", { replace: true });
-      });
+    dispatch(create(savedAnswers));
+    resetAll();
+    navigate("/", { replace: true });
+    // .unwrap()
+    // .then(() => {
+
+    // });
   };
 
   // * try to understand useCallback and useMemo

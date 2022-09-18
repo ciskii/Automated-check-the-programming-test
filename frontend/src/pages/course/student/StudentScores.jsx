@@ -51,7 +51,7 @@ const StudentScores = () => {
         console.log("change tab scores", scores);
         const newScores = scores.map((item, index) => {
           return {
-            id: index + 1,
+            id: item.questionNumber,
             score: item.score,
           };
         });

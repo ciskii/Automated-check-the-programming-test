@@ -27,7 +27,6 @@ const createAnswer = asyncHandler(async (req, res) => {
         score = 0;
       }
 
-      console.log("testResult", testResult);
       const savedAnswer = await Answer.create({
         answerObj: answerObj,
         score: score,
@@ -38,6 +37,7 @@ const createAnswer = asyncHandler(async (req, res) => {
         questionNumber: questionNumber,
       });
 
+      console.log("savedAnswer.questionNumber", savedAnswer.questionNumber);
       return savedAnswer;
     })
   );

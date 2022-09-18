@@ -117,6 +117,16 @@ const StudentScores = () => {
               <div style={{ display: "flex", height: "100%" }}>
                 <div style={{ flexGrow: 1 }}>
                   <DataGrid
+                    initialState={{
+                      sorting: {
+                        sortModel: [
+                          {
+                            field: "id",
+                            sort: "asc",
+                          },
+                        ],
+                      },
+                    }}
                     rows={rows}
                     columns={columns}
                     pageSize={5}

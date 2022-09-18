@@ -27,42 +27,6 @@ const EnrolledStudents = () => {
   const { quizzes } = useSelector((state) => state.quiz);
   const [quizId, setQuizId] = useState(quizzes[0].id);
 
-  const initialColumns = [
-    { field: "id", headerName: "ID", width: 50 },
-    {
-      field: "name",
-      headerName: "Name",
-      width: 160,
-    },
-    {
-      field: "sum",
-      headerName: "Summary",
-      headerClassName: "score-sum",
-      width: 100,
-    },
-    {
-      field: "actions",
-      headerName: "Answers",
-      type: "actions",
-      width: 80,
-      flex: 1,
-      getActions: (params) => [
-        params.row.isAnswer ? (
-          <GridActionsCellItem
-            icon={<AssignmentIcon />}
-            label="Student's Answers"
-            onClick={linkAnswer(params.row)}
-          />
-        ) : (
-          <></>
-        ),
-      ],
-    },
-  ];
-
-  const [columns, setColumns] = useState(initialColumns);
-  const [newRows, setNewRows] = useState([]);
-
   const { isIdle, enrolledStudents } = useSelector((state) => state.enrollment);
   // const { questions } = useSelector((state) => state.question);
   const { course } = useSelector((state) => state.course);
@@ -71,11 +35,53 @@ const EnrolledStudents = () => {
 
   const linkAnswer = useCallback(
     (row) => () => {
-      console.log("row", row);
-      navigate(`/student-answers/qId/${quizId}/sId/${row.id}`);
+      console.log("rows", row);
+      console.log("quizId answer icon", quizId);
+      // console.log("row.id}", row.id);
+      // console.log("path", `/student-answers/qId/${quizId}/sId/${row.id}`);
+      navigate(`/student-answers/qId/${row.QuizId}/sId/${row.id}`);
     },
-    [quizId]
+    []
   );
+
+  const initialColumns = React.useMemo(
+    () => [
+      { field: "id", headerName: "ID", width: 50 },
+      {
+        field: "name",
+        headerName: "Name",
+        width: 160,
+      },
+      {
+        field: "sum",
+        headerName: "Summary",
+        headerClassName: "score-sum",
+        width: 100,
+      },
+      {
+        field: "actions",
+        headerName: "Answers",
+        type: "actions",
+        width: 80,
+        flex: 1,
+        getActions: (params) => [
+          params.row.isAnswer ? (
+            <GridActionsCellItem
+              icon={<AssignmentIcon />}
+              label="Student's Answers"
+              onClick={linkAnswer(params.row)}
+            />
+          ) : (
+            <></>
+          ),
+        ],
+      },
+    ],
+    [linkAnswer, quizId]
+  );
+
+  const [columns, setColumns] = useState(initialColumns);
+  const [newRows, setNewRows] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -83,6 +89,7 @@ const EnrolledStudents = () => {
 
   // set quiz id state
   const switchTabHandler = (id) => {
+    console.log("quiz.id switch tab", id);
     setQuizId(id);
     dispatch(getEnrolledStudents(course.id))
       .unwrap()
@@ -116,12 +123,14 @@ const EnrolledStudents = () => {
     setColumns(newCols);
 
     // create rows
+    console.log("students", students);
     const rows = students.map((student) => {
       // check if student have answer or not
       const studentScores = scores.filter((item) => {
         return student.id === item.StudentId;
       });
 
+      console.log("studentScores", studentScores);
       //  new row field
       const newRow = {
         id: student.id,
@@ -131,24 +140,27 @@ const EnrolledStudents = () => {
 
       let sum = 0;
 
-      console.log("studentScores", studentScores);
+      // console.log("studentScores", studentScores);
       questions.forEach((item, index) => {
         if (studentScores[index]) {
           newRow[`Q${studentScores[index].QuestionId}`] =
             studentScores[index].score;
           newRow["isAnswer"] = true;
           sum = sum + studentScores[index].score;
+          newRow["QuizId"] = studentScores[index].QuizId;
         } else {
           newRow[`Q${item.id}`] = 0;
         }
       });
 
       newRow["sum"] = sum;
+      console.log("newRow", newRow);
       return newRow;
     });
     setNewRows(rows);
   };
 
+  // console.log("quizId", quizId);
   useEffect(() => {
     if (isIdle) {
       dispatch(getEnrolledStudents(course.id))
@@ -172,6 +184,7 @@ const EnrolledStudents = () => {
     };
   }, []);
 
+  // console.log("quizId", quizId);
   return (
     <>
       <Box sx={{ height: "100%", width: "100%", typography: "body1" }}>

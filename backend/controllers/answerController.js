@@ -74,6 +74,7 @@ const checkAnswers = asyncHandler(
     await createFile(filePath, mergeAnswer);
 
     const res = await runScript(command, filePath);
+    // fs.unlink(filePath);
     return res;
   }
 );
@@ -105,13 +106,14 @@ const runScript = (command, filePath) => {
       }
     });
     child.stderr.on("data", (data) => {
+      res = false;
       console.error(`stderr: ${data}`);
     });
     child.on("close", (code) => {
       if (code !== 0) {
         return reject(`Program died with ${code}`);
       }
-      fs.unlink(filePath);
+      // fs.unlink(filePath);
       resolve(res);
     });
   });
